@@ -1,48 +1,36 @@
-# Astro Starter Kit: Basics
+<img
+  src='/mictlan-logo.webp'
+  width={600}
+  height={300}
+  alt='Mictlan Logo'
+  className='w-3/4 m-auto border border-transparent dark:border-default-200/50 object-fit rounded-xl shadow-xl'
+/>
 
-```sh
-npm create astro@latest -- --template basics
-```
+## ¿Qué es MictlanUI?
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+MictlanUI es una colección personalizada de componentes reutilizables. Está diseñado para ser fácil de usar y adaptar a tus necesidades. Con MictlanUI, puedes crear aplicaciones web de alta calidad, diseñadas para que sean visualmente atractivas y accesibles.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Creado con Tailwind CSS, MictlanUI se adapta a tus necesidades y diseños, ofreciendo un estilo consistente y moderno para una experiencia de usuario agradable.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## ¿Qué es un design system del tipo _copy-paste_?
 
-## 🚀 Project Structure
+Se refiere a un sistema donde los componentes y patrones están definidos en código HTML, y los desarrolladores pueden copiarlos directamente e integrarlos en sus proyectos.
+Este enfoque tiene ventajas particulares, especialmente en términos de velocidad y accesibilidad.
 
-Inside of your Astro project, you'll see the following folders and files:
+## ¿Cómo funciona MictlanUI?
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+MictlanUI es de tipo copy-paste, por lo que no requiere instalación ni configuración adicional. Simplemente copia y pega el código en tu proyecto y empieza a crear tus interfaces de usuario.
+Sin embargo, es necesario tener instalado Tailwind CSS en tu proyecto.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## ¿Cuáles son las diferencias entre MictlanUI y Tailwind CSS?
 
-## 🧞 Commands
+Mientras que Tailwind CSS es una herramienta para desarrollar interfaces, MictlanUI es un marco integral que organiza componentes, estilos y guías de diseño.
 
-All commands are run from the root of the project, from a terminal:
+## ¿Cuándo se puede utilizar MictlanUI?
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- Proyectos pequeños, medianos o grandes.
+- Equipos con recursos limitados o sin experiencia en sistemas de diseño avanzados.
+- Prototipos rápidos o MVPs (Minimum Viable Products).
+- Proyectos con una arquitectura simple que no requiere componentes dinámicos avanzados.
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+MictlanUI puede ser una excelente introducción al uso de un sistema de diseño mientras se evalúan las necesidades futuras de un sistema más robusto.
