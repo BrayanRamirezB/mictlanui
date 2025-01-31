@@ -1,11 +1,3 @@
-<img
-  src='/mictlan-logo.webp'
-  width={600}
-  height={300}
-  alt='Mictlan Logo'
-  className='w-3/4 m-auto border border-transparent dark:border-default-200/50 object-fit rounded-xl shadow-xl'
-/>
-
 ## ¿Qué es MictlanUI?
 
 MictlanUI es una colección personalizada de componentes reutilizables. Está diseñado para ser fácil de usar y adaptar a tus necesidades. Con MictlanUI, puedes crear aplicaciones web de alta calidad, diseñadas para que sean visualmente atractivas y accesibles.
