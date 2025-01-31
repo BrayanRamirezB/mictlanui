@@ -1,0 +1,640 @@
+---
+name: 'CheckboxGroup'
+description: 'Permite al usuario seleccionar varias opciones de una lista.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CheckboxGroup from '../../components/CheckboxGroup.jsx'
+import { check } from '@astrojs/mdx/server.js'
+
+## Sobre el componente
+
+Este componente se utiliza para permitir al usuario seleccionar uno o más elementos de una lista de opciones.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debes definir los atributos `title` y `checkboxes`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CheckboxGroup
+      client:load
+      title='CheckboxGroup'
+      checkboxes={[
+        { id: 'checkbox-1', label: 'Checkbox 1' },
+        { id: 'checkbox-2', label: 'Checkbox 2' },
+        { id: 'checkbox-3', label: 'Checkbox 3' }
+      ]}
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+/>
+```
+
+</CodeBlock>
+
+El código para `CheckboxGroup` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useState } from 'react'
+import Checkbox from './Checkbox'
+
+const CheckboxGroup = ({
+  title = '',
+  checkboxes = [],
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  rounded = 'md',
+  orientation = 'horizontal'
+}) => {
+  const [checkboxStates, setCheckboxStates] = useState(
+    checkboxes.map((checkbox) => ({ ...checkbox }))
+  )
+
+  const handleCheckboxChange = (id) => {
+    const updatedStates = checkboxStates.map((checkbox) =>
+      checkbox.id === id
+        ? { ...checkbox, checked: !checkbox.checked }
+        : checkbox
+    )
+    setCheckboxStates(updatedStates)
+    if (onChange) onChange(updatedStates)
+  }
+
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const sizes = {
+    sm: 'px-3 py-2 text-xs',
+    md: 'px-4 py-2.5 text-sm',
+    lg: 'px-5 py-3 text-base',
+    xl: 'px-6 py-3.5 text-lg'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg'
+  }
+
+  return (
+    <div
+      className={`flex flex-col gap-2 ${variants[variant]} ${sizes[size]} ${
+        variant === 'default' && colors[color]
+      } ${variant === 'bordered' && borderColors[color]} ${textColors[color]} ${
+        variant !== 'light' && roundeds[rounded]
+      }`}
+    >
+      {title && <h3 className='text-lg font-semibold'>{title}</h3>}
+      <div
+        className={`flex gap-2 ${
+          orientation === 'vertical' ? 'flex-col' : 'flex-row'
+        }`}
+      >
+        {checkboxStates.map(({ id, label, checked, disabled }) => (
+          <Checkbox
+            key={id}
+            id={id}
+            label={label}
+            checked={checked}
+            disabled={disabled}
+            variant='light'
+            color={color}
+            size={size}
+            onChange={() => handleCheckboxChange(id)}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default CheckboxGroup
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `CheckboxGroup`. Este atributo tiene los siguientes valores: `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        variant='default'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        variant='bordered'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        variant='light'
+      />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  variant='default'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  variant='bordered'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  variant='light'
+/>
+```
+
+</CodeBlock>
+
+## Colores
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `CheckboxGroup`. Este atributo tiene los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        color='default'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        color='primary'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        color='secondary'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        color='success'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        color='warning'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        color='danger'
+      />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  color='default'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  color='primary'
+  />
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  color='secondary'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  color='success'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  color='warning'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  color='danger'
+/>
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en el componente `CheckboxGroup`. Este atributo tiene los siguientes valores: `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        size='sm'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        size='md'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        size='lg'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        size='xl'
+      />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  size='sm'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  size='md'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  size='lg'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  size='xl'
+/>
+```
+
+</CodeBlock>
+
+## Bordes redondeados
+
+Para cambiar el borde del componente, se puede utilizar el atributo `rounded` en el componente `CheckboxGroup`. Este atributo tiene los siguientes valores: `none`, `sm`, `md` y `lg`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        rounded='none'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        rounded='sm'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        rounded='md'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        rounded='lg'
+      />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  rounded='none'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  rounded='sm'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  rounded='md'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  rounded='lg'
+/>
+```
+
+</CodeBlock>
+
+## Orientación
+
+Para cambiar la orientación del componente, se puede utilizar el atributo `orientation` en el componente `CheckboxGroup`. Este atributo tiene los siguientes valores: `horizontal` y `vertical`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        orientation='horizontal'
+      />
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <CheckboxGroup
+        client:load
+        title='CheckboxGroup'
+        checkboxes={[
+          { id: 'checkbox-1', label: 'Checkbox 1' },
+          { id: 'checkbox-2', label: 'Checkbox 2' },
+          { id: 'checkbox-3', label: 'Checkbox 3' }
+        ]}
+        orientation='vertical'
+      />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  orientation='horizontal'
+/>
+<CheckboxGroup
+  title='CheckboxGroup'
+  checkboxes={[
+    { id: 'checkbox-1', label: 'Checkbox 1' },
+    { id: 'checkbox-2', label: 'Checkbox 2' },
+    { id: 'checkbox-3', label: 'Checkbox 3' }
+  ]}
+  orientation='vertical'
+/>
+```
+
+</CodeBlock>

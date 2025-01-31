@@ -1,0 +1,423 @@
+---
+name: 'Badge'
+description: 'Un comoponente que muestra un valor en forma de etiqueta.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Badge from '../../components/Badge.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para mostrar información relevante a los usuarios como etiquetas, íconos o botones.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debes definir el atributo `text`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Default' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' />
+```
+
+</CodeBlock>
+
+El código para `Badge` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const Badge = ({
+  type = 'default',
+  text = 'text',
+  color = 'default',
+  size = 'md',
+  rounded = 'full',
+  dot = false,
+  dotColor = 'default',
+  dotPosition = 'top-right',
+  dotText,
+  icon
+}) => {
+  const types = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered:
+      'border border-current shadow-lg bg-transparent dark:bg-transparent',
+    icon: 'p-1 shadow-lg backdrop-blur-sm'
+  }
+
+  const sizes = {
+    sm: 'text-xs px-2 py-0.5',
+    md: 'text-sm px-3 py-1',
+    lg: 'text-base px-4 py-1.5'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-lg',
+    lg: 'rounded-2xl',
+    full: 'rounded-full'
+  }
+
+  const colors = {
+    default: 'bg-neutral-500/20',
+    primary: 'bg-blue-500/40',
+    secondary: 'bg-indigo-500/40',
+    success: 'bg-green-500/40',
+    warning: 'bg-yellow-500/40',
+    danger: 'bg-red-500/20'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const dotColors = {
+    default: 'bg-neutral-500',
+    primary: 'bg-blue-500',
+    secondary: 'bg-indigo-500',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    danger: 'bg-red-500'
+  }
+
+  const dotPositions = {
+    'top-left': 'top-0 left-0 transform -translate-x-1/3 -translate-y-1/3',
+    'top-right': 'top-0 right-0 transform translate-x-1/3 -translate-y-1/3',
+    'bottom-left': 'bottom-0 left-0 transform -translate-x-1/3 translate-y-1/3',
+    'bottom-right': 'bottom-0 right-0 transform translate-x-1/3 translate-y-1/3'
+  }
+
+  const typeClass = types[type]
+  const sizeClass = sizes[size]
+  const roundedClass = roundeds[rounded]
+  const colorClass = colors[color]
+  const textColorClass = textColors[color]
+  const dotPositionClass = dotPositions[dotPosition]
+  const dotColorClass = dotColors[dotColor]
+
+  const content = () => {
+    if (type === 'icon') {
+      return icon ? (
+        <span className='inline-block'>{icon}</span>
+      ) : (
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='currentColor'
+        >
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path d='M14.235 19c.865 0 1.322 1.024 .745 1.668a3.992 3.992 0 0 1 -2.98 1.332a3.992 3.992 0 0 1 -2.98 -1.332c-.552 -.616 -.158 -1.579 .634 -1.661l.11 -.006h4.471z' />
+          <path d='M12 2c1.358 0 2.506 .903 2.875 2.141l.046 .171l.008 .043a8.013 8.013 0 0 1 4.024 6.069l.028 .287l.019 .289v2.931l.021 .136a3 3 0 0 0 1.143 1.847l.167 .117l.162 .099c.86 .487 .56 1.766 -.377 1.864l-.116 .006h-16c-1.028 0 -1.387 -1.364 -.493 -1.87a3 3 0 0 0 1.472 -2.063l.021 -.143l.001 -2.97a8 8 0 0 1 3.821 -6.454l.248 -.146l.01 -.043a3.003 3.003 0 0 1 2.562 -2.29l.182 -.017l.176 -.004z' />
+        </svg>
+      )
+    }
+
+    return text
+  }
+
+  return (
+    <span
+      className={`relative inline-flex items-center justify-center font-medium ${sizeClass} ${roundedClass} ${colorClass} ${textColorClass} ${typeClass}`}
+    >
+      {content()}
+      {dot && (
+        <span
+          className={`absolute ${
+            dotText ? 'px-1 rounded-md' : 'w-2.5 h-2.5 rounded-full'
+          } ${dotColorClass} ${dotPositionClass} `}
+        >
+          {dotText}
+        </span>
+      )}
+    </span>
+  )
+}
+
+export default Badge
+```
+
+</CodeBlock>
+
+## Tipos de etiquetas
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `type` en el componente `Badge`. Este atributo acepta los siguientes valores: `default`, `icon` y `bordered`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Default' type='default' />
+    <Badge client:load type='icon' />
+    <Badge client:load text='Bordered' type='bordered' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' type='default' text='Default' />
+<Badge text='Icon' type='icon' />
+<Badge text='Bordered' type='bordered' text='Bordered' />
+```
+
+</CodeBlock>
+
+## Color
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `Badge`. Este atributo acepta los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-2'>
+    <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+      <Badge client:load text='Default' color='default' />
+      <Badge client:load text='Primary' color='primary' />
+      <Badge client:load text='Secondary' color='secondary' />
+      <Badge client:load text='Success' color='success' />
+      <Badge client:load text='Warning' color='warning' />
+      <Badge client:load text='Danger' color='danger' />
+    </div>
+    <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+      <Badge client:load type='icon' color='default' />
+      <Badge client:load type='icon' color='primary' />
+      <Badge client:load type='icon' color='secondary' />
+      <Badge client:load type='icon' color='success' />
+      <Badge client:load type='icon' color='warning' />
+      <Badge client:load type='icon' color='danger' />
+    </div>
+    <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+      <Badge client:load type='bordered' text='default' color='default' />
+      <Badge client:load type='bordered' text='primary' color='primary' />
+      <Badge client:load type='bordered' text='secondary' color='secondary' />
+      <Badge client:load type='bordered' text='success' color='success' />
+      <Badge client:load type='bordered' text='warning' color='warning' />
+      <Badge client:load type='bordered' text='danger' color='danger' />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' color='default' />
+<Badge text='Primary' color='primary' />
+<Badge text='Secondary' color='secondary' />
+<Badge text='Success' color='success' />
+<Badge text='Warning' color='warning' />
+<Badge text='Danger' color='danger' />
+
+<Badge type='icon' color='default' />
+<Badge type='icon' color='primary' />
+<Badge type='icon' color='secondary' />
+<Badge type='icon' color='success' />
+<Badge type='icon' color='warning' />
+<Badge type='icon' color='danger' />
+
+<Badge type='bordered' text='default' color='default' />
+<Badge type='bordered' text='primary' color='primary' />
+<Badge type='bordered' text='secondary' color='secondary' />
+<Badge type='bordered' text='success' color='success' />
+<Badge type='bordered' text='warning' color='warning' />
+<Badge type='bordered' text='danger' color='danger' />
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en el componente `Badge`. Este atributo acepta los siguientes valores: `sm`, `md` y `lg`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Size sm' color='primary' size='sm' />
+    <Badge client:load text='Size md' color='primary' size='md' />
+    <Badge client:load text='Size lg' color='primary' size='lg' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Size sm' color='primary' size='sm' />
+<Badge text='Size md' color='primary' size='md' />
+<Badge text='Size lg' color='primary' size='lg' />
+```
+
+</CodeBlock>
+
+## Rounded
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `rounded` en el componente `Badge`. Este atributo acepta los siguientes valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Rounded none' color='secondary' rounded='none' />
+    <Badge client:load text='Rounded sm' color='secondary' rounded='sm' />
+    <Badge client:load text='Rounded md' color='secondary' rounded='md' />
+    <Badge client:load text='Rounded lg' color='secondary' rounded='lg' />
+    <Badge client:load text='Rounded full' color='secondary' rounded='full' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Rounded none' color='secondary' rounded='none' />
+<Badge text='Rounded sm' color='secondary' rounded='sm' />
+<Badge text='Rounded md' color='secondary' rounded='md' />
+<Badge text='Rounded lg' color='secondary' rounded='lg' />
+<Badge text='Rounded full' color='secondary' rounded='full' />
+```
+
+</CodeBlock>
+
+## Puntos
+
+Para agregar puntos al componente, simplemente debes agregar el atributo `dot={true}` en el componente `Badge`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Default' color='success' dot={true} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' color='success' dot={true} />
+```
+
+</CodeBlock>
+
+### Posición de puntos
+
+Para cambiar la posición de los puntos del componente, se puede utilizar el atributo `dotPosition` en el componente `Badge`. Este atributo acepta los siguientes valores: `top-left`, `top-right`, `bottom-left` y `bottom-right`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge
+      client:load
+      text='Default'
+      color='warning'
+      dot={true}
+      dotPosition='top-left'
+    />
+    <Badge
+      client:load
+      text='Default'
+      color='warning'
+      dot={true}
+      dotPosition='top-right'
+    />
+    <Badge
+      client:load
+      text='Default'
+      color='warning'
+      dot={true}
+      dotPosition='bottom-left'
+    />
+    <Badge
+      client:load
+      text='Default'
+      color='warning'
+      dot={true}
+      dotPosition='bottom-right'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' color='warning' dot={true} dotPosition='top-left' />
+<Badge text='Default' color='warning' dot={true} dotPosition='top-right' />
+<Badge text='Default' color='warning' dot={true} dotPosition='bottom-left' />
+<Badge text='Default' color='warning' dot={true} dotPosition='bottom-right' />
+```
+
+</CodeBlock>
+
+### Color de puntos
+
+Para cambiar el color de los puntos del componente, se puede utilizar el atributo `dotColor` en el componente `Badge`. Este atributo acepta los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Default' dot={true} dotColor='default' />
+    <Badge client:load text='Default' dot={true} dotColor='primary' />
+    <Badge client:load text='Default' dot={true} dotColor='secondary' />
+    <Badge client:load text='Default' dot={true} dotColor='success' />
+    <Badge client:load text='Default' dot={true} dotColor='warning' />
+    <Badge client:load text='Default' dot={true} dotColor='danger' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' dot={true} dotColor='default' />
+<Badge text='Default' dot={true} dotColor='primary' />
+<Badge text='Default' dot={true} dotColor='secondary' />
+<Badge text='Default' dot={true} dotColor='success' />
+<Badge text='Default' dot={true} dotColor='warning' />
+<Badge text='Default' dot={true} dotColor='danger' />
+```
+
+</CodeBlock>
+
+### Texto de puntos
+
+Para cambiar el texto de los puntos del componente, se puede utilizar el atributo `dotText` en el componente `Badge`. Este atributo acepta cualquier valor.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load text='Default' dot={true} dotText='2' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge text='Default' dot={true} dotText='2' />
+```
+
+</CodeBlock>
+
+## Tipos de iconos
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `icon` en el componente `Badge`.
+
+<Preview>
+  <div class='flex justify-center items-center gap-x-2 w-full m-auto'>
+    <Badge client:load type='icon' icon='😀' />
+    <Badge client:load type='icon' color='primary' icon='😎' />
+    <Badge client:load type='icon' color='secondary' icon='🤓' />
+    <Badge client:load type='icon' color='success' icon='👍 like' />
+    <Badge client:load type='icon' color='danger' icon='👎 dislike' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Badge type='icon' icon='😀' />
+<Badge type='icon' color='primary' icon='😎' />
+<Badge type='icon' color='secondary' icon='🤓' />
+<Badge type='icon' color='success' icon='👍 like' />
+<Badge type='icon' color='danger' icon='👎 dislike' />
+```
+
+</CodeBlock>

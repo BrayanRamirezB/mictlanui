@@ -1,0 +1,358 @@
+---
+name: Tooltip
+description: Permite al usuario mostrar información sobre un elemento
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Button from '../../components/Button.jsx'
+import Tooltip from '../../components/Tooltip.jsx'
+
+## Sobre el componente
+
+Este componente permite al usuario mostrar información contextual o algun tipo de ayuda para comprender mejor un elemento.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debemos definir el atributo `content` del componente `Tooltip`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Tooltip client:load content='Este es un tooltip'>
+      <Button text='Botón con tooltip' />
+    </Tooltip>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tooltip content='Este es un tooltip'>
+  <Button text='Botón con tooltip' />
+</Tooltip>
+```
+
+</CodeBlock>
+
+El código para el componente `Tooltip` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useState, useEffect } from 'react'
+
+const Tooltip = ({
+  children,
+  content,
+  color = 'default',
+  rounded = 'md',
+  placement = 'top',
+  isDisabled = false,
+  delay = 300
+}) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+
+  useEffect(() => {
+    let timeoutId
+
+    if (isHovered && !isDisabled) {
+      timeoutId = setTimeout(() => setIsOpen(true), delay)
+    } else {
+      setIsOpen(false)
+    }
+
+    return () => clearTimeout(timeoutId)
+  }, [isHovered, isDisabled, delay])
+
+  const positions = {
+    top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
+    bottom: 'top-full left-1/2 transform -translate-x-1/2 mt-2',
+    left: 'right-full top-1/2 transform -translate-y-1/2 mr-2',
+    right: 'left-full top-1/2 transform -translate-y-1/2 ml-2'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  return (
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      aria-describedby={isOpen ? 'tooltip-content' : undefined}
+      className='relative flex items-center'
+    >
+      {isOpen && !isDisabled && (
+        <div
+          id='tooltip-content'
+          role='tooltip'
+          data-open={isOpen}
+          data-placement={placement}
+          data-disabled={isDisabled}
+          className={`absolute z-50 border-0 shadow-md backdrop-blur-sm ${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
+          ${roundeds[rounded]}
+          ${textColors[color]}
+          ${colors[color]}
+          `}
+        >
+          {content}
+        </div>
+      )}
+      {children}
+    </div>
+  )
+}
+
+export default Tooltip
+```
+
+</CodeBlock>
+
+## Posicionamiento
+
+Para cambiar el posicionamiento del componente, se puede utilizar el atributo `placement` en el componente `Tooltip`. Este atributo los siguientes valores: `top`, `bottom`, `left` y `right`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
+    <Tooltip client:load content='Este es un tooltip' placement='right'>
+      <Button text='Right tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' placement='left'>
+      <Button text='Left tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' placement='bottom'>
+      <Button text='Bottom tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' placement='top'>
+      <Button text='Top tooltip' />
+    </Tooltip>
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tooltip content='Este es un tooltip' placement='right'>
+  <Button text='Right tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' placement='left'>
+  <Button text='Left tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' placement='bottom'>
+  <Button text='Bottom tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' placement='top'>
+  <Button text='Top tooltip' />
+</Tooltip>
+```
+
+</CodeBlock>
+
+## Color
+
+Este componente tiene un atributo para cambiar su color. Para esto tenemos los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
+    <Tooltip client:load content='Este es un tooltip' color='default'>
+      <Button text='Default tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' color='primary'>
+      <Button text='Primary tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' color='secondary'>
+      <Button text='Secondary tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' color='success'>
+      <Button text='Success tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' color='warning'>
+      <Button text='Warning tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' color='danger'>
+      <Button text='Danger tooltip' />
+    </Tooltip>
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tooltip content='Este es un tooltip' color='default'>
+  <Button text='Default tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' color='primary'>
+  <Button text='Primary tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' color='secondary'>
+  <Button text='Secondary tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' color='success'>
+  <Button text='Success tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' color='warning'>
+  <Button text='Warning tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' color='danger'>
+  <Button text='Danger tooltip' />
+</Tooltip>
+```
+
+</CodeBlock>
+
+## Rounded
+
+Para cambiar el borde del componente, se puede utilizar el atributo `rounded`. Este atributo tiene los siguientes valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
+    <Tooltip client:load content='Este es un tooltip' rounded='none'>
+      <Button text='None tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' rounded='sm'>
+      <Button text='Small tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' rounded='md'>
+      <Button text='Medium tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' rounded='lg'>
+      <Button text='Large tooltip' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' rounded='full'>
+      <Button text='Full tooltip' />
+    </Tooltip>
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tooltip content='Este es un tooltip' rounded='none'>
+  <Button text='None tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' rounded='sm'>
+  <Button text='Small tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' rounded='md'>
+  <Button text='Medium tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' rounded='lg'>
+  <Button text='Large tooltip' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' rounded='full'>
+  <Button text='Full tooltip' />
+</Tooltip>
+```
+
+</CodeBlock>
+
+## Delay
+
+Para cambiar el tiempo de espera antes de mostrar el componente, se puede utilizar el atributo `delay`. Este atributo acepta un valor en milisegundos.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
+    <Tooltip client:load content='Este es un tooltip' delay={1000}>
+      <Button text='Tooltip with delay 1000ms' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' delay={2000}>
+      <Button text='Tooltip with delay 2000ms' />
+    </Tooltip>
+
+    <Tooltip client:load content='Este es un tooltip' delay={3000}>
+      <Button text='Tooltip with delay 3000ms' />
+    </Tooltip>
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tooltip content='Este es un tooltip' delay={1000}>
+  <Button text='Tooltip with delay 1000ms' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' delay={2000}>
+  <Button text='Tooltip with delay 2000ms' />
+</Tooltip>
+
+<Tooltip content='Este es un tooltip' delay={3000}>
+  <Button text='Tooltip with delay 3000ms' />
+</Tooltip>
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+Para deshabilitar el componente, se puede utilizar el atributo `isDisabled = {true}` en el componente `Tooltip`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
+    <Tooltip client:load content='Este es un tooltip' isDisabled={true}>
+      <Button text='Disabled tooltip' />
+    </Tooltip>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tooltip content='Este es un tooltip' isDisabled={true}>
+  <Button text='Disabled tooltip' />
+</Tooltip>
+```
+
+</CodeBlock>

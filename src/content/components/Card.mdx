@@ -1,0 +1,1991 @@
+---
+name: 'Card'
+description: 'Un componente que muestra información en un formato agradable.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomCard from '../../components/Card/CustomCard.jsx'
+import Card from '../../components/Card/Card.jsx'
+import CardHeader from '../../components/Card/CardHeader.jsx'
+import CardContent from '../../components/Card/CardContent.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza como contenedor para texto, imágenes y acciones de un tema en específico.
+
+## Uso básico
+
+Para mostrar el funcionamiento del componente, utilizaremos el componente `CustomCard` que se encarga de mostrar la información que se le pase como propiedad.
+`CustomCard` hace uso de los componentes principales `Card`, `CardHeader` y `CardContent` para mostrar la información.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomCard
+      client:load
+      title='Card'
+      description='This is a card.'
+      imageUrl='/img-preview1.webp'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<CustomCard
+  title='Card'
+  description='This is a card.'
+  imageUrl='/img-preview1.webp'
+/>
+```
+
+</CodeBlock>
+
+El componente `CustomCard` tiene los siguientes atributos:
+
+- `title`: Título del componente.
+- `description`: Descripción del componente.
+- `imageUrl`: URL de la imagen del componente.
+- `actions`: Acciones del componente.
+
+El código para `CustomCard` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const CustomCard = ({ title, description, imageUrl, actions }) => {
+  return (
+    <Card maxWidth='xs' shadow='md' rounded='lg' color='default'>
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={title || 'Card image'}
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+      )}
+      <CardHeader textSize='lg' padding='md' font='bold'>
+        <h3>{title}</h3>
+      </CardHeader>
+      <CardContent textSize='sm'>
+        <p>{description}</p>
+        {actions && <div className='mt-4 flex gap-2'>{actions}</div>}
+      </CardContent>
+    </Card>
+  )
+}
+
+export default CustomCard
+```
+
+</CodeBlock>
+
+Con respecto al código de los componentes principales `Card`, `CardHeader` y `CardContent`:
+
+<CodeBlock client:load>
+
+```jsx
+const Card = ({
+  children,
+  color = 'default',
+  imgBackground,
+  isLink = false,
+  href = '#',
+  rounded = 'md',
+  border = false,
+  shadow = 'md',
+  maxWidth = 'sm',
+  padding = 'none',
+  height = 'auto',
+  className = ''
+}) => {
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
+    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
+    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
+    success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
+    warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
+    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+  }
+
+  const shadowSizes = {
+    none: 'shadow-none',
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    xl: 'shadow-xl',
+    xxl: 'shadow-2xl'
+  }
+
+  const borderColors = {
+    default: 'border-neutral-100/40 dark:border-zinc-700/60',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const maxWidths = {
+    xs: 'max-w-xs',
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    xxl: 'max-w-2xl',
+    xxxl: 'max-w-3xl',
+    ivxl: 'max-w-4xl',
+    vxl: 'max-w-5xl',
+    vixl: 'max-w-6xl'
+  }
+
+  const paddings = {
+    none: 'p-0',
+    xs: 'p-1',
+    sm: 'p-2',
+    md: 'p-4',
+    lg: 'p-6',
+    xl: 'p-8',
+    xxl: 'p-12',
+    xxxl: 'p-16',
+    ivxl: 'p-20',
+    vxl: 'p-24',
+    vixl: 'p-28'
+  }
+
+  const heights = {
+    auto: 'h-auto',
+    screen: 'h-screen',
+    fit: 'h-fit',
+    full: 'h-full',
+    sm: 'h-20',
+    md: 'h-60',
+    lg: 'h-80',
+    xl: 'h-96'
+  }
+
+  const Component = isLink ? 'a' : 'div'
+
+  return (
+    <Component
+      href={isLink ? href : undefined}
+      className={` 
+          w-full overflow-hidden backdrop-blur-sm
+          ${heights[height]}
+          ${paddings[padding]}
+          ${isLink ? hoverColors[color] : ''}
+          ${shadowSizes[shadow]}
+          ${roundeds[rounded]}
+          ${border ? `border ${borderColors[color]}` : ''}
+          ${maxWidths[maxWidth]}
+          ${!imgBackground && colors[color]}
+          ${className}
+        `}
+      style={
+        imgBackground
+          ? {
+              backgroundImage: `url('${imgBackground}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }
+          : {}
+      }
+    >
+      {children}
+    </Component>
+  )
+}
+
+export default Card
+```
+
+</CodeBlock>
+
+<CodeBlock client:load>
+
+```jsx
+const CardHeader = ({
+  children,
+  textColor = 'default',
+  textHoverColor,
+  font = 'bold',
+  textSize = 'lg',
+  textAlign = 'left',
+  padding = 'md',
+  isLink = false,
+  href = '#'
+}) => {
+  const textColors = {
+    default: 'text-zinc-700 dark:text-neutral-100/80',
+    primary: 'text-blue-500',
+    secondary: 'text-indigo-500',
+    success: 'text-green-500',
+    warning: 'text-yellow-500',
+    danger: 'text-red-500'
+  }
+
+  const textHoverColors = {
+    default: 'hover:text-zinc-900 dark:hover:text-neutral-100',
+    primary: 'hover:text-blue-600 dark:hover:text-blue-500',
+    secondary: 'hover:text-indigo-600 dark:hover:text-indigo-500',
+    success: 'hover:text-green-600 dark:hover:text-green-500',
+    warning: 'hover:text-yellow-600 dark:hover:text-yellow-500',
+    danger: 'hover:text-red-600 dark:hover:text-red-500'
+  }
+
+  const fonts = {
+    bold: 'font-bold',
+    semibold: 'font-semibold',
+    medium: 'font-medium',
+    normal: 'font-normal',
+    light: 'font-light',
+    extrabold: 'font-extrabold'
+  }
+
+  const textSizes = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    xxl: 'text-2xl'
+  }
+
+  const textAligns = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right'
+  }
+
+  const paddings = {
+    none: 'p-0',
+    xs: 'p-1',
+    sm: 'p-2',
+    md: 'p-4',
+    lg: 'p-6',
+    xl: 'p-8'
+  }
+
+  const Component = isLink ? 'a' : 'div'
+
+  return (
+    <Component
+      href={isLink ? href : undefined}
+      className={`
+        ${textColors[textColor]} 
+        ${textHoverColor && textHoverColors[textHoverColor]} 
+        ${fonts[font]} 
+        ${textSizes[textSize]} 
+        ${textAligns[textAlign]} 
+        ${paddings[padding]}`}
+    >
+      {children}
+    </Component>
+  )
+}
+
+export default CardHeader
+```
+
+</CodeBlock>
+
+<CodeBlock client:load>
+
+```jsx
+const CardContent = ({
+  children,
+  textColor = 'default',
+  font,
+  textSize = 'sm',
+  textAlign = 'left',
+  padding = 'md'
+}) => {
+  const textColors = {
+    default: 'text-zinc-700/80 dark:text-neutral-100/70',
+    primary: 'text-blue-500/80',
+    secondary: 'text-indigo-500/80',
+    success: 'text-green-500/80',
+    warning: 'text-yellow-500/80',
+    danger: 'text-red-500/80'
+  }
+
+  const fonts = {
+    bold: 'font-bold',
+    semibold: 'font-semibold',
+    medium: 'font-medium',
+    normal: 'font-normal',
+    light: 'font-light',
+    extrabold: 'font-extrabold'
+  }
+
+  const textSizes = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    xxl: 'text-2xl'
+  }
+
+  const textAligns = {
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right'
+  }
+
+  const paddings = {
+    none: 'p-0',
+    xs: 'p-1',
+    sm: 'p-2',
+    md: 'p-4',
+    lg: 'p-6',
+    xl: 'p-8'
+  }
+
+  return (
+    <div
+      className={`
+        ${textColors[textColor]} 
+        ${fonts[font]} 
+        ${textSizes[textSize]} 
+        ${textAligns[textAlign]} 
+        ${paddings[padding]}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default CardContent
+```
+
+</CodeBlock>
+
+## Card
+
+El componente `Card` tiene los siguientes atributos:
+
+- `children`: Contenido del componente.
+- `color`: Color del componente.
+- `imgBackground`: URL de la imagen de fondo del componente.
+- `isLink`: Si el componente es un enlace.
+- `href`: URL del enlace del componente.
+- `rounded`: Tamaño del borde del componente.
+- `border`: Si el componente tiene un borde.
+- `shadow`: Tamaño del sombreado del componente.
+- `maxWidth`: Tamaño máximo del componente.
+- `padding`: Tamaño del padding del componente.
+- `height`: Tamaño del componente.
+- `className`: Clase adicional del componente.
+
+### Color
+
+Este componente tiene un atributo para cambiar su color. Para esto tenemos los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+        <Card client:load color='default'>
+        <img
+            src='/img-preview2.webp'
+            alt='Card image'
+            className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+            <h3>Default</h3>
+        </CardHeader>
+        </Card>
+
+        <Card client:load color='primary'>
+        <img
+            src='/img-preview2.webp'
+            alt='Card image'
+            className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+            <h3>Primary</h3>
+        </CardHeader>
+        </Card>
+
+        <Card client:load color='secondary'>
+        <img
+            src='/img-preview2.webp'
+            alt='Card image'
+            className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+            <h3>Secondary</h3>
+        </CardHeader>
+        </Card>
+    </div>
+
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+        <Card client:load color='success'>
+        <img
+            src='/img-preview2.webp'
+            alt='Card image'
+            className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+            <h3>Success</h3>
+        </CardHeader>
+        </Card>
+
+        <Card color='warning' >
+        <img
+            src='/img-preview2.webp'
+            alt='Card image'
+            className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+            <h3>Warning</h3>
+        </CardHeader>
+        </Card>
+
+        <Card color='danger'>
+        <img
+            src='/img-preview2.webp'
+            alt='Card image'
+            className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+            <h3>Danger</h3>
+        </CardHeader>
+        </Card>
+    </div>
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card color='default'>
+    <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+    />
+    <CardHeader>
+        <h3>Default</h3>
+    </CardHeader>
+</Card>
+
+<Card color='primary'>
+    <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+    />
+    <CardHeader>
+        <h3>Primary</h3>
+    </CardHeader>
+</Card>
+
+<Card color='secondary'>
+    <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+    />
+    <CardHeader>
+        <h3>Secondary</h3>
+    </CardHeader>
+</Card>
+
+<Card color='success'>
+    <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+    />
+    <CardHeader>
+        <h3>Success</h3>
+    </CardHeader>
+</Card>
+
+<Card color='warning' >
+    <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+    />
+    <CardHeader>
+        <h3>Warning</h3>
+    </CardHeader>
+</Card>
+
+<Card color='danger'>
+    <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+    />
+    <CardHeader >
+        <h3>Danger</h3>
+    </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Imagen de fondo
+
+Para agregar una imagen de fondo al componente, simplemente debes agregar el atributo `imgBackground` en el componente `Card`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load imgBackground='/img-preview3.webp' height='xl'>
+      <CardHeader client:load textAlign='center'>
+        <div className='px-2 m-auto backdrop-blur-md text-gray-400 bg-white/10 dark:bg-zinc-700/30 rounded-md'>
+          <h3>Imagen de fondo</h3>
+        </div>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card imgBackground='/img-preview3.webp' height='xl'>
+  <CardHeader textAlign='center'>
+    <div className='px-2 m-auto backdrop-blur-md text-gray-400 bg-white/10 dark:bg-zinc-700/30 rounded-md'>
+      <h3>Imagen de fondo</h3>
+    </div>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Enlace
+
+Para agregar un enlace al componente, simplemente debes agregar el atributo `isLink={true}` en el componente `Card`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load isLink={true} href='/'>
+      <img
+        src='/img-preview4.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover'
+      />
+      <CardHeader client:load>
+        <h3>Enlace</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card isLink={true} href='/' color='primary'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover'
+  />
+  <CardHeader>
+    <h3>Enlace</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Rounded
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `rounded` en el componente `Card`. Este atributo acepta los valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load rounded='none'>
+      <img
+        src='/img-preview1.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-none'
+      />
+      <CardHeader client:load>
+        <h3>Rounded none</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load rounded='sm'>
+      <img
+        src='/img-preview1.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-sm'
+      />
+      <CardHeader client:load>
+        <h3>Rounded sm</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load rounded='md'>
+      <img
+        src='/img-preview1.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-md'
+      />
+      <CardHeader client:load>
+        <h3>Rounded md</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load rounded='lg'>
+      <img
+        src='/img-preview1.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-lg'
+      />
+      <CardHeader client:load>
+        <h3>Rounded lg</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load rounded='full'>
+      <img
+        src='/img-preview1.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-full'
+      />
+      <CardHeader client:load>
+        <h3>Rounded full</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card rounded='none'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-none'
+  />
+  <CardHeader>
+    <h3>Rounded none</h3>
+  </CardHeader>
+</Card>
+<Card rounded='sm'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-sm'
+  />
+  <CardHeader>
+    <h3>Rounded sm</h3>
+  </CardHeader>
+</Card>
+<Card rounded='md'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-md'
+  />
+  <CardHeader>
+    <h3>Rounded md</h3>
+  </CardHeader>
+</Card>
+<Card rounded='lg'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-lg'
+  />
+  <CardHeader>
+    <h3>Rounded lg</h3>
+  </CardHeader>
+</Card>
+<Card rounded='full'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-full'
+  />
+  <CardHeader>
+    <h3>Rounded full</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Borde
+
+Para agregar un borde al componente, simplemente debes agregar el atributo `border={true}` en el componente `Card`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load border={true} color='danger'>
+      <img
+        src='/img-preview2.webp'
+        alt='Card image'
+        className='w-full h-40 object-cover rounded-t-lg'
+      />
+      <CardHeader client:load>
+        <h3>Border</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card border={true} color='danger'>
+  <img
+    src='/img-preview2.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Border</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Sombreado
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `shadow` en el componente `Card`. Este atributo acepta los valores: `none`, `sm`, `md`, `lg`, `xl` y `xxl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load color='secondary' shadow='none'>
+        <img
+          src='/img-preview3.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Shadow none</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load color='secondary' shadow='sm'>
+        <img
+          src='/img-preview3.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Shadow sm</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load color='secondary' shadow='md'>
+        <img
+          src='/img-preview3.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Shadow md</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load color='secondary' shadow='lg'>
+        <img
+          src='/img-preview3.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Shadow lg</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load color='secondary' shadow='xl'>
+        <img
+          src='/img-preview3.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Shadow xl</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load color='secondary' shadow='xxl'>
+        <img
+          src='/img-preview3.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Shadow xxl</h3>
+        </CardHeader>
+      </Card>
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card color='secondary' shadow='none'>
+  <img
+    src='/img-preview3.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Shadow none</h3>
+  </CardHeader>
+</Card>
+<Card color='secondary' shadow='sm'>
+  <img
+    src='/img-preview3.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Shadow sm</h3>
+  </CardHeader>
+</Card>
+<Card color='secondary' shadow='md'>
+  <img
+    src='/img-preview3.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Shadow md</h3>
+  </CardHeader>
+</Card>
+<Card color='secondary' shadow='lg'>
+  <img
+    src='/img-preview3.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Shadow lg</h3>
+  </CardHeader>
+</Card>
+<Card color='secondary' shadow='xl'>
+  <img
+    src='/img-preview3.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Shadow xl</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Tamaño máximo
+
+Para cambiar el tamaño máximo del componente, se puede utilizar el atributo `maxWidth` en el componente `Card`. Este atributo acepta los valores: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`, `ivxl`, `vxl` y `vixl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load maxWidth='xs'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Max width xs</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load maxWidth='sm'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Max width sm</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load maxWidth='md'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Max width md</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load maxWidth='lg'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Max width lg</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load maxWidth='xl'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Max width xl</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load maxWidth='xxl'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Max width xxl</h3>
+        </CardHeader>
+      </Card>
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card maxWidth='xs'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Max width xs</h3>
+  </CardHeader>
+</Card>
+<Card maxWidth='sm'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Max width sm</h3>
+  </CardHeader>
+</Card>
+<Card maxWidth='md'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Max width md</h3>
+  </CardHeader>
+</Card>
+<Card maxWidth='lg'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Max width lg</h3>
+  </CardHeader>
+</Card>
+<Card maxWidth='xl'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Max width xl</h3>
+  </CardHeader>
+</Card>
+<Card maxWidth='xxl'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Max width xxl</h3>
+  </CardHeader>
+</Card>
+
+```
+
+</CodeBlock>
+
+### Padding
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `padding` en el componente `Card`. Este atributo acepta los valores: `none`, `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`, `ivxl`, `vxl` y `vixl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load padding='none'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load padding='none'>
+          <h3>Padding none</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load padding='xs'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load padding='none'>
+          <h3>Padding xs</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load padding='sm'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load padding='none'>
+          <h3>Padding sm</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load padding='md'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load padding='none'>
+          <h3>Padding md</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load padding='lg'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load padding='none'>
+          <h3>Padding lg</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load padding='xl'>
+        <img
+          src='/img-preview4.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load padding='none'>
+          <h3>Padding xl</h3>
+        </CardHeader>
+      </Card>
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card padding='none'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Padding none</h3>
+  </CardHeader>
+</Card>
+<Card padding='xs'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Padding xs</h3>
+  </CardHeader>
+</Card>
+<Card padding='sm'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Padding sm</h3>
+  </CardHeader>
+</Card>
+<Card padding='md'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Padding md</h3>
+  </CardHeader>
+</Card>
+<Card padding='lg'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Padding lg</h3>
+  </CardHeader>
+</Card>
+<Card padding='xl'>
+  <img
+    src='/img-preview4.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Padding xl</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Altura
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `height` en el componente `Card`. Este atributo acepta los valores: `auto`, `screen`, `fit`, `full`, `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load height='auto'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height auto</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load height='screen'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height screen</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load height='full'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height full</h3>
+        </CardHeader>
+      </Card>
+    </div>
+    <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+      <Card client:load height='sm'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height sm</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load height='md'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height md</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load height='lg'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height lg</h3>
+        </CardHeader>
+      </Card>
+      <Card client:load height='xl'>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader client:load>
+          <h3>Height xl</h3>
+        </CardHeader>
+      </Card>
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card height='auto'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height auto</h3>
+  </CardHeader>
+</Card>
+<Card height='screen'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height screen</h3>
+  </CardHeader>
+</Card>
+<Card height='full'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height full</h3>
+  </CardHeader>
+</Card>
+<Card height='sm'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height sm</h3>
+  </CardHeader>
+</Card>
+<Card height='md'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height md</h3>
+  </CardHeader>
+</Card>
+<Card height='lg'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height lg</h3>
+  </CardHeader>
+</Card>
+<Card height='xl'>
+  <img
+    src='/img-preview1.webp'
+    alt='Card image'
+    className='w-full h-40 object-cover rounded-t-lg'
+  />
+  <CardHeader>
+    <h3>Height xl</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+## CardHeader
+
+El componente `CardHeader` tiene los siguientes atributos:
+
+- `textColor`: Color del texto del componente.
+- `textHoverColor`: Color del texto del componente al pasar el ratón por encima.
+- `font`: Tipografía del texto del componente.
+- `textSize`: Tamaño del texto del componente.
+- `textAlign`: Alineación del texto del componente.
+- `padding`: Tamaño del padding del componente.
+- `isLink`: Si el componente es un enlace.
+- `href`: URL del enlace del componente.
+- `className`: Clase adicional del componente.
+
+### Color
+
+Este componente tiene un atributo para cambiar su color. Para esto tenemos los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardHeader client:load textColor='primary'>
+        <h3>Default</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textColor='secondary'>
+        <h3>Secondary</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textColor='success'>
+        <h3>Success</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textColor='warning'>
+        <h3>Warning</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textColor='danger'>
+        <h3>Danger</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardHeader textColor='primary'>
+    <h3>Default</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textColor='secondary'>
+    <h3>Secondary</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textColor='success'>
+    <h3>Success</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textColor='warning'>
+    <h3>Warning</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textColor='danger'>
+    <h3>Danger</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Color al pasar el ratón
+
+Para cambiar el color del componente al pasar el ratón por encima, simplemente debes agregar el atributo `textHoverColor` en el componente `CardHeader`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardHeader client:load textHoverColor='default'>
+        <h3>Default</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textHoverColor='primary'>
+        <h3>Secondary</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textHoverColor='success'>
+        <h3>Success</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textHoverColor='warning'>
+        <h3>Warning</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textHoverColor='danger'>
+        <h3>Danger</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card >
+  <CardHeader textHoverColor='default'>
+    <h3>Default</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader textHoverColor='secondary'>
+    <h3>Secondary</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textHoverColor='success'>
+    <h3>Success</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textHoverColor='warning'>
+    <h3>Warning</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textHoverColor='danger'>
+    <h3>Danger</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Tipografía
+
+Para cambiar el tipo de letra del componente, se puede utilizar el atributo `font` en el componente `CardHeader`. Este atributo acepta los valores: `bold`, `semibold`, `medium`, `normal`, `light` y `extrabold`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardHeader client:load font='bold'>
+        <h3>Bold</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load font='normal'>
+        <h3>Normal</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load font='extrabold'>
+        <h3>Extrabold</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardHeader font='bold'>
+    <h3>Bold</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader font='normal'>
+    <h3>Normal</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader font='extrabold'>
+    <h3>Extrabold</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Tamaño del texto
+
+Para cambiar el tamaño del texto del componente, se puede utilizar el atributo `textSize` en el componente `CardHeader`. Este atributo acepta los valores: `xs`, `sm`, `md`, `lg`, `xl` y `xxl`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardHeader client:load textSize='xs'>
+        <h3>xs</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textSize='md'>
+        <h3>md</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textSize='lg'>
+        <h3>lg</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textSize='xxl'>
+        <h3>xxl</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardHeader textSize='xs'>
+    <h3>xs</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader textSize='md'>
+    <h3>md</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader textSize='lg'>
+    <h3>lg</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader textSize='xxl'>
+    <h3>xxl</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Alineación del texto
+
+Para cambiar la alineación del texto del componente, se puede utilizar el atributo `textAlign` en el componente `CardHeader`. Este atributo acepta los valores: `left`, `center` y `right`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardHeader client:load textAlign='left'>
+        <h3>Left</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textAlign='center'>
+        <h3>Center</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load textAlign='right'>
+        <h3>Right</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card >
+  <CardHeader textAlign='left'>
+    <h3>Left</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textAlign='center'>
+    <h3>Center</h3>
+  </CardHeader>
+</Card>
+<Card >
+  <CardHeader textAlign='right'>
+    <h3>Right</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Padding
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `padding` en el componente `CardHeader`. Este atributo acepta los valores: `none`, `xs`, `sm`, `md`, `lg`, `xl` y `xxl`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardHeader client:load padding='none'>
+        <h3>Padding none</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load padding='sm'>
+        <h3>Padding sm</h3>
+      </CardHeader>
+    </Card>
+    <Card client:load>
+      <CardHeader client:load padding='lg'>
+        <h3>Padding lg</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardHeader padding='none'>
+    <h3>Padding none</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader padding='sm'>
+    <h3>Padding sm</h3>
+  </CardHeader>
+</Card>
+<Card>
+  <CardHeader padding='lg'>
+    <h3>Padding lg</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+### Enlace
+
+Para agregar un enlace al componente, simplemente debes agregar el atributo `isLink={true}` en el componente `CardHeader`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load isLink={true} href='/'>
+      <CardHeader client:load>
+        <h3>Enlace</h3>
+      </CardHeader>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card isLink={true} href='/'>
+  <CardHeader>
+    <h3>Enlace</h3>
+  </CardHeader>
+</Card>
+```
+
+</CodeBlock>
+
+## CardContent
+
+El componente `CardContent` tiene los siguientes atributos:
+
+- `textColor`: Color del texto del componente.
+- `font`: Tipografía del texto del componente.
+- `textSize`: Tamaño del texto del componente.
+- `textAlign`: Alineación del texto del componente.
+- `padding`: Tamaño del padding del componente.
+- `className`: Clase adicional del componente.
+
+### Color
+
+Este componente tiene un atributo para cambiar su color. Para esto tenemos los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardContent client:load textColor='primary'>
+        <p>Default</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textColor='secondary'>
+        <p>Secondary</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textColor='success'>
+        <p>Success</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textColor='warning'>
+        <p>Warning</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textColor='danger'>
+        <p>Danger</p>
+      </CardContent>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardContent textColor='primary'>
+    <p>Default</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textColor='secondary'>
+    <p>Secondary</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textColor='success'>
+    <p>Success</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textColor='warning'>
+    <p>Warning</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textColor='danger'>
+    <p>Danger</p>
+  </CardContent>
+</Card>
+```
+
+</CodeBlock>
+
+### Tipografía
+
+Para cambiar el tipo de letra del componente, se puede utilizar el atributo `font` en el componente `CardContent`. Este atributo acepta los valores: `bold`, `semibold`, `medium`, `normal`, `light` y `extrabold`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardContent client:load font='bold'>
+        <p>Bold</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load font='normal'>
+        <p>Normal</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load font='extrabold'>
+        <p>Extrabold</p>
+      </CardContent>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardContent font='bold'>
+    <p>Bold</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent font='normal'>
+    <p>Normal</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent font='extrabold'>
+    <p>Extrabold</p>
+  </CardContent>
+</Card>
+```
+
+</CodeBlock>
+
+### Tamaño del texto
+
+Para cambiar el tamaño del texto del componente, se puede utilizar el atributo `textSize` en el componente `CardContent`. Este atributo acepta los valores: `xs`, `sm`, `md`, `lg`, `xl` y `xxl`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardContent client:load textSize='xs'>
+        <p>xs</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textSize='md'>
+        <p>md</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textSize='lg'>
+        <p>lg</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textSize='xxl'>
+        <p>xxl</p>
+      </CardContent>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardContent textSize='xs'>
+    <p>xs</p>
+  </CardContent>
+  </Card>
+<Card>
+  <CardContent textSize='md'>
+    <p>md</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textSize='lg'>
+    <p>lg</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textSize='xxl'>
+    <p>xxl</p>
+  </CardContent>
+</Card>
+```
+
+</CodeBlock>
+
+### Alineación del texto
+
+Para cambiar la alineación del texto del componente, se puede utilizar el atributo `textAlign` en el componente `CardContent`. Este atributo acepta los valores: `left`, `center` y `right`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardContent client:load textAlign='left'>
+        <p>Left</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textAlign='center'>
+        <p>Center</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load textAlign='right'>
+        <p>Right</p>
+      </CardContent>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardContent textAlign='left'>
+    <p>Left</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textAlign='center'>
+    <p>Center</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent textAlign='right'>
+    <p>Right</p>
+  </CardContent>
+</Card>
+```
+
+</CodeBlock>
+
+### Padding
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `padding` en el componente `CardContent`. Este atributo acepta los valores: `none`, `xs`, `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Card client:load>
+      <CardContent client:load padding='none'>
+        <p>Padding none</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load padding='sm'>
+        <p>Padding sm</p>
+      </CardContent>
+    </Card>
+    <Card client:load>
+      <CardContent client:load padding='lg'>
+        <p>Padding lg</p>
+      </CardContent>
+    </Card>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Card>
+  <CardContent padding='none'>
+    <p>Padding none</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent padding='sm'>
+    <p>Padding sm</p>
+  </CardContent>
+</Card>
+<Card>
+  <CardContent padding='lg'>
+    <p>Padding lg</p>
+  </CardContent>
+</Card>
+```
+
+</CodeBlock>

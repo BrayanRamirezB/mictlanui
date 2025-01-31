@@ -1,0 +1,686 @@
+---
+name: 'Tabs'
+description: 'Permite a los usuarios navegar entre diferentes secciones de una página.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomTab from '../../components/Tabs/CustomTab.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para organizar contenido en multiples secciones permitiendo al usuario navegar entre dichas secciones.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debemos utilizar el componente `Tabs` y dentro de él, el componente `Tab`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomTab client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+El código para el componente `Tab` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const Tab = ({ label, children, disabled = false, href }) => {
+  return <div>{children}</div>
+}
+
+export default Tab
+```
+
+</CodeBlock>
+
+El código para el componente `Tabs` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import React, { useState } from 'react'
+
+const Tabs = ({
+  children,
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  radius = 'md',
+  placement = 'top',
+  orientation = 'horizontal',
+  disabled = false
+}) => {
+  const [activeTab, setActiveTab] = useState(0)
+
+  const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row'
+
+  const placementClass = {
+    top: 'flex-col',
+    bottom: 'flex-col-reverse',
+    left: 'flex-row ',
+    right: 'flex-row-reverse'
+  }[placement]
+
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-md',
+    light: 'border-b'
+  }
+
+  const activeVariants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border',
+    light: 'border-b-2'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const noActiveTextColors = {
+    default: 'text-gray-800/50 dark:text-gray-300/50',
+    primary: 'text-blue-800/50 dark:text-blue-500/50',
+    secondary: 'text-indigo-800/50 dark:text-indigo-500/50',
+    success: 'text-green-800/50 dark:text-green-500/50',
+    warning: 'text-yellow-800/50 dark:text-yellow-500/50',
+    danger: 'text-red-800/50 dark:text-red-500/50'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const hoverColors = {
+    default: 'hover:text-neutral-100/80 dark:hover:text-zinc-700/80 ',
+    primary: 'hover:text-blue-500/50 dark:hover:text-blue-500/50',
+    secondary: 'hover:text-indigo-500/50 dark:hover:text-indigo-500/50',
+    success: 'hover:text-green-500/80 dark:hover:text-green-500/60',
+    warning: 'hover:text-yellow-500/80 dark:hover:text-yellow-500/50',
+    danger: 'hover:text-red-500/50 dark:hover:text-red-500/50'
+  }
+
+  const sizes = {
+    sm: 'px-3 py-2 text-xs',
+    md: 'px-4 py-2.5 text-sm',
+    lg: 'px-5 py-3 text-base',
+    xl: 'px-6 py-3.5 text-lg'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  return (
+    <div className={`flex ${placementClass}`}>
+      {/* Botones de las pestañas */}
+      <div
+        className={`flex ${orientationClass} ${variants[variant]} ${
+          variant === 'default' && colors[color]
+        } ${variant !== 'default' && borderColors[color]} 
+        ${sizes[size]}
+        ${variant !== 'light' && roundeds[radius]}
+        `}
+      >
+        {React.Children.map(children, (child, index) => {
+          const isDisabled = child.props.disabled
+          const isLink = child.props.href
+
+          return (
+            <button
+              key={index}
+              onClick={() => !isDisabled && !disabled && setActiveTab(index)}
+              className={`px-4 py-2 transition-colors duration-300 ease-in-out ${
+                activeTab === index
+                  ? `${activeVariants[variant]} ${borderColors[color]} ${
+                      textColors[color]
+                    } ${variant !== 'light' && roundeds[radius]}`
+                  : noActiveTextColors[color]
+              } ${
+                isDisabled || disabled
+                  ? 'opacity-50 cursor-not-allowed'
+                  : hoverColors[color]
+              }`}
+              disabled={isDisabled}
+            >
+              {isLink ? (
+                <a
+                  href={child.props.href}
+                  className={`block ${
+                    isDisabled || disabled ? 'pointer-events-none' : ''
+                  }`}
+                >
+                  {child.props.label}
+                </a>
+              ) : (
+                child.props.label
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Contenido de las pestañas */}
+      <div className={`p-4 ${textColors[color]}`}>
+        {React.Children.map(children, (child, index) =>
+          activeTab === index ? child.props.children : null
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default Tabs
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `Tabs`. Este atributo tiene los siguientes valores: `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load variant='default' />
+    <CustomTab client:load variant='bordered' />
+    <CustomTab client:load variant='light' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs variant='default'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs variant='bordered'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs variant='light'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Color
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `Tabs`. Este atributo tiene los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load color='default' />
+    <CustomTab client:load color='primary' />
+    <CustomTab client:load color='secondary' />
+    <CustomTab client:load color='success' />
+    <CustomTab client:load color='warning' />
+    <CustomTab client:load color='danger' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs color='default'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs color='primary'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs color='secondary'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs color='success'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs color='warning'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs color='danger'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Tamaño
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en el componente `Tabs`. Este atributo tiene los siguientes valores: `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load size='sm' />
+    <CustomTab client:load size='md' />
+    <CustomTab client:load size='lg' />
+    <CustomTab client:load size='xl' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs size='sm'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs size='md'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs size='lg'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs size='xl'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Redondeo
+
+Para cambiar el redondeo del componente, se puede utilizar el atributo `radius` en el componente `Tabs`. Este atributo tiene los siguientes valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load radius='none' />
+    <CustomTab client:load radius='sm' />
+    <CustomTab client:load radius='md' />
+    <CustomTab client:load radius='lg' />
+    <CustomTab client:load radius='full' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs radius='none'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs radius='sm'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs radius='md'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs radius='lg'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs radius='full'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Orientación
+
+Para cambiar la orientación del componente, se puede utilizar el atributo `orientation` en el componente `Tabs`. Este atributo tiene los siguientes valores: `horizontal` y `vertical`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load orientation='horizontal' />
+    <CustomTab client:load orientation='vertical' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs orientation='horizontal'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs orientation='vertical'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Posición
+
+Para cambiar la posición del componente, se puede utilizar el atributo `placement` en el componente `Tabs`. Este atributo tiene los siguientes valores: `top`, `bottom`, `left` y `right`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load placement='top' />
+    <CustomTab client:load placement='bottom' />
+    <CustomTab client:load placement='left' />
+    <CustomTab client:load placement='right' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs placement='top'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs placement='bottom'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs placement='left'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+<Tabs placement='right'>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Deshabilitado total
+
+Para deshabilitar el componente, simplemente debes agregar el atributo `disabled={true}` en el componente `Tabs`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load disabled={true} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs disabled={true}>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Deshabilitado de una pestaña
+
+Para deshabilitar un pestaña en particular, simplemente debes agregar el atributo `disabled={true}` en el componente `Tab`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load isDisabled={true} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2' disabled={true}>
+    <div>Contenido de la pestaña 2 (deshabilitada)</div>
+  </Tab>
+  <Tab label='Tab 3'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>
+
+## Enlace
+
+Para agregar un enlace a una pestaña, simplemente debes agregar el atributo `href` en el componente `Tab`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <CustomTab client:load href='#' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Tabs>
+  <Tab label='Tab 1'>
+    <div>Contenido de la pestaña 1</div>
+  </Tab>
+  <Tab label='Tab 2'>
+    <div>Contenido de la pestaña 2 (enlace)</div>
+  </Tab>
+  <Tab label='Tab 3' href='#'>
+    <div>Contenido de la pestaña 3</div>
+  </Tab>
+</Tabs>
+```
+
+</CodeBlock>

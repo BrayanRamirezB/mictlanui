@@ -1,0 +1,531 @@
+---
+name: 'Accordion'
+description: 'Un componente que permite mostrar y ocultar elementos de una lista.'
+---
+
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Preview from '../../components/Preview.astro'
+import Accordion from '../../components/Accordion/Accordion.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para mostrar información compleja o detalles de manera clara y concisa.
+
+Está compuesto por dos elementos principales:
+
+- Un componente `Accordion` que se encarga de renderizar los items de la lista.
+- Un componente `AccordionItem` que se encarga de mostrar el contenido del accordion.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debes definir una lista de objetos con las propiedades **_title_** y **_content_**. Luego, debes renderizar el componente `Accordion` y pasar la lista de objetos como propiedad _**items**_.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+/>
+```
+
+</CodeBlock>
+
+El código para `AccordionItem` es el siguiente:
+
+<CodeBlock client:load>
+
+    ```jsx
+    const AccordionItem = ({
+      index,
+      title,
+      subtitle,
+      content,
+      isActive,
+      toggle,
+      styleVariant
+    }) => {
+      const variants = {
+        default:
+          'border-0 shadow-lg dark:shadow-neutral-100/5 backdrop-blur-md bg-neutral-100/20 dark:bg-zinc-700/30 hover:bg-white/50 dark:hover:bg-zinc-800 ',
+        light: 'border-b-2 border-zinc-700/20 dark:border-neutral-100/30',
+        bordered:
+          'border rounded-sm border-zinc-700/20 dark:border-neutral-100/30 hover:bg-white/50 dark:hover:bg-zinc-800',
+        complete:
+          'border backdrop-blur-sm border-neutral-100/20 dark:border-zinc-700/20 bg-neutral-100/20 dark:bg-zinc-700/30 hover:bg-white/50 dark:hover:bg-zinc-800'
+      }
+
+      const bodyVariants = {
+        default: 'backdrop-blur-md bg-neutral-200/30 dark:bg-zinc-700/20',
+        light: 'bg-transparent dark:bg-transparent',
+        bordered: 'border-x-[1px] border-zinc-700/20 dark:border-neutral-100/30',
+        complete:
+          'backdrop-blur-sm bg-neutral-100/20 dark:bg-zinc-700/30 border-x-[1px] border-neutral-100/20 dark:border-zinc-700/20'
+      }
+
+      const variantClass = variants[styleVariant]
+      const bodyVariantClass = bodyVariants[styleVariant]
+
+      return (
+        <div>
+          <h2 id={`accordion-heading-${index}`}>
+            <button
+              type='button'
+              className={`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-gray-800 dark:text-gray-300 ${variantClass}  ${
+                isActive ? 'rounded-t-xl' : ''
+              } `}
+              onClick={() => toggle(index)}
+              aria-expanded={isActive}
+              aria-controls={`accordion-body-${index}`}
+            >
+              <div className='w-full max-w-full'>
+                <span className='flex justify-start items-center max-w-full'>
+                  {title}
+                </span>
+                {subtitle && (
+                  <p className='text-left text-sm font-light text-gray-500 dark:text-gray-400'>
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+              <svg
+                data-accordion-icon
+                className={`w-3 h-3 shrink-0 transition duration-300 ease-in ${
+                  isActive ? 'rotate-180' : ''
+                }`}
+                aria-hidden='true'
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 10 6'
+              >
+                <path
+                  stroke='currentColor'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M9 5 5 1 1 5'
+                />
+              </svg>
+            </button>
+          </h2>
+
+          <div
+            id={`accordion-body-${index}`}
+            className={`overflow-hidden ${
+              isActive ? '' : 'hidden'
+            } p-5  ${bodyVariantClass}`}
+          >
+            <p className='mb-2 text-gray-600 dark:text-gray-500'>{content}</p>
+          </div>
+        </div>
+      )
+    }
+
+    export default AccordionItem
+
+    ```
+
+</CodeBlock>
+
+Y el código para `Accordion` es el siguiente:
+
+<CodeBlock client:load>
+
+    ```jsx
+    import { useState } from 'react'
+    import AccordionItem from './AccordionItem.jsx'
+
+    const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
+      const [activeIndexes, setActiveIndexes] = useState([])
+
+      const toggleAccordion = (index) => {
+        if (multiple) {
+          setActiveIndexes((prevIndexes) =>
+            prevIndexes.includes(index)
+              ? prevIndexes.filter((i) => i !== index)
+              : [...prevIndexes, index]
+          )
+        } else {
+          setActiveIndexes((prevIndexes) =>
+            prevIndexes.includes(index) ? [] : [index]
+          )
+        }
+      }
+
+      return (
+        <div id='accordion' className='w-full shadow-sm'>
+          {items.map((item, index) => (
+            <AccordionItem
+              key={index}
+              index={index}
+              title={item.title}
+              subtitle={item.subtitle}
+              content={item.content}
+              isActive={activeIndexes.includes(index)}
+              toggle={toggleAccordion}
+              styleVariant={styleVariant}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    export default Accordion
+    ```
+
+</CodeBlock>
+
+### Con subtitulos
+
+Para agregar subtitulos al componente, simplemente debes agregar un objeto con la propiedad `subtitle`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          subtitle: 'Subtitulo 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          subtitle: 'Subtitulo 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          subtitle: 'Subtitulo 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      subtitle: 'Subtitulo 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      subtitle: 'Subtitulo 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      subtitle: 'Subtitulo 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+/>
+```
+
+</CodeBlock>
+
+### Multiple
+
+Para tener multiples elementos abiertos al mismo tiempo, se puede utilizar el atributo `multiple` en el componente `Accordion`:
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      multiple={true}
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  multiple={true}
+/>
+```
+
+</CodeBlock>
+
+### Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `styleVariant` en el componente `Accordion`. Este atributo acepta cuatro valores: `default`, `light`, `bordered` y `complete`.
+
+#### Default
+
+El estilo por defecto del componente es el `default`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      styleVariant='default'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  styleVariant='default'
+/>
+```
+
+</CodeBlock>
+
+#### Light
+
+Si colocamos el atributo `styleVariant` en `light`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      styleVariant='light'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  styleVariant='light'
+/>
+```
+
+</CodeBlock>
+
+#### Bordered
+
+Si colocamos el atributo `styleVariant` en `bordered`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      styleVariant='bordered'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  styleVariant='bordered'
+/>
+```
+
+</CodeBlock>
+
+#### Complete
+
+Si colocamos el atributo `styleVariant` en `complete`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      styleVariant='complete'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  styleVariant='complete'
+/>
+```
+
+</CodeBlock>

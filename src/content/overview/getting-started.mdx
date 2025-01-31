@@ -1,0 +1,157 @@
+---
+name: 'Empezando'
+description: 'Cómo empezar a utilizar MictlanUI.'
+---
+
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Accordion from '../../components/Accordion/Accordion.jsx'
+import Preview from '../../components/Preview.astro'
+
+> Para poder utilizar MictlanUI, necesitarás estar familiarizado con HTML y CSS.
+
+### 1. Instalación de Tailwind CSS 3.4
+
+MictlanUI utiliza Tailwind CSS como framework CSS. Para poder utilizar MictlanUI, es obligatorio tener Tailwind CSS instalado en tu proyecto.
+
+La instalación es muy sencilla y en general depende del framework que estés utilizando. Por ejemplo, si estás utilizando Astro, puedes instalar Tailwind CSS utilizando el siguiente comando:
+
+<CodeBlock client:load>`npx astro add tailwind `</CodeBlock>
+
+Para conocer el proceso de instalación en tu proyecto consulta la documentación disponible en el sitio oficial de [**Tailwind CSS**](https://tailwindcss.com/docs/installation).
+
+### 2. Uso de componentes de MictlanUI
+
+Para utilizar un componente de MictlanUI, unicamente tienes que copiar y pegar el código HTML correspondiente en tu proyecto.
+Una vez que lo hayas hecho, puedes personalizar el componente según tus necesidades.
+
+<CodeBlock client:load>
+  ```html
+  <div class='flex items-center px-6'>
+    <img src='/mictlan-logo.webp' class='h-10' alt='Mictlan Logo' />
+    <span class='self-center text-2xl font-bold whitespace-nowrap text-white'>
+      MictlanUI
+    </span>
+  </div>
+  ```
+</CodeBlock>
+
+A continuación, puedes ver el resultado de la implementación del componente anterior.
+
+<Preview>
+  <div class='flex items-center px-6'>
+    <img src='/mictlan-logo.webp' class='h-10' alt='Mictlan Logo' />
+    <span class='self-center text-2xl font-bold whitespace-nowrap text-white'>
+      MictlanUI
+    </span>
+  </div>
+</Preview>
+
+### 3. Personalización de componentes
+
+Para personalizar un componente, simplemente tienes que modificar los atributos de HTML correspondientes.
+Por ejemplo, si queremos cambiar el color del texto del componente anterior, podemos hacerlo de la siguiente manera:
+
+<Preview>
+  <div class='flex items-center px-6'>
+    <img src='/mictlan-logo.webp' class='h-10' alt='Mictlan Logo' />
+    <span class='self-center text-2xl font-bold whitespace-nowrap text-blue-600'>
+      MictlanUI
+    </span>
+  </div>
+</Preview>
+<CodeBlock client:load>
+  ```html
+  <div class='flex items-center px-6'>
+    <img src='/mictlan-logo.webp' class='h-10' alt='Mictlan Logo' />
+    <span class='self-center text-2xl font-bold whitespace-nowrap text-blue-600'>
+      MictlanUI
+    </span>
+  </div>
+  ```
+</CodeBlock>
+
+### 4. Componentes con ReactJs
+
+Para utilizar estos componentes debes tener todas las dependencias de React instaladas en tu proyecto.
+
+Por ejemplo, si queremos utilizar el componente **`Accordion`** de MictlanUI, podemos hacerlo de la siguiente manera:
+
+<CodeBlock client:load>
+  ```jsx
+  <Accordion
+    items={[
+      {
+        title: 'Accordion 1',
+        content: '1st content to show in the accordion'
+      },
+      {
+        title: 'Accordion 2',
+        content: '2nd content to show in the accordion'
+      },
+      {
+        title: 'Accordion 3',
+        content: '3rd content to show in the accordion'
+      }
+    ]}
+  />
+  ```
+</CodeBlock>
+
+y obtendrás el siguiente resultado:
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      multiple={false}
+    />
+  </div>
+</Preview>
+
+con respecto al código, tenemos dos componentes principales:
+
+- El componente `Accordion` que es el componente principal que se encarga de renderizar los items de la lista.
+- El componente `AccordionItem` que es el componente que se encarga de renderizar cada item de la lista.
+
+<CodeBlock client:load>
+
+```jsx
+const Accordion = ({ items }) => {
+  const [activeIndex, setActiveIndex] = useState(null)
+
+  const toggleAccordion = (index) => {
+    setActiveIndex(activeIndex === index ? null : index)
+  }
+
+  return (
+    <div id='accordion' className='w-full'>
+      {items.map((item, index) => (
+        <AccordionItem
+          key={index}
+          index={index}
+          title={item.title}
+          content={item.content}
+          isActive={activeIndex === index}
+          toggle={toggleAccordion}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+</CodeBlock>

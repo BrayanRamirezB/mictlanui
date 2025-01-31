@@ -1,0 +1,477 @@
+---
+name: User
+description: Contiene información de los usuarios
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import User from '../../components/User.jsx'
+
+## Sobre el componente
+
+Este componente permite mostrar información de los usuarios con una imagen de perfil, nombre y una descripción.
+Además, hace uso del componente `Avatar` para mostrar la imagen de perfil.
+
+## Uso básico
+
+Para utilizar este componente, simplmente debemos definir los atributos `name`, `description` y `avatarSrc`.
+
+<Preview>
+  <User
+    client:load
+    name='John Doe'
+    description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+    avatarSrc='/mictlan-avatar.webp'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+/>
+```
+
+</CodeBlock>
+
+El código para el componente `User` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import Avatar from './Avatar'
+
+const User = ({
+  avatarSrc,
+  avatarAlt,
+  avatarSize,
+  avatarRounded,
+  avatarBordered,
+  avatarColor,
+  avatarDot,
+  avatarDotColor,
+  avatarDotPosition,
+  name = '',
+  description = '',
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  rounded = 'md'
+}) => {
+  const variants = {
+    default: 'border-0 shadow-md backdrop-blur-sm',
+    bordered: 'border border-current',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const sizes = {
+    xs: 'p-1 space-x-2',
+    sm: 'p-2 space-x-3',
+    md: 'p-3 space-x-4',
+    lg: 'p-4 space-x-5',
+    xl: 'p-5 space-x-6'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-lg',
+    lg: 'rounded-2xl',
+    full: 'rounded-full'
+  }
+
+  const textSizes = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl'
+  }
+
+  return (
+    <div
+      className={`base flex items-center ${variants[variant]} 
+        ${sizes[size]} 
+        ${roundeds[rounded]} 
+        ${textColors[color]}
+        ${variant === 'default' && colors[color]}
+        ${textSizes[size]}
+      `}
+    >
+      <Avatar
+        src={avatarSrc}
+        name={name}
+        alt={avatarAlt}
+        size={avatarSize}
+        rounded={avatarRounded}
+        bordered={avatarBordered}
+        color={avatarColor}
+        dot={avatarDot}
+        dotColor={avatarDotColor}
+        dotPosition={avatarDotPosition}
+      />
+      <div className='wrapper'>
+        <div className={`font-semibold`}>{name}</div>
+        <div className={`font-normal`}>{description}</div>
+      </div>
+    </div>
+  )
+}
+
+export default User
+```
+
+</CodeBlock>
+
+## Variantes
+
+El componente `User` admite algunas variantes que pueden ser utilizadas para darle un estilo a los elementos. Los variantes disponibles son `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      variant='default'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      variant='bordered'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      variant='light'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  variant='default'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  variant='bordered'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  variant='light'
+/>
+```
+
+</CodeBlock>
+
+## Colores
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `User`. Este atributo tiene los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      color='default'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      color='primary'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      color='secondary'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      color='success'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      color='warning'
+    />
+
+    <User
+      client:load
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      color='danger'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  color='default'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  color='primary'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  color='secondary'
+/>
+
+<User
+  client:load
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  color='success'
+/>
+
+<User
+  client:load
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  color='warning'
+/>
+
+<User
+  client:load
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  color='danger'
+/>
+```
+
+</CodeBlock>
+
+## Tamaño
+
+Para cambiar el tamaño del componente, puedes utilizar la propiedad `size`. Este atributo permite los siguientes valores: `xs`, `sm`, `md`, `lg`, `xl`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      size='xs'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      size='sm'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      size='md'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      size='lg'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      size='xl'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  size='xs'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  size='sm'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  size='md'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  size='lg'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  size='xl'
+/>
+```
+
+</CodeBlock>
+
+## Bordes redondeados
+
+Para cambiar el borde redondeado del componente, puedes utilizar la propiedad `rounded`. Este atributo permite los siguientes valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-2 w-full m-auto'>
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      rounded='none'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      rounded='sm'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      rounded='md'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      rounded='lg'
+    />
+    <User
+      name='John Doe'
+      description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      avatarSrc='/mictlan-avatar.webp'
+      rounded='full'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  rounded='none'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  rounded='sm'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  rounded='md'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  rounded='lg'
+/>
+
+<User
+  name='John Doe'
+  description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+  avatarSrc='/mictlan-avatar.webp'
+  rounded='full'
+/>
+```
+
+</CodeBlock>
+
+## Atributos del Avatar
+
+Para personalizar el componente `Avatar`, puedes utilizar los atributos descritos en la sección de [**Avatar**](/components/avatar).

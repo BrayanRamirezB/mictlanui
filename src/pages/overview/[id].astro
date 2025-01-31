@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Aside from "../../components/Aside.astro";
+import PageContainer from "../../components/PageContainer.astro";
+
+export async function getStaticPaths() {
+    const overview = await getCollection('overview')
+
+    return overview.map((over) => ({
+        params: { id: over.slug },
+        props: { over }
+    }))
+}
+
+const { over } = Astro.props
+const { data } = over
+const { name, description } = data
+
+const { Content } = await render(over)
+---
+<Layout>
+    <main class="md:flex md:flex-1">
+        <div class="flex md:flex-row flex-col md:min-h-full md:min-w-full flex-nowrap mt-10 md:mt-16 pt-6 md:pt-0">
+            <Aside />
+    
+            <PageContainer title={name} description={description}>
+                <Content />
+            </PageContainer>
+        </div>
+    </main>
+</Layout>

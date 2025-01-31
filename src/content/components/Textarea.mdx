@@ -1,0 +1,363 @@
+---
+name: 'Textarea'
+description: 'Permite al usuario ingresar un texto en múltiples líneas.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Textarea from '../../components/Textarea.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para permitir al usuario ingresar un texto en múltiples líneas.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debemos definir el atributo `placeholder`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <Textarea client:load placeholder='Escribe aquí tu texto' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea placeholder='Escribe aquí tu texto' />
+```
+
+</CodeBlock>
+
+El código para el componente `Textarea` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useState } from 'react'
+
+const Textarea = ({
+  label,
+  placeholder = '',
+  description,
+  errorMessage,
+  isRequired = false,
+  isReadOnly = false,
+  isDisabled = false,
+  defaultValue = '',
+  onChange: externalOnChange,
+  variant = 'default',
+  ...props
+}) => {
+  const [value, setValue] = useState(defaultValue)
+  const [isInvalid, setIsInvalid] = useState(false)
+
+  const handleChange = (e) => {
+    const newValue = e.target.value
+    setValue(newValue)
+
+    if (newValue === '' && isRequired) {
+      setIsInvalid(true)
+    }
+
+    if (externalOnChange) {
+      externalOnChange(e)
+    }
+  }
+
+  const [isFocused, setFocused] = useState(false)
+  const [isFocusVisible, setFocusVisible] = useState(false)
+
+  const handleFocus = (e) => {
+    setFocused(true)
+    setFocusVisible(e.type === 'focus')
+  }
+  const handleBlur = () => {
+    setFocused(false)
+    setFocusVisible(false)
+  }
+
+  const variants = {
+    default: 'border-0 shadow-md backdrop-blur-sm',
+    bordered: 'border bg-transparent',
+    light: 'bg-transparent'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    danger: 'bg-red-500/20'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const baseClasses = `
+    flex flex-col space-y-2
+    ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}
+  `
+
+  const inputClasses = `
+    w-full p-2 rounded-lg transition-colors
+    ${variants[variant]}
+    ${variant === 'default' && colors['default']}
+    ${textColors['default']}
+    ${variant === 'bordered' && borderColors['default']}
+    ${isInvalid ? colors['danger'] : ''}
+    ${isFocused && isFocusVisible ? 'ring-2 ring-blue-500' : ''}
+    ${isDisabled ? 'bg-gray-100' : ''}
+  `
+
+  return (
+    <div
+      className={baseClasses}
+      data-invalid={isInvalid}
+      data-required={isRequired}
+      data-readonly={isReadOnly}
+      data-focus={isFocused}
+      data-focus-visible={isFocusVisible}
+      data-disabled={isDisabled}
+    >
+      <div className='headerWrapper'>
+        {label && (
+          <label
+            className={`label text-sm font-medium ${textColors['default']}`}
+          >
+            {label}
+            {isRequired && <span className={`${textColors['danger']}`}>*</span>}
+          </label>
+        )}
+      </div>
+
+      <div className='inputWrapper'>
+        <textarea
+          className={inputClasses}
+          aria-invalid={isInvalid}
+          aria-required={isRequired}
+          aria-readonly={isReadOnly}
+          aria-disabled={isDisabled}
+          aria-describedby={description ? 'description' : undefined}
+          aria-errormessage={errorMessage ? 'errorMessage' : undefined}
+          disabled={isDisabled}
+          readOnly={isReadOnly}
+          value={value}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          {...props}
+        />
+      </div>
+
+      {description && (
+        <div
+          id='description'
+          className={`description text-sm ${textColors['default']}`}
+        >
+          {description}
+        </div>
+      )}
+
+      {isInvalid && errorMessage && (
+        <div
+          id='errorMessage'
+          className={`errorMessage text-sm ${textColors['danger']}`}
+        >
+          {errorMessage}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Textarea
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `Textarea`. Este atributo tiene los siguientes valores: `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea
+      client:load
+      variant='default'
+      placeholder='Escribe aquí tu texto'
+    />
+    <Textarea
+      client:load
+      variant='bordered'
+      placeholder='Escribe aquí tu texto'
+    />
+    <Textarea client:load variant='light' placeholder='Escribe aquí tu texto' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea variant='default' placeholder='Escribe aquí tu texto' />
+<Textarea variant='bordered' placeholder='Escribe aquí tu texto' />
+<Textarea variant='light' placeholder='Escribe aquí tu texto' />
+```
+
+</CodeBlock>
+
+## Label
+
+Para agregar un label al componente, simplemente debes agregar el atributo `label` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea client:load label='Textarea' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea label='Textarea' />
+```
+
+</CodeBlock>
+
+## Descripción
+
+Para agregar una descripción al componente, simplemente debes agregar el atributo `description` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea client:load description='Descripción del textarea' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea description='Descripción del textarea' />
+```
+
+</CodeBlock>
+
+## Mensaje de error
+
+Para agregar un mensaje de error al componente, simplemente debes agregar el atributo `errorMessage` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea
+      client:load
+      label='Si el campo es vacío, el componente no se validará'
+      errorMessage='Esto es un mensaje de error'
+      placeholder='Pureba escribir aquí tu texto y luego borrar'
+      isRequired={true}
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea
+  label='Si el campo es vacío, el componente no se validará'
+  errorMessage='Esto es un mensaje de error'
+  placeholder='Pureba escribir aquí tu texto y luego borrar'
+  isRequired={true}
+/>
+```
+
+</CodeBlock>
+
+## Requerido
+
+Para agregar un asterisco al componente, simplemente debes agregar el atributo `isRequired={true}` y establecer el valor del atributo `label` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea client:load label='Label' isRequired={true} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea label='Label' isRequired={true} />
+```
+
+</CodeBlock>
+
+## Solo lectura
+
+Para hacer el componente solo de lectura, simplemente debes agregar el atributo `isReadOnly={true}` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea
+      client:load
+      isReadOnly={true}
+      placeholder='Escribe aquí tu texto'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea isReadOnly={true} placeholder='Escribe aquí tu texto' />
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+Para deshabilitar el componente, simplemente debes agregar el atributo `isDisabled={true}` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea
+      client:load
+      isDisabled={true}
+      placeholder='Escribe aquí tu texto'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea isDisabled={true} placeholder='Escribe aquí tu texto' />
+```
+
+</CodeBlock>
+
+## Valor por defecto
+
+Para establecer un valor por defecto al componente, simplemente debes agregar el atributo `defaultValue` en el componente `Textarea`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-y-2 w-full m-auto'>
+    <Textarea
+      client:load
+      defaultValue='Este es un texto por defecto'
+      placeholder='Escribe aquí tu texto'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Textarea
+  defaultValue='Este es un texto por defecto'
+  placeholder='Escribe aquí tu texto'
+/>
+```
+
+</CodeBlock>

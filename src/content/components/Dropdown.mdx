@@ -1,0 +1,1120 @@
+---
+name: 'Dropdown'
+description: 'Permite al usuario seleccionar una opción de una lista.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import {
+  CustomDropdown,
+  CustomDropdown2,
+  CustomDropdown3,
+  CustomDropdown4,
+  CustomDropdown5,
+  CustomDropdown6,
+  CustomDropdown7,
+  CustomDropdown8,
+  CustomDropdown9,
+  CustomDropdown10,
+  CustomDropdown11,
+  CustomDropdown12,
+  CustomDropdown13,
+  CustomDropdown14,
+  CustomDropdown15,
+  CustomDropdown16
+} from '../../components/Dropdown/CustomDropdown.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para mostrar un menú desplegable con múltiples opciones al usuario.
+
+## Uso básico
+
+Para utilizar el componente, debemos hacer uso de los componentes `Dropdown`, `DropdownTrigger`, `DropdownMenu`, `DropdownSection` y `DropdownItem`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+  <DropdownMenu>
+    <DropdownSection heading='Section 1'>
+      <DropdownItem title='Titulo 1' description='decripcion 1' />
+      <DropdownItem title='Titulo 2' description='decripcion 2' />
+    </DropdownSection>
+  </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+Y el código para el componente `Dropdown` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { createContext, useContext, useState } from 'react'
+
+const DropdownContext = createContext()
+
+const Dropdown = ({ children, ...props }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen)
+  }
+
+  return (
+    <DropdownContext.Provider value={{ isOpen, toggleDropdown }}>
+      <div className='relative inline-block' {...props}>
+        {children}
+      </div>
+    </DropdownContext.Provider>
+  )
+}
+
+export const useDropdown = () => {
+  const context = useContext(DropdownContext)
+  if (!context) {
+    throw new Error('useDropdown must be used within a Dropdown')
+  }
+  return context
+}
+
+export default Dropdown
+```
+
+</CodeBlock>
+
+El código para el componente `DropdownTrigger` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useDropdown } from './Dropdown'
+
+const DropdownTrigger = ({
+  children,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  size = 'md',
+  ...props
+}) => {
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-neutral-100/30 dark:hover:bg-zinc-700/50 ',
+    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
+    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/10',
+    success: 'hover:bg-green-500/30 dark:hover:bg-green-500/10',
+    warning: 'hover:bg-yellow-500/30 dark:hover:bg-yellow-500/10',
+    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+  }
+
+  const sizes = {
+    sm: 'font-light text-xs px-2 py-1.5',
+    md: 'font-medium text-sm px-4 py-2',
+    lg: 'font-medium text-base px-8 py-2.5'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const { toggleDropdown } = useDropdown()
+
+  return (
+    <button
+      className={`inline-flex justify-center items-center
+        ${variants[variant]} 
+        ${sizes[size]} 
+        ${textColors[color]} 
+        ${variant === 'bordered' && borderColors[color]}
+        ${variant === 'default' && colors[color]}
+        ${roundeds[rounded]} 
+        ${hoverColors[color]}
+      `}
+      onClick={toggleDropdown}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
+
+export default DropdownTrigger
+```
+
+</CodeBlock>
+
+El código para el componente `DropdownMenu` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useDropdown } from './Dropdown'
+
+const DropdownMenu = ({
+  children,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  ...props
+}) => {
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg'
+  }
+
+  const { isOpen } = useDropdown()
+
+  return (
+    <div
+      className={`origin-top-right flex flex-col right-0 mt-2 w-full ${
+        isOpen ? 'block' : 'hidden'
+      }
+        ${variants[variant]} 
+        ${variant === 'default' && colors[color]}
+        ${variant === 'bordered' && borderColors[color]}
+        ${roundeds[rounded]}
+      `}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default DropdownMenu
+```
+
+</CodeBlock>
+
+El código para el componente `DropdownSection` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const DropdownSection = ({
+  children,
+  heading,
+  showDivider,
+  variant = 'light',
+  color = 'default',
+  font = 'md',
+  rounded = 'md',
+  ...props
+}) => {
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/5 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const fonts = {
+    sm: 'font-normal',
+    md: 'font-medium',
+    lg: 'font-semibold',
+    xl: 'font-bold'
+  }
+
+  const dividerColors = {
+    default: 'bg-zinc-700 dark:bg-neutral-100/70',
+    primary: 'bg-blue-500',
+    secondary: 'bg-indigo-500',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    danger: 'bg-red-500'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg'
+  }
+
+  return (
+    <div className='flex flex-col' {...props}>
+      {heading && (
+        <h3
+          className={`px-4 ${variants[variant]} ${
+            variant !== 'light' && roundeds[rounded]
+          } ${textColors[color]} ${fonts[font]} ${
+            variant === 'default' && colors[color]
+          } ${variant === 'bordered' && borderColors[color]}`}
+        >
+          {heading}
+        </h3>
+      )}
+      {children}
+      {showDivider && (
+        <div className={`my-2 h-px ${dividerColors[color]}`}></div>
+      )}
+    </div>
+  )
+}
+
+export default DropdownSection
+```
+
+</CodeBlock>
+
+El código para el componente `DropdownItem` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const DropdownItem = ({
+  children,
+  title,
+  description,
+  selected,
+  onClick,
+  variant = 'light',
+  color = 'default',
+  rounded = 'md',
+  disabled = false,
+  ...props
+}) => {
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const selectedColors = {
+    default: 'bg-neutral-100/50 dark:bg-zinc-700/60 ',
+    primary: 'bg-blue-500/40 dark:bg-blue-500/40',
+    secondary: 'bg-indigo-500/40 dark:bg-indigo-500/40',
+    success: 'bg-green-500/40 dark:bg-green-500/40',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/40',
+    danger: 'bg-red-500/40 dark:bg-red-500/40'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-neutral-100/30 dark:hover:bg-zinc-700/50 ',
+    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
+    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/10',
+    success: 'hover:bg-green-500/30 dark:hover:bg-green-500/10',
+    warning: 'hover:bg-yellow-500/30 dark:hover:bg-yellow-500/10',
+    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg'
+  }
+
+  return (
+    <button
+      className={`flex w-full px-7 py-2 text-sm ${
+        disabled ? 'opacity-50 cursor-not-allowed' : ''
+      } ${roundeds[rounded]} ${variants[variant]} ${textColors[color]} ${
+        variant === 'default' && !selected && colors[color]
+      } ${variant === 'bordered' && borderColors[color]} ${
+        !disabled && hoverColors[color]
+      } ${selected && selectedColors[color]}`}
+      onClick={onClick}
+      {...props}
+    >
+      <div className='flex flex-col text-left'>
+        <span className='text-sm font-medium'>{title}</span>
+        {description && <p className='text-sm'>{description}</p>}
+      </div>
+      {children}
+    </button>
+  )
+}
+
+export default DropdownItem
+```
+
+</CodeBlock>
+
+### DropdownTrigger
+
+### Variantes
+
+El componente `DropdownTrigger` admite varias variantes que pueden ser utilizadas para darle un estilo a los botones que activan el menú desplegable.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown2 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger default' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger variant='bordered'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger bordered' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger variant='light'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger light' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Colores
+
+El componente `DropdownTrigger` admite varios colores que pueden ser utilizados para darle un estilo a los botones que activan el menú desplegable.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown3 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger default' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger color='primary'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger primary' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger color='secondary'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger secondary' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger color='success'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger success' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger color='warning'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger warning' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger color='danger'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger danger' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Rounded
+
+El componente `DropdownTrigger` admite varios colores que pueden ser utilizados para darle un estilo a los botones que activan el menú desplegable.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown4 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger rounded='none'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger rounded none' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger rounded='sm'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger rounded sm' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger rounded='md'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger rounded md' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger rounded='lg'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger rounded lg' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger rounded='full'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger rounded full' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Tamaño
+
+El componente `DropdownTrigger` admite varios colores que pueden ser utilizados para darle un estilo a los botones que activan el menú desplegable.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown5 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger size='sm'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger size sm' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger size='md'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger size md' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger size='lg'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger size lg' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+## DropdownMenu
+
+### Variantes
+
+El componente `DropdownMenu` admite algunas variantes que pueden ser utilizadas para darle un estilo a los menús desplegables. Los variantes disponibles son `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown6 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu variant='default'>
+      <DropdownItem title='Menu default' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu variant='bordered'>
+      <DropdownItem title='Menu bordered' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu variant='light'>
+      <DropdownItem title='Menu light' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Colores
+
+El componente `DropdownMenu` admite varios colores que pueden ser utilizados para darle un estilo a los menús desplegables. Los colores disponibles son `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown7 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu color='default'>
+      <DropdownItem title='Menu default' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu color='primary'>
+      <DropdownItem title='Menu primary' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu color='secondary'>
+      <DropdownItem title='Menu secondary' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu color='success'>
+      <DropdownItem title='Menu success' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu color='warning'>
+      <DropdownItem title='Menu warning' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu color='danger'>
+      <DropdownItem title='Menu danger' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Rounded
+
+El componente `DropdownMenu` permite modificar el borde del menú desplegable. Los colores disponibles son `none`, `sm`, `md` y `lg`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown8 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu rounded='none'>
+      <DropdownItem title='Menu rounded none' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu rounded='sm'>
+      <DropdownItem title='Menu rounded sm' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu rounded='md'>
+      <DropdownItem title='Menu rounded md' />
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu rounded='lg'>
+      <DropdownItem title='Menu rounded lg' />
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+## DropdownSection
+
+### Variantes
+
+El componente `DropdownSection` admite algunas variantes que pueden ser utilizadas para darle un estilo a las secciones de los menús desplegables. Los variantes disponibles son `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown9 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='default'>
+        <DropdownItem title='Section default' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='bordered'>
+        <DropdownItem title='Section bordered' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='light'>
+        <DropdownItem title='Section light' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Color
+
+El componente `DropdownSection` admite varios colores que pueden ser utilizados para darle un estilo a las secciones de los menús desplegables. Los colores disponibles son `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown10 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' color='default'>
+        <DropdownItem title='Section default' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' color='primary'>
+        <DropdownItem title='Section primary' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' color='secondary'>
+        <DropdownItem title='Section secondary' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' color='success'>
+        <DropdownItem title='Section success' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' color='warning'>
+        <DropdownItem title='Section warning' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' color='danger'>
+        <DropdownItem title='Section danger' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Font
+
+El componente `DropdownSection` admite distintos tamaños de fuente que pueden ser utilizados para darle un estilo a las secciones de los menús desplegables. Los tamaños disponibles son `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown11 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' font='sm'>
+        <DropdownItem title='Section font sm' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' font='md'>
+        <DropdownItem title='Section font md' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' font='lg'>
+        <DropdownItem title='Section font lg' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' font='xl'>
+        <DropdownItem title='Section font xl' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Rounded
+
+El componente `DropdownSection` permite modificar el borde de las secciones de los menús desplegables. Los colores disponibles son `none`, `sm`, `md` y `lg`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown12 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='default' rounded='none'>
+        <DropdownItem title='Section rounded none' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='default' rounded='sm'>
+        <DropdownItem title='Section rounded sm' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='default' rounded='md'>
+        <DropdownItem title='Section rounded md' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownSection heading='Section' variant='default' rounded='lg'>
+        <DropdownItem title='Section rounded lg' />
+      </DropdownSection>
+    </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+## DropdownItem
+
+### Atributos description, selected y disabled
+
+El componente `DropdownItem` admite algunos atributos que pueden ser utilizados para darle un estilo a los elementos de los menús desplegables. Los atributos disponibles son `description`, `disabled` y `selected`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown13 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+  <DropdownMenu>
+    <DropdownItem title='Item' description='default' />
+    <DropdownItem title='Item' description='selected' selected={true} />
+    <DropdownItem title='Item' description='disabled' disabled={true} />
+  </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Variantes
+
+El componente `DropdownItem` admite algunas variantes que pueden ser utilizadas para darle un estilo a los elementos de los menús desplegables. Los variantes disponibles son `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown14 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+  <DropdownMenu>
+    <DropdownItem
+      title='Item'
+      description='variant default'
+      variant='default'
+    />
+    <DropdownItem
+      title='Item'
+      description='variant bordered'
+      variant='bordered'
+    />
+    <DropdownItem title='Item' description='variant light' variant='light' />
+  </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Colores
+
+El componente `DropdownItem` admite varios colores que pueden ser utilizados para darle un estilo a los elementos de los menús desplegables. Los colores disponibles son `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown15 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+  <DropdownMenu>
+    <DropdownItem title='Item' description='color default' color='default' />
+    <DropdownItem title='Item' description='color primary' color='primary' />
+    <DropdownItem
+      title='Item'
+      description='color secondary'
+      color='secondary'
+    />
+    <DropdownItem title='Item' description='color success' color='success' />
+    <DropdownItem title='Item' description='color warning' color='warning' />
+    <DropdownItem title='Item' description='color danger' color='danger' />
+  </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>
+
+### Rounded
+
+El componente `DropdownItem` permite modificar el borde de los elementos de los menús desplegables. Los colores disponibles son `none`, `sm`, `md` y `lg`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomDropdown16 client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Dropdown>
+  <DropdownTrigger>Open Dropdown</DropdownTrigger>
+  <DropdownMenu>
+    <DropdownItem title='Item' description='rounded none' rounded='none' />
+    <DropdownItem title='Item' description='rounded sm' rounded='sm' />
+    <DropdownItem title='Item' description='rounded md' rounded='md' />
+    <DropdownItem title='Item' description='rounded lg' rounded='lg' />
+  </DropdownMenu>
+</Dropdown>
+```
+
+</CodeBlock>

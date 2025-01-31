@@ -1,0 +1,764 @@
+---
+name: 'Drawer'
+description: 'Permite al usuario mostrar y ocultar contenido en una ventana flotante.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomDrawer from '../../components/Drawer/CustomDrawer.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para mostrar un panel que se desliza desde un borde de la pantalla y contiene información adicional.
+
+## Uso básico
+
+Para utilizar el componente, debemos utilizar los componentes `Drawer`, `DrawerContent`, `DrawerHeader`, `DrawerBody` y `DrawerFooter`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomDrawer client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isDrawerOpen, setDrawerOpen] = useState(false)
+
+return (
+  <div>
+    <Button onClick={() => setDrawerOpen(true)}>Open Drawer</Button>
+    <Drawer isOpen={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
+      <DrawerContent>
+        <DrawerHeader
+          onClose={() => setDrawerOpen(false)}
+          closeDrawer={() => setDrawerOpen(false)}
+        >
+          Drawer Title
+        </DrawerHeader>
+        <DrawerBody>
+          <p>This is the body of the drawer.</p>
+        </DrawerBody>
+        <DrawerFooter>
+          <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  </div>
+)
+```
+
+</CodeBlock>
+
+Y el código para el componente `Drawer` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useEffect, useRef } from 'react'
+
+const Drawer = ({
+  isOpen,
+  onClose,
+  isDismissable = true,
+  position = 'right',
+  effect = 'opaque',
+  size = 'md',
+  color = 'default',
+  children
+}) => {
+  const drawerRef = useRef(null)
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: `${
+      effect === 'opaque' ? 'text-gray-200' : 'text-gray-800 '
+    } dark:text-gray-300`,
+    primary: 'text-blue-400 dark:text-blue-500',
+    secondary: 'text-indigo-400 dark:text-indigo-500',
+    success: 'text-green-400 dark:text-green-500',
+    warning: 'text-yellow-400 dark:text-yellow-500',
+    danger: 'text-red-400 dark:text-red-500'
+  }
+
+  const backdropEffects = {
+    opaque: 'bg-black bg-opacity-50',
+    blur: 'backdrop-filter backdrop-blur-sm',
+    transparent: 'bg-transparent'
+  }
+
+  const drawerWSizes = {
+    sm: 'w-1/4',
+    md: 'w-1/3',
+    lg: 'w-1/2',
+    xl: 'w-3/4',
+    full: 'w-full'
+  }
+
+  const drawerHSizes = {
+    sm: 'h-1/4',
+    md: 'h-1/3',
+    lg: 'h-1/2',
+    xl: 'h-3/4',
+    full: 'h-full'
+  }
+
+  const drawerPositions = {
+    top: 'top-0 left-0 right-0 w-full',
+    bottom: 'bottom-0 left-0 right-0 w-full',
+    left: 'left-0 top-0 bottom-0 h-full',
+    right: 'right-0 top-0 bottom-0 h-full'
+  }
+
+  const drawerStyle = `${drawerPositions[position]} ${
+    position === 'top' || position === 'bottom'
+      ? drawerHSizes[size]
+      : drawerWSizes[size]
+  } fixed `
+
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && isOpen && isDismissable) {
+        onClose()
+      }
+    }
+
+    const handleClickOutside = (event) => {
+      if (
+        drawerRef.current &&
+        !drawerRef.current.contains(event.target) &&
+        isOpen &&
+        isDismissable
+      ) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, onClose, isDismissable])
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isOpen])
+
+  if (!isOpen) return null
+
+  return (
+    <div className={`fixed inset-0 z-50 ${textColors[color]}`}>
+      <div
+        className={`fixed inset-0 ${backdropEffects[effect]}`}
+        aria-hidden='true'
+      />
+      <div
+        ref={drawerRef}
+        className={`border-0 shadow-lg backdrop-blur-sm ${drawerStyle} ${colors[color]}`}
+        data-open={isOpen}
+        data-dismissable={isDismissable}
+      >
+        <div className='flex flex-col h-full'>{children}</div>
+      </div>
+    </div>
+  )
+}
+
+export default Drawer
+```
+
+</CodeBlock>
+
+el código para el componente `DrawerContent` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const DrawerContent = ({ children }) => (
+  <div className='flex-1 flex flex-col overflow-hidden'>{children}</div>
+)
+
+export default DrawerContent
+```
+
+</CodeBlock>
+
+el código para el componente `DrawerHeader` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const DrawerHeader = ({ children, closeDrawer }) => (
+  <div className='flex-shrink-0 flex items-center justify-between p-2'>
+    <div>{children}</div>
+    {closeDrawer && (
+      <button
+        onClick={closeDrawer}
+        className='p-2 transition duration-300 ease-in-out hover:text-red-700'
+        aria-label='Close'
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='currentColor'
+          className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+        >
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path
+            d='M12 2l.324 .001l.318 .004l.616 .017l.299 .013l.579 .034l.553 .046c4.785 .464 6.732 2.411 7.196 7.196l.046 .553l.034 .579c.005 .098 .01 .198 .013 .299l.017 .616l.005 .642l-.005 .642l-.017 .616l-.013 .299l-.034 .579l-.046 .553c-.464 4.785 -2.411 6.732 -7.196 7.196l-.553 .046l-.579 .034c-.098 .005 -.198 .01 -.299 .013l-.616 .017l-.642 .005l-.642 -.005l-.616 -.017l-.299 -.013l-.579 -.034l-.553 -.046c-4.785 -.464 -6.732 -2.411 -7.196 -7.196l-.046 -.553l-.034 -.579a28.058 28.058 0 0 1 -.013 -.299l-.017 -.616c-.003 -.21 -.005 -.424 -.005 -.642l.001 -.324l.004 -.318l.017 -.616l.013 -.299l.034 -.579l.046 -.553c.464 -4.785 2.411 -6.732 7.196 -7.196l.553 -.046l.579 -.034c.098 -.005 .198 -.01 .299 -.013l.616 -.017c.21 -.003 .424 -.005 .642 -.005zm-1.489 7.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z'
+            fill='currentColor'
+            strokeWidth='0'
+          />
+        </svg>
+      </button>
+    )}
+  </div>
+)
+
+export default DrawerHeader
+```
+
+</CodeBlock>
+
+el código para el componente `DrawerBody` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const DrawerBody = ({ children }) => (
+  <div className='flex-1 overflow-y-auto p-2'>{children}</div>
+)
+
+export default DrawerBody
+```
+
+</CodeBlock>
+
+el código para el componente `DrawerFooter` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const DrawerFooter = ({ children }) => (
+  <div className='flex-shrink-0 p-2'>{children}</div>
+)
+
+export default DrawerFooter
+```
+
+</CodeBlock>
+
+## Cerrar Drawer
+
+Por defecto el componente `Drawer` puede ser cerrado con la tecla `Escape` o haciendo clic fuera del componente. Para deshabilitar esto, simplemente debes agregar el atributo `isDismissable={false}`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomDrawer client:load isDismissable={false} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  isDismissable={true}
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+</CodeBlock>
+
+## Posicionamiento
+
+Para cambiar el posicionamiento del componente, se puede utilizar el atributo `position` en el componente `Drawer`. Este atributo acepta cuatro valores: `top`, `bottom`, `left` y `right`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomDrawer client:load position='top' text='Open Drawer Top' />
+    <CustomDrawer client:load position='bottom' text='Open Drawer Bottom' />
+    <CustomDrawer client:load position='left' text='Open Drawer Left' />
+    <CustomDrawer client:load position='right' text='Open Drawer Right' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  position='top'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  position='bottom'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  position='left'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  position='right'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+</CodeBlock>
+
+## Efectos
+
+Para cambiar el efecto del componente, se puede utilizar el atributo `effect` en el componente `Drawer`. Este atributo acepta los siguientes valores: `opaque`, `blur` y `transparent`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomDrawer client:load effect='opaque' text='Open Drawer Opaque' />
+    <CustomDrawer client:load effect='blur' text='Open Drawer Blur' />
+    <CustomDrawer
+      client:load
+      effect='transparent'
+      text='Open Drawer Transparent'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  effect='opaque'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  effect='blur'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  effect='transparent'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en el componente `Drawer`. Este atributo acepta los siguientes valores: `sm`, `md`, `lg`, `xl` y `full`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomDrawer client:load size='sm' text='Open Drawer Sm' />
+    <CustomDrawer client:load size='md' text='Open Drawer Md' />
+    <CustomDrawer client:load size='lg' text='Open Drawer Lg' />
+    <CustomDrawer client:load size='xl' text='Open Drawer Xl' />
+    <CustomDrawer client:load size='full' text='Open Drawer Xl' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  size='sm'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  size='md'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  size='lg'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  size='xl'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  size='full'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+</CodeBlock>
+
+## Color
+
+Este componente tiene un atributo para cambiar su color. Para esto tenemos los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomDrawer client:load color='default' text='Open Drawer Default' />
+    <CustomDrawer client:load color='primary' text='Open Drawer Primary' />
+    <CustomDrawer client:load color='secondary' text='Open Drawer Secondary' />
+    <CustomDrawer client:load color='success' text='Open Drawer Success' />
+    <CustomDrawer client:load color='warning' text='Open Drawer Warning' />
+    <CustomDrawer client:load color='danger' text='Open Drawer Danger' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  color='default'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  color='primary'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  color='secondary'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  color='success'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  color='warning'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+
+<Drawer
+  isOpen={isDrawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  color='danger'
+>
+  <DrawerContent>
+    <DrawerHeader
+      onClose={() => setDrawerOpen(false)}
+      closeDrawer={() => setDrawerOpen(false)}
+    >
+      Drawer Title
+    </DrawerHeader>
+    <DrawerBody>
+      <p>This is the body of the drawer.</p>
+    </DrawerBody>
+    <DrawerFooter>
+      <Button onClick={() => setDrawerOpen(false)}>Close</Button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+</CodeBlock>

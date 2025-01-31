@@ -1,0 +1,43 @@
+---
+import Hero from '../components/Hero.astro';
+import SectionContainer from '../components/SectionContainer.astro';
+import Layout from '../layouts/Layout.astro';
+import CardSection from '../components/CardSection.astro';
+import ListSection from '../components/ListSection.astro';
+import EsloganSection from '../components/EsloganSection.astro';
+import GlassSection from '../components/GlassSection.astro';
+import DarkSection from '../components/DarkSection.astro';
+import ColorSection from '../components/ColorSection.astro';
+---
+
+<Layout>
+	<main class="px-4">
+		<SectionContainer class="mt-10 sm:mt-8 py-24 md:py-36 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<Hero />
+		</SectionContainer>
+
+		<SectionContainer class="py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<CardSection />
+		</SectionContainer>
+
+		<SectionContainer class="py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<GlassSection />
+		</SectionContainer>
+
+		<SectionContainer class="py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<DarkSection />
+		</SectionContainer>
+
+		<SectionContainer class="py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<ColorSection />
+		</SectionContainer>
+
+		<SectionContainer class="py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<ListSection />
+		</SectionContainer>
+
+		<SectionContainer class="py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl">
+			<EsloganSection />
+		</SectionContainer>
+	</main>
+</Layout>

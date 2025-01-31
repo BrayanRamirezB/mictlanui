@@ -1,0 +1,9 @@
+---
+const { background } = Astro.props
+---
+
+<div class='lg:max-w-4xl md:max-w-3xl sm:max-w-xl mx-auto p-2'>
+    <div class={`flex justify-center items-center gap-2 rounded-lg p-3 shadow-xl backdrop-blur-2xl ${background}`}>
+        <slot />
+    </div>
+</div>

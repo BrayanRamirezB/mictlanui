@@ -1,0 +1,1004 @@
+---
+name: 'Breadcrumbs'
+description: 'Lista de elementos para la navegación de una página web.'
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Breadcrumbs from '../../components/Breadcrumbs/Breadcrumbs.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para representar la navegación de una página web mediante unal lista de elementos.
+
+## Uso básico
+
+Para utilizar el componente, simplemente debes definir el atributo `items` en el componente `Breadcrumbs`. Este atributo acepta un array de objetos con la propiedad `label`.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+/>
+```
+
+</CodeBlock>
+
+El código para `BreadcrumbItem` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const BreadcrumbItem = ({
+  label,
+  href,
+  icon,
+  selected = false,
+  sizeClass = '',
+  roundedClass = '',
+  colorClass = '',
+  onClick
+}) => {
+  if (href) {
+    return (
+      <a
+        href={href}
+        onClick={(e) => onClick?.(e)}
+        className={`inline-flex items-center gap-1 cursor-pointer ${sizeClass} ${roundedClass} ${colorClass}
+        ${
+          selected ? 'font-bold' : 'font-normal'
+        } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50`}
+        aria-current={selected ? 'page' : undefined}
+      >
+        {icon && <span className='inline-block'>{icon}</span>}
+        {label}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      type='button'
+      onClick={onClick}
+      className={`inline-flex items-center gap-1 cursor-pointer ${sizeClass} ${roundedClass} ${colorClass}
+        ${
+          selected ? 'font-bold' : 'font-normal'
+        } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50`}
+      aria-current={selected ? 'page' : undefined}
+    >
+      {icon && <span className='inline-block'>{icon}</span>}
+      {label}
+    </button>
+  )
+}
+
+export default BreadcrumbItem
+```
+
+</CodeBlock>
+
+El código para `BreadcrumbSeparator` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const BreadcrumbSeparator = ({ separator, colorClass }) => (
+  <span className={`mx-1 ${colorClass}`}>{separator}</span>
+)
+
+export default BreadcrumbSeparator
+```
+
+</CodeBlock>
+
+Y el código para `Breadcrumbs` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useState } from 'react'
+import BreadcrumbItem from './BreadcrumbItem'
+import BreadcrumbSeparator from './BreadcrumbSeparator'
+
+const Breadcrumbs = ({
+  items = [],
+  variant = 'default',
+  size = 'md',
+  color = 'default',
+  rounded = 'md',
+  separator = '/',
+  collapsible = false
+}) => {
+  const [selected, setSelected] = useState(items[0]?.label)
+
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-lg bg-transparent dark:bg-transparent',
+    light: 'border-0 bg-transparent'
+  }
+
+  const sizes = {
+    sm: 'text-xs px-2 py-1',
+    md: 'text-sm px-3 py-1.5',
+    lg: 'text-base px-4 py-2'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const colors = {
+    default: 'bg-neutral-200/30 dark:bg-zinc-700/30',
+    primary: 'bg-blue-500/20',
+    secondary: 'bg-indigo-500/20',
+    success: 'bg-green-500/20',
+    warning: 'bg-yellow-500/10 dark:bg-yellow-500/20',
+    danger: 'bg-red-500/20'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-neutral-100/40 dark:border-zinc-700/60',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const sizeClass = sizes[size]
+  const roundedClass = roundeds[rounded]
+  const colorClass = colors[color]
+  const variantClass = variants[variant]
+  const textcolorClass = textColors[color]
+  const borderClass = borderColors[color]
+
+  const handleClick = (label) => {
+    setSelected(label) // Actualiza el elemento seleccionado
+  }
+
+  const renderItem = (item, isLast) => (
+    <div className='flex items-center' key={item.label}>
+      <BreadcrumbItem
+        label={item.label}
+        href={item.href}
+        icon={item.icon}
+        selected={item.label === selected}
+        sizeClass={sizeClass}
+        roundedClass={roundedClass}
+        colorClass={textcolorClass}
+        onClick={() => handleClick(item.label)}
+      />
+      {!isLast && (
+        <BreadcrumbSeparator
+          separator={separator}
+          colorClass={textcolorClass}
+        />
+      )}
+    </div>
+  )
+
+  const renderCollapsed = () => {
+    const firstItem = items[0]
+    const lastItem = items[items.length - 1]
+    return (
+      <>
+        {renderItem(firstItem, false)}
+        <span className={`mx-2 ${textcolorClass}`}>...</span>
+        {renderItem(lastItem, true)}
+      </>
+    )
+  }
+
+  return (
+    <nav className='flex flex-row mx-auto p-2' aria-label='Breadcrumb'>
+      <ul
+        className={`flex mx-auto items-center gap-2 px-2 ${variantClass}  ${roundedClass}
+        ${variant === 'bordered' ? `${borderClass}` : `${colorClass}`}`}
+      >
+        {collapsible && items.length > 2
+          ? renderCollapsed()
+          : items.map((item, index) => (
+              <li key={item.label}>
+                {renderItem(item, index === items.length - 1)}
+              </li>
+            ))}
+      </ul>
+    </nav>
+  )
+}
+
+export default Breadcrumbs
+```
+
+</CodeBlock>
+
+## Items
+
+Para agregar elementos al componente, simplemente debes agregar el atributo `items` en el componente `Breadcrumbs`. Este atributo acepta un array de objetos con la propiedad `label`, `icon` y `href`.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home',
+          href: '/',
+          icon: '🏠'
+        },
+        {
+          label: 'Components',
+          href: '/overview/introduction',
+          icon: '✨'
+        },
+        {
+          label: 'Breadcrumbs',
+          href: '/components/breadcrumbs',
+          icon: '⚜️'
+        }
+      ]}
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home',
+      href: '/',
+      icon: '🏠'
+    },
+    {
+      label: 'Components',
+      href: '/',
+      icon: '✨'
+    },
+    {
+      label: 'Breadcrumbs',
+      href: '/',
+      icon: '⚜️'
+    }
+  ]}
+/>
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `Breadcrumbs`. Este atributo acepta los valores: `default`, `bordered` y `light`.
+
+<Preview>
+  <div class='items-baseline gap-2 w-full m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      variant='default'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      variant='bordered'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      variant='light'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  variant='default'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  variant='bordered'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  variant='light'
+/>
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en el componente `Breadcrumbs`. Este atributo acepta los valores: `sm`, `md`, `lg`.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      size='sm'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      size='md'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      size='lg'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  size='sm'
+  />
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  size='md'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  size='lg'
+/>
+```
+
+</CodeBlock>
+
+## Color
+
+Este componente tiene un atributo para cambiar su color. Para esto tenemos los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='default'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='primary'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='secondary'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='success'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='warning'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='danger'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='default'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='primary'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='secondary'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='success'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='warning'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='danger'
+/>
+```
+
+</CodeBlock>
+
+## Radius
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `rounded` en el componente `Breadcrumbs`. Este atributo acepta los valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='primary'
+      rounded='none'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='primary'
+      rounded='sm'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='primary'
+      rounded='md'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='primary'
+      rounded='lg'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='primary'
+      rounded='full'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='primary'
+  rounded='none'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='primary'
+  rounded='sm'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='primary'
+  rounded='md'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='primary'
+  rounded='lg'
+/>
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='primary'
+  rounded='full'
+/>
+```
+
+</CodeBlock>
+
+## Separador
+
+Para cambiar el separador entre elementos, se puede utilizar el atributo `separator` en el componente `Breadcrumbs`. Este atributo acepta cualquier valor.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='success'
+      separator='-'
+    />
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='success'
+      separator='>'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='success'
+  separator='-'
+/>
+
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='success'
+  separator='>'
+/>
+```
+
+</CodeBlock>
+
+## Colapsable
+
+Para hacer el componente colapsable, simplemente debes agregar el atributo `collapsible={true}` en el componente `Breadcrumbs`.
+
+<Preview>
+  <div class='w-full gap-2 m-auto'>
+    <Breadcrumbs
+      client:load
+      items={[
+        {
+          label: 'Home'
+        },
+        {
+          label: 'Components'
+        },
+        {
+          label: 'Breadcrumbs'
+        }
+      ]}
+      color='warning'
+      collapsible={true}
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Breadcrumbs
+  items={[
+    {
+      label: 'Home'
+    },
+    {
+      label: 'Components'
+    },
+    {
+      label: 'Breadcrumbs'
+    }
+  ]}
+  color='warning'
+  collapsible={true}
+/>
+```
+
+</CodeBlock>

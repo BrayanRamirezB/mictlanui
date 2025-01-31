@@ -1,0 +1,34 @@
+---
+import SocialPill from "./SocialPill.astro";
+import HomeIcon from "./Icons/Home.astro";
+import GitHubIcon from "./Icons/GitHub.astro";
+import Theme from "./Theme.jsx";
+import ComponentIcon from "./Icons/ComponentIcon.astro";
+---
+
+<header class="fixed top-0 z-10 w-full mx-auto shadow-lg backdrop-blur-sm border-gray-200 bg-neutral-400/5 dark:bg-white/5">
+    <nav class="max-w-screen-3xl flex flex-wrap items-center md:justify-between justify-center mx-auto py-4">
+        <div class="flex items-center px-6">
+            <a href="/" class="flex items-center transition hover:animate-pulse">
+                <img src="/mictlan-logo.webp" class="h-8" alt="Mictlan Logo" />
+                <span class="self-center text-2xl font-bold whitespace-nowrap text-black dark:text-white">MictlanUI</span>
+            </a>
+            <span class="self-center px-3 text-2xl font-thin text-black dark:text-white">v0.0.1</span>
+        </div>
+    
+        <div class="flex items-center px-6 text-base font-medium space-x-5">
+            <a href="/" class="flex items-center justify-center gap-x-1  transition text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]">
+                <HomeIcon class="size-5"/>
+                Inicio
+            </a>
+            <a href="/overview/introduction" class="flex items-center justify-center gap-x-1  transition text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]">
+                <ComponentIcon class="size-5"/>
+                Componentes
+            </a>
+            <SocialPill href="/" class="transition text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]">
+                <GitHubIcon class="size-5"/>
+            <SocialPill />
+            <Theme client:only="react" />
+        </div>
+    </nav>
+</header>  
