@@ -19,10 +19,10 @@ const { name, description } = data
 
 const { Content } = await render(over)
 ---
-<Layout>
+<Layout transition:name='layout'>
     <main class="md:flex md:flex-1">
         <div class="flex md:flex-row flex-col md:min-h-full md:min-w-full flex-nowrap mt-10 md:mt-16 pt-6 md:pt-0">
-            <Aside />
+            <Aside transition:name="aside" />
     
             <PageContainer title={name} description={description}>
                 <Content />

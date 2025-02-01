@@ -51,7 +51,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
                       <a
                         href={`/overview/${slug}`}
                         className={`flex text-sm items-center px-2 py-1.5 rounded-lg transition duration-300  group ${
-                          currentPath.includes(`/overview/${slug}`)
+                          currentPath === `/overview/${slug}/`
                             ? 'bg-gray-300/50 dark:bg-zinc-700/30 text-[#0052D4] dark:text-[#4364F7]'
                             : 'text-gray-600 dark:text-gray-300 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:bg-gray-300/50 dark:hover:bg-zinc-700/30'
                         }`}
@@ -78,7 +78,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
                       <a
                         href={`/components/${slug}`}
                         className={`flex text-sm items-center px-2 py-1.5 rounded-lg  transition duration-300  group ${
-                          currentPath.includes(`/components/${slug}`)
+                          currentPath === `/components/${slug}/`
                             ? 'text-[#0052D4] dark:text-[#4364F7] bg-gray-300/50 dark:bg-zinc-700/30'
                             : 'text-gray-600 dark:text-gray-300 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:bg-gray-300/50 dark:hover:bg-zinc-700/30'
                         }`}
