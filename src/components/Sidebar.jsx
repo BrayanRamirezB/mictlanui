@@ -3,6 +3,12 @@ import { useState } from 'react'
 const Sidebar = ({ components, overview, currentPath }) => {
   const [isOpen, setIsOpen] = useState(false)
 
+  const ordenPersonalizado = [
+    'Introducción',
+    'Principios de diseño',
+    'Empezando'
+  ]
+
   return (
     <>
       <button
@@ -42,25 +48,36 @@ const Sidebar = ({ components, overview, currentPath }) => {
                 Introducción
               </h3>
               <ul className='pl-4 space-y-1'>
-                {overview.map((over) => {
-                  const { slug, data } = over
-                  const { name } = data
+                {overview
+                  .sort((a, b) => {
+                    const indexA = ordenPersonalizado.indexOf(a.data.name)
+                    const indexB = ordenPersonalizado.indexOf(b.data.name)
 
-                  return (
-                    <li key={slug} className='mb-1'>
-                      <a
-                        href={`/overview/${slug}`}
-                        className={`flex text-sm items-center px-2 py-1.5 rounded-lg transition duration-300  group ${
-                          currentPath === `/overview/${slug}/`
-                            ? 'bg-gray-300/50 dark:bg-zinc-700/30 text-[#0052D4] dark:text-[#4364F7]'
-                            : 'text-gray-600 dark:text-gray-300 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:bg-gray-300/50 dark:hover:bg-zinc-700/30'
-                        }`}
-                      >
-                        {name}
-                      </a>
-                    </li>
-                  )
-                })}
+                    // Si un elemento no está en el orden personalizado, se coloca al final
+                    if (indexA === -1) return 1
+                    if (indexB === -1) return -1
+
+                    return indexA - indexB
+                  })
+                  .map((over) => {
+                    const { slug, data } = over
+                    const { name } = data
+
+                    return (
+                      <li key={slug} className='mb-1'>
+                        <a
+                          href={`/overview/${slug}`}
+                          className={`flex text-sm items-center px-2 py-1.5 rounded-lg transition duration-300  group ${
+                            currentPath === `/overview/${slug}/`
+                              ? 'bg-gray-300/50 dark:bg-zinc-700/30 text-[#0052D4] dark:text-[#4364F7]'
+                              : 'text-gray-600 dark:text-gray-300 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:bg-gray-300/50 dark:hover:bg-zinc-700/30'
+                          }`}
+                        >
+                          {name}
+                        </a>
+                      </li>
+                    )
+                  })}
               </ul>
             </li>
 
@@ -69,25 +86,27 @@ const Sidebar = ({ components, overview, currentPath }) => {
                 Componentes
               </h3>
               <ul className='pl-4 space-y-1'>
-                {components.map((component) => {
-                  const { slug, data } = component
-                  const { name } = data
+                {components
+                  .sort((a, b) => a.data.name.localeCompare(b.data.name))
+                  .map((component) => {
+                    const { slug, data } = component
+                    const { name } = data
 
-                  return (
-                    <li key={slug} className='mb-1'>
-                      <a
-                        href={`/components/${slug}`}
-                        className={`flex text-sm items-center px-2 py-1.5 rounded-lg  transition duration-300  group ${
-                          currentPath === `/components/${slug}/`
-                            ? 'text-[#0052D4] dark:text-[#4364F7] bg-gray-300/50 dark:bg-zinc-700/30'
-                            : 'text-gray-600 dark:text-gray-300 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:bg-gray-300/50 dark:hover:bg-zinc-700/30'
-                        }`}
-                      >
-                        {name}
-                      </a>
-                    </li>
-                  )
-                })}
+                    return (
+                      <li key={slug} className='mb-1'>
+                        <a
+                          href={`/components/${slug}`}
+                          className={`flex text-sm items-center px-2 py-1.5 rounded-lg  transition duration-300  group ${
+                            currentPath === `/components/${slug}/`
+                              ? 'text-[#0052D4] dark:text-[#4364F7] bg-gray-300/50 dark:bg-zinc-700/30'
+                              : 'text-gray-600 dark:text-gray-300 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:bg-gray-300/50 dark:hover:bg-zinc-700/30'
+                          }`}
+                        >
+                          {name}
+                        </a>
+                      </li>
+                    )
+                  })}
               </ul>
             </li>
           </ul>
