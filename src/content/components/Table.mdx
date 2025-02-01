@@ -1,0 +1,1094 @@
+---
+name: Table
+description: Permite al usuario visualizar información de manera organizada y fácil de leer.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomTable from '../../components/Table/CustomTable.jsx'
+
+## Sobre el componente
+
+Este componente se utilizar para mostrar información tabular utilizando filas y columnas, permitiendo al usuario visualizar la información de manera rapida y organizada.
+
+## Uso básico
+
+Para utilizar el componente `Table` es necesario hacer uso de `TableHeader`, `TableBody`, `TableRow`, `TableCell` y `TableColumn` para estructurar la información.
+
+<Preview>
+  <CustomTable client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+El código para el componente `Table` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const Table = ({
+  children,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md'
+}) => {
+  const variants = {
+    default: 'border-0 backdrop-blur-sm shadow-lg',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    xl: 'rounded-xl'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-600',
+    secondary: 'text-indigo-800 dark:text-indigo-600',
+    success: 'text-green-800 dark:text-green-600',
+    warning: 'text-yellow-800 dark:text-yellow-600',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  return (
+    <div
+      className={`w-full overflow-auto ${variants[variant]} ${
+        roundeds[rounded]
+      } ${textColors[color]} ${variant === 'bordered' && borderColors[color]}`}
+    >
+      <table className={`w-full ${variant === 'default' && colors[color]}`}>
+        {children}
+      </table>
+    </div>
+  )
+}
+
+export default Table
+```
+
+</CodeBlock>
+
+El código para el componente `TableHeader` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const TableHeader = ({ children, color = 'default' }) => {
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  return (
+    <thead className={`border-0 backdrop-blur-md shadow-md ${colors[color]}`}>
+      <tr>{children}</tr>
+    </thead>
+  )
+}
+
+export default TableHeader
+```
+
+</CodeBlock>
+
+El código para el componente `TableBody` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const TableBody = ({
+  isLoading,
+  loadingContent,
+  isEmpty,
+  emptyMessage = 'No data available.',
+  divide = false,
+  color = 'default',
+  children
+}) => {
+  const divideColors = {
+    default: 'divide-gray-800 dark:divide-gray-300',
+    primary: 'divide-blue-800 dark:divide-blue-500',
+    secondary: 'divide-indigo-800 dark:divide-indigo-500',
+    success: 'divide-green-800 dark:divide-green-500',
+    warning: 'divide-yellow-800 dark:divide-yellow-500',
+    danger: 'divide-red-800 dark:divide-red-500'
+  }
+
+  if (isLoading) {
+    return (
+      <tbody>
+        <tr>
+          <td colSpan='100%' className='py-6 text-center'>
+            {loadingContent}
+          </td>
+        </tr>
+      </tbody>
+    )
+  }
+
+  if (isEmpty) {
+    return (
+      <tbody>
+        <tr>
+          <td colSpan='100%' className='py-6 text-center'>
+            {emptyMessage}
+          </td>
+        </tr>
+      </tbody>
+    )
+  }
+
+  return (
+    <tbody className={` ${divide && `divide-y ${divideColors[color]}`}`}>
+      {children}
+    </tbody>
+  )
+}
+
+export default TableBody
+```
+
+</CodeBlock>
+
+El código para el componente `TableRow` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const TableRow = ({
+  isSelected,
+  isDisabled,
+  isHovered,
+  isFocusVisible,
+  isFirst,
+  isLast,
+  isOdd,
+  id,
+  selectedColor = 'default',
+  hoverColor = 'default',
+  oddColor = 'default',
+  children
+}) => {
+  const selectedColors = {
+    default: 'bg-neutral-100/60 dark:bg-zinc-700/70 ',
+    primary: 'bg-blue-500/60 ',
+    secondary: 'bg-indigo-500/60 ',
+    success: 'bg-green-500/70 ',
+    warning: 'bg-yellow-500/80 dark:bg-yellow-500/60 ',
+    danger: 'bg-red-500/60 '
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-neutral-100/40 dark:hover:bg-zinc-700/50 ',
+    primary: 'hover:bg-blue-500/40 ',
+    secondary: 'hover:bg-indigo-500/40 ',
+    success: 'hover:bg-green-500/50 ',
+    warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/40 ',
+    danger: 'hover:bg-red-500/40 '
+  }
+
+  const oddColors = {
+    default: 'bg-neutral-200/20 dark:bg-zinc-800/30 ',
+    primary: 'bg-blue-600/20 ',
+    secondary: 'bg-indigo-600/20 ',
+    success: 'bg-green-600/30 ',
+    warning: 'bg-yellow-600/40 dark:bg-yellow-600/20 ',
+    danger: 'bg-red-600/20 '
+  }
+
+  return (
+    <tr
+      key={id}
+      className={`
+          ${isSelected ? selectedColors[selectedColor] : ''}
+          ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}
+          ${isHovered ? hoverColors[hoverColor] : ''}
+          ${isFocusVisible ? 'ring-2 ring-blue-500' : ''}
+          ${isFirst ? 'rounded-t-lg' : ''}
+          ${isLast ? 'rounded-b-lg' : ''}
+          ${isOdd ? oddColors[oddColor] : ''}
+          transition-colors duration-200
+        `}
+    >
+      {children}
+    </tr>
+  )
+}
+
+export default TableRow
+```
+
+</CodeBlock>
+
+El código para el componente `TableCell` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const TableCell = ({
+  isSelected,
+  isFocusVisible,
+  selectColor = 'default',
+  children
+}) => {
+  const selectedColors = {
+    default: 'bg-neutral-100/70 dark:bg-zinc-700/80 ',
+    primary: 'bg-blue-500/70 ',
+    secondary: 'bg-indigo-500/70 ',
+    success: 'bg-green-500/80 ',
+    warning: 'bg-yellow-500/90 dark:bg-yellow-500/70 ',
+    danger: 'bg-red-500/70 '
+  }
+  return (
+    <td
+      className={`
+          px-6 py-4 whitespace-nowrap text-sm
+          ${isSelected ? selectedColors[selectColor] : ''}
+          ${isFocusVisible ? 'ring-2 ring-blue-500' : ''}
+        `}
+    >
+      {children}
+    </td>
+  )
+}
+
+export default TableCell
+```
+
+</CodeBlock>
+
+El código para el componente `TableColumn` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const TableColumn = ({ children }) => {
+  return (
+    <th className='px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider'>
+      {children}
+    </th>
+  )
+}
+
+export default TableColumn
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo de la tabla es posible utilizar el atributo `variant` con los valores `default`, `bordered` y `light`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <CustomTable variant={'default'} client:load />
+    <CustomTable variant={'bordered'} client:load />
+    <CustomTable variant={'light'} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table variant={'default'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table variant={'bordered'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table variant={'light'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Colores
+
+Para cambiar el color de la tabla es posible utilizar el atributo `color` con los valores `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <CustomTable color={'default'} client:load />
+    <CustomTable color={'primary'} client:load />
+    <CustomTable color={'secondary'} client:load />
+    <CustomTable color={'success'} client:load />
+    <CustomTable color={'warning'} client:load />
+    <CustomTable color={'danger'} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table color={'default'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table color={'primary'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table color={'secondary'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table color={'success'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table color={'warning'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table color={'danger'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Bordes redondeados
+
+Para cambiar el borde redondeado de la tabla es posible utilizar el atributo `rounded` con los valores `none`, `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <CustomTable rounded={'none'} client:load />
+    <CustomTable rounded={'sm'} client:load />
+    <CustomTable rounded={'md'} client:load />
+    <CustomTable rounded={'lg'} client:load />
+    <CustomTable rounded={'xl'} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table rounded={'none'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table rounded={'sm'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table rounded={'md'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table rounded={'lg'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+<Table rounded={'xl'}>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Tabla vacía
+
+Para mostrar una tabla vacía es necesario utilizar el atributo `isEmpty` en el componente `TableBody` y no debe contener ningún elemento dentro de él. Además, es posible utilizar el atributo `emptyMessage` para mostrar un mensaje personalizado en caso de que la tabla esté vacía.
+
+<Preview>
+  <CustomTable empty emptyMessage='No existen elementos.' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody isEmpty emptyMessage='No existen elementos.'>
+    {[]}
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Tabla con datos
+
+Para mostrar una tabla con datos es necesario utilizar el atributo `isLoading` en el componente `TableBody` . Además, es posible utilizar el atributo `loadingContent` para mostrar un mensaje personalizado en caso de que la tabla esté cargando los datos.
+
+<Preview>
+  <CustomTable loading loadingContent='Cargando datos...' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody isLoading loadingContent='Cargando datos...'>
+    {[]}
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Tabla con divisores
+
+Para mostrar una tabla con divisores es necesario utilizar el atributo `divide` en el componente `TableBody`. Además, es posible utilizar el atributo `color` para cambiar el color de los divisores.
+
+<Preview>
+  <CustomTable divide={true} divideColor={'primary'} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody divide={true} color={'primary'}>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Fila seleccionada
+
+Para mostrar una fila seleccionada es necesario utilizar el atributo `isSelected` en el componente `TableRow`. Además, es posible utilizar el atributo `selectColor` para cambiar el color de la selección.
+
+<Preview>
+  <CustomTable rowSelected={true} selectedColor={'primary'} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1' isSelected={true} selectedColor={'primary'}>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Fila deshabilitada
+
+Para mostrar una fila deshabilitada es necesario utilizar el atributo `isDisabled` en el componente `TableRow`.
+
+<Preview>
+  <CustomTable disabledRow={true} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2' isDisabled={true}>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Fila Hover y Odd
+
+Para mostrar una fila con hover y odd es necesario utilizar los atributos `isHovered` y `isOdd` en el componente `TableRow`. Además, es posible utilizar el atributo `hoverColor` y `oddColor` para cambiar el color de hover y odd.
+
+<Preview>
+  <CustomTable
+    hover={true}
+    hoverColor={'danger'}
+    oddRow={true}
+    oddColor={'success'}
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1' isOdd={true} oddColor={'success'}>
+      <TableCell>1</TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2' isHovered={true} hoverColor={'danger'}>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3' isOdd={true} oddColor={'success'}>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4' isHovered={true} hoverColor={'danger'}>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>
+
+## Celda seleccionada
+
+Para mostrar una celda seleccionada es necesario utilizar el atributo `isSelected` en el componente `TableCell`. Además, es posible utilizar el atributo `selectColor` para cambiar el color de la celda seleccionada.
+
+<Preview>
+  <CustomTable cellSelected={true} selectedCellColor={'primary'} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Table>
+  <TableHeader>
+    <TableColumn>id</TableColumn>
+    <TableColumn>name</TableColumn>
+    <TableColumn>age</TableColumn>
+  </TableHeader>
+  <TableBody>
+    <TableRow id='1'>
+      <TableCell isSelected={true} selectColor={'primary'}>
+        1
+      </TableCell>
+      <TableCell>Jhon Doe</TableCell>
+      <TableCell>28</TableCell>
+    </TableRow>
+    <TableRow id='2'>
+      <TableCell>2</TableCell>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>34</TableCell>
+    </TableRow>
+    <TableRow id='3'>
+      <TableCell>3</TableCell>
+      <TableCell>Sam Green</TableCell>
+      <TableCell>45</TableCell>
+    </TableRow>
+    <TableRow id='4'>
+      <TableCell>4</TableCell>
+      <TableCell>Jackie Chan</TableCell>
+      <TableCell>60</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+</CodeBlock>

@@ -1,0 +1,246 @@
+---
+name: Switch
+description: Permite al usuario activar o desactivar una opción.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Switch from '../../components/Switch.jsx'
+
+## Sobre el componente
+
+Este componente se utilizar para mostrar un botón que puede ser alternado entre dos estados.
+
+## Uso básico
+
+Para utilizar el componente `Switch` simplemente debe importarlo y luego utilizarlo.
+
+<Preview>
+  <Switch client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch />
+```
+
+</CodeBlock>
+
+El código para el componente `Switch` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+## Seleccionado
+
+Para cambiar el estado de la switch es posible utilizar el atributo `isSelected` con el valor `true` o `false`.
+
+<Preview>
+  <Switch isSelected={true} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch isSelected={true} />
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+Para cambiar el estado de la switch es posible utilizar el atributo `isDisabled` con el valor `true` o `false`.
+
+<Preview>
+  <Switch isDisabled={true} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch isDisabled={true} />
+```
+
+</CodeBlock>
+
+## Solo lectura
+
+Para cambiar el estado de la switch es posible utilizar el atributo `isReadOnly` con el valor `true` o `false`.
+
+<Preview>
+  <Switch isReadOnly={true} isSelected={true} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch isReadOnly={true} isSelected={true} />
+```
+
+</CodeBlock>
+
+## Colores
+
+Para cambiar el color de la switch es posible utilizar el atributo `color` con los valores `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch color='default' isSelected={true} client:load />
+    <Switch color='primary' isSelected={true} client:load />
+    <Switch color='secondary' isSelected={true} client:load />
+    <Switch color='success' isSelected={true} client:load />
+    <Switch color='warning' isSelected={true} client:load />
+    <Switch color='danger' isSelected={true} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch color='default' isSelected={true} />
+<Switch color='primary' isSelected={true} />
+<Switch color='secondary' isSelected={true} />
+<Switch color='success' isSelected={true} />
+<Switch color='warning' isSelected={true} />
+<Switch color='danger' isSelected={true} />
+```
+
+</CodeBlock>
+
+## Bordes redondeados
+
+Para cambiar el borde redondeado de la switch es posible utilizar el atributo `rounded` con los valores `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch rounded='none' isSelected={true} client:load />
+    <Switch rounded='sm' isSelected={true} client:load />
+    <Switch rounded='md' isSelected={true} client:load />
+    <Switch rounded='lg' isSelected={true} client:load />
+    <Switch rounded='full' isSelected={true} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch rounded='none' isSelected={true} />
+<Switch rounded='sm' isSelected={true} />
+<Switch rounded='md' isSelected={true} />
+<Switch rounded='lg' isSelected={true} />
+<Switch rounded='full' isSelected={true} />
+```
+
+</CodeBlock>
+
+## Tamaño
+
+Para cambiar el tamaño de la switch es posible utilizar el atributo `size` con los valores `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch size='sm' isSelected={true} client:load />
+    <Switch size='md' isSelected={true} client:load />
+    <Switch size='lg' isSelected={true} client:load />
+    <Switch size='xl' isSelected={true} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch size='sm' isSelected={true} />
+<Switch size='md' isSelected={true} />
+<Switch size='lg' isSelected={true} />
+<Switch size='xl' isSelected={true} />
+```
+
+</CodeBlock>
+
+## Texto
+
+Para cambiar el texto de la switch es posible utilizar el atributo `label` con el valor que desee.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch label='Toggle me' isSelected={true} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch label='Toggle me' isSelected={true} />
+```
+
+</CodeBlock>
+
+### Color de texto
+
+Para cambiar el color de texto de la switch es posible utilizar el atributo `textColor` con los valores `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch label='default' textColor='default' client:load />
+    <Switch label='primary' textColor='primary' client:load />
+    <Switch label='secondary' textColor='secondary' client:load />
+    <Switch label='success' textColor='success' client:load />
+    <Switch label='warning' textColor='warning' client:load />
+    <Switch label='danger' textColor='danger' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch textColor='default' isSelected={true} />
+<Switch textColor='primary' isSelected={true} />
+<Switch textColor='secondary' isSelected={true} />
+<Switch textColor='success' isSelected={true} />
+<Switch textColor='warning' isSelected={true} />
+<Switch textColor='danger' isSelected={true} />
+```
+
+</CodeBlock>
+
+## Start y End content
+
+Para cambiar el contenido de inicio y final de la switch es posible utilizar el atributo `startContent` y `endContent` con el valor que desee.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch startContent='🌞' endContent='🌜' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch startContent='🌞' endContent='🌜' />
+```
+
+</CodeBlock>
+
+## Thumb Icon
+
+Para cambiar el icono de la switch es posible utilizar el atributo `thumbIcon` con el valor que desee.
+
+<Preview>
+  <div className='flex flex-col gap-4 mx-auto'>
+    <Switch thumbIcon='⭐' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Switch thumbIcon='⭐' />
+```
+
+</CodeBlock>
