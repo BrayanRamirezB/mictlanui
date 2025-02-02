@@ -1,0 +1,579 @@
+---
+name: Slider
+description: Permite al usuario seleccionar un valor dentro de un rango de valores.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Slider from '../../components/Slider.jsx'
+
+## Sobre el componente
+
+El componente `Slider` es una herramienta de interfaz de usuario que permite seleccionar multiples valores dentro de un rango de valores.
+
+## Uso básico
+
+Para utilizar el componente `Slider`, simplemente se debe importar el componente y utilizar su etiqueta en el código HTML. El componente `Slider` se puede utilizar en cualquier parte de la página web, pero es especialmente útil para crear una interfaz de usuario interactiva y dinámica.
+
+<Preview>
+  <Slider client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider />
+```
+
+</CodeBlock>
+
+El código para el componente `Slider` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useState, useRef, useEffect } from 'react'
+
+const Slider = ({
+  min = 0,
+  max = 100,
+  step = 1,
+  value: initialValue = 0,
+  showValue = true,
+  onChange,
+  label,
+  startContent,
+  endContent,
+  disabled = false,
+  orientation = 'horizontal',
+  color = 'default',
+  textColor = 'default',
+  size = 'md',
+  sliderLength = 'md',
+  thumbRadius = 'full',
+  showThumb = true
+}) => {
+  const [value, setValue] = useState(initialValue ?? min)
+  const [isDragging, setIsDragging] = useState(false)
+  const [hovering, setHovering] = useState(false)
+  const [thumbHovering, setThumbHovering] = useState(false)
+  const [thumbPressed, setThumbPressed] = useState(false)
+  const [thumbFocused, setThumbFocused] = useState(false)
+  const trackRef = useRef(null)
+  const thumbRef = useRef(null)
+
+  useEffect(() => {
+    if (initialValue !== undefined) {
+      setValue(initialValue)
+    }
+  }, [initialValue])
+
+  const handleValueChange = (newValue) => {
+    if (disabled) return
+    setValue(newValue)
+    if (onChange) {
+      onChange(newValue)
+    }
+  }
+
+  const handleTrackClick = (e) => {
+    if (disabled) return
+    if (!trackRef.current) return
+    const trackRect = trackRef.current.getBoundingClientRect()
+    const trackLength =
+      orientation === 'horizontal' ? trackRect.width : trackRect.height
+    const clickPos =
+      orientation === 'horizontal'
+        ? e.clientX - trackRect.left
+        : trackRect.bottom - e.clientY
+    const newValue =
+      Math.round(min + ((clickPos / trackLength) * (max - min)) / step) * step
+    handleValueChange(Math.max(min, Math.min(max, newValue)))
+  }
+
+  const handleThumbMouseDown = (e) => {
+    if (disabled) return
+    setIsDragging(true)
+    setThumbPressed(true)
+    document.addEventListener('mousemove', handleThumbDrag)
+    document.addEventListener('mouseup', handleThumbMouseUp)
+  }
+
+  const handleThumbTouchStart = (e) => {
+    if (disabled) return
+    setIsDragging(true)
+    setThumbPressed(true)
+    document.addEventListener('touchmove', handleThumbDrag)
+    document.addEventListener('touchend', handleThumbMouseUp)
+  }
+
+  const handleThumbDrag = (e) => {
+    if (disabled) return
+    if (!trackRef.current) return
+    const trackRect = trackRef.current.getBoundingClientRect()
+    const trackLength =
+      orientation === 'horizontal' ? trackRect.width : trackRect.height
+    const clientPos =
+      orientation === 'horizontal'
+        ? (e.clientX ?? e.touches[0].clientX) - trackRect.left
+        : trackRect.bottom - (e.clientY ?? e.touches[0].clientY)
+    const newValue =
+      Math.round(min + ((clientPos / trackLength) * (max - min)) / step) * step
+    handleValueChange(Math.max(min, Math.min(max, newValue)))
+  }
+
+  const handleThumbMouseUp = () => {
+    if (disabled) return
+    setIsDragging(false)
+    setThumbPressed(false)
+    document.removeEventListener('mousemove', handleThumbDrag)
+    document.removeEventListener('mouseup', handleThumbMouseUp)
+    document.removeEventListener('touchmove', handleThumbDrag)
+    document.removeEventListener('touchend', handleThumbMouseUp)
+  }
+
+  const calculatePercentage = () => {
+    return ((value - min) / (max - min)) * 100
+  }
+
+  const thumbStyle = {
+    [orientation === 'horizontal' ? 'left' : 'top']: `${
+      orientation === 'vertical'
+        ? 100 - calculatePercentage()
+        : calculatePercentage()
+    }%`
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/90 dark:bg-zinc-700/90',
+    primary: 'bg-blue-500/40 ',
+    secondary: 'bg-indigo-500/40 ',
+    success: 'bg-green-500/40 ',
+    warning: 'bg-yellow-500/40',
+    danger: 'bg-red-500/40 '
+  }
+
+  const thumbColors = {
+    default: 'bg-neutral-100 dark:bg-zinc-700',
+    primary: 'bg-blue-500',
+    secondary: 'bg-indigo-500',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    danger: 'bg-red-500'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-600',
+    secondary: 'text-indigo-600',
+    success: 'text-green-600',
+    warning: 'text-yellow-600',
+    danger: 'text-red-600'
+  }
+
+  const thumbSizes = {
+    sm: 'w-4 h-4',
+    md: 'w-5 h-5',
+    lg: 'w-7 h-7'
+  }
+
+  const verticalBarSizes = {
+    sm: 'w-4',
+    md: 'w-5',
+    lg: 'w-7'
+  }
+
+  const horizontalBarSizes = {
+    sm: 'h-4',
+    md: 'h-5',
+    lg: 'h-7'
+  }
+
+  const thumbRadiuses = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const sliderWidth = {
+    sm: 'w-40',
+    md: 'w-64',
+    lg: 'w-96',
+    full: 'w-full'
+  }
+
+  const sliderHeight = {
+    sm: 'h-40',
+    md: 'h-64',
+    lg: 'h-96',
+    full: 'h-full'
+  }
+
+  return (
+    <div
+      className={`flex items-center justify-center ${
+        orientation === 'horizontal' ? 'flex-col' : 'flex-col-reverse gap-y-4'
+      } ${textColors[textColor]}`}
+    >
+      <div className='flex items-center'>
+        {label && <span className='text-sm mr-2'>{label}</span>}
+        {showValue && <span className='text-sm'>{value}</span>}
+      </div>
+      <div
+        className={`flex justify-between items-center  ${
+          orientation === 'horizontal'
+            ? 'flex-row space-x-2'
+            : 'flex-col space-y-2'
+        }`}
+      >
+        {startContent && (
+          <span className='flex items-center justify-center'>
+            {startContent}
+          </span>
+        )}
+        <div
+          className={`relative ${
+            orientation === 'horizontal'
+              ? `${sliderWidth[sliderLength]} h-10`
+              : `${sliderHeight[sliderLength]} w-10`
+          } ${hovering ? 'data-hover' : ''} ${disabled ? 'opacity-50' : ''}`}
+          onMouseEnter={() => setHovering(true)}
+          onMouseLeave={() => setHovering(false)}
+          data-orientation={orientation}
+        >
+          <div
+            className={`absolute ${
+              orientation === 'horizontal'
+                ? `top-1/2 left-0 w-full ${horizontalBarSizes[size]} -translate-y-1/2`
+                : `left-1/2 top-0 h-full ${verticalBarSizes[size]} -translate-x-1/2`
+            } backdrop-blur-sm shadow-md bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10 rounded-md ${
+              disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+            }`}
+            ref={trackRef}
+            onClick={handleTrackClick}
+          >
+            <div
+              className={`absolute ${
+                orientation === 'horizontal'
+                  ? 'left-0 top-0 h-full'
+                  : 'bottom-0 left-0 w-full'
+              } ${colors[color]} rounded-md`}
+              style={{
+                [orientation === 'horizontal'
+                  ? 'width'
+                  : 'height']: `${calculatePercentage()}%`
+              }}
+            ></div>
+          </div>
+
+          <div
+            className={`absolute ${
+              orientation === 'horizontal'
+                ? 'top-1/2 -translate-y-1/2 -translate-x-1/2 left-0'
+                : 'left-1/2 -translate-x-1/2 -translate-y-1/2 top-0'
+            } ${thumbSizes[size]} ${thumbRadiuses[thumbRadius]} ${
+              showThumb &&
+              `${thumbColors[color]} border-2 border-zinc-700/30 dark:border-neutral-100/20`
+            } shadow-sm ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            style={thumbStyle}
+            ref={thumbRef}
+            onMouseDown={handleThumbMouseDown}
+            onTouchStart={handleThumbTouchStart}
+            onMouseEnter={() => setThumbHovering(true)}
+            onMouseLeave={() => setThumbHovering(false)}
+            onFocus={() => setThumbFocused(true)}
+            onBlur={() => setThumbFocused(false)}
+            data-dragging={isDragging}
+            data-hover={thumbHovering}
+            data-pressed={thumbPressed}
+            data-focus-visible={thumbFocused}
+          ></div>
+        </div>
+        {endContent && (
+          <span className='flex items-center justify-center'>{endContent}</span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default Slider
+```
+
+</CodeBlock>
+
+## Minimo y máximo
+
+El componente `Slider` tiene dos propiedades que se utilizan para establecer el rango de valores que el usuario puede seleccionar: `min` y `max`. Estas propiedades se utilizan para establecer el valor mínimo y máximo del componente `Slider`.
+
+<Preview>
+  <Slider min={0} max={50} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider min={0} max={50} />
+```
+
+</CodeBlock>
+
+## Step
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer el paso del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `step` en el componente `Slider`.
+
+<Preview>
+  <Slider step={10} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider step={10} />
+```
+
+</CodeBlock>
+
+## Valor inicial
+
+El componente también tiene una propiedad que se utiliza para establecer el valor inicial. Para utilizarla simplemente se debe establecer el valor de la propiedad `value` en el componente `Slider`.
+
+<Preview>
+  <Slider value={25} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider value={25} />
+```
+
+</CodeBlock>
+
+## Etiqueta del valor actual
+
+Para ocultar el valor actual del componente `Slider`, se puede utilizar la propiedad `showValue`. Esta propiedad se utiliza para mostrar o no la etiqueta junto con el valor actual.
+
+<Preview>
+  <Slider showValue={false} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider showValue={false} />
+```
+
+</CodeBlock>
+
+## Etiqueta
+
+El componente también tiene una propiedad que se utiliza para mostrar una etiqueta. Para utilizarla simplemente se debe establecer el valor de la propiedad `label` en el componente `Slider`.
+
+<Preview>
+  <Slider label='Volumen' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider label='Volumen' />
+```
+
+</CodeBlock>
+
+## Contenido inicial y final
+
+El componente `Slider` también tiene dos propiedades que se utilizan para establecer el contenido inicial y final del componente. Para utilizarlas simplemente se deben establecer los valores de las propiedades `startContent` y `endContent` en el componente `Slider`.
+
+<Preview>
+  <Slider startContent='🔈' endContent='🔊' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider startContent='🔈' endContent='🔊' />
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+El componente `Slider` también tiene una propiedad que se utiliza para deshabilitar el componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `disabled` en el componente `Slider`.
+
+<Preview>
+  <Slider disabled client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider disabled />
+```
+
+</CodeBlock>
+
+## Orientación
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer la orientación del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `orientation` en el componente `Slider`. Esta propiedad acepta los siguientes valores: `horizontal` y `vertical`.
+
+<Preview>
+  <div className='flex flex-col gap-4'>
+    <Slider orientation='horizontal' client:load />
+    <Slider orientation='vertical' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider orientation='horizontal' />
+<Slider orientation='vertical' />
+```
+
+</CodeBlock>
+
+## Color
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer el color del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `color` en el componente `Slider`. Esta propiedad acepta los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-4'>
+    <Slider color='default' client:load />
+    <Slider color='primary' client:load />
+    <Slider color='secondary' client:load />
+    <Slider color='success' client:load />
+    <Slider color='warning' client:load />
+    <Slider color='danger' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider color='default' />
+<Slider color='primary' />
+<Slider color='secondary' />
+<Slider color='success' />
+<Slider color='warning' />
+<Slider color='danger' />
+```
+
+</CodeBlock>
+
+### Color del texto
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer el color del texto del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `textColor` en el componente `Slider`. Esta propiedad acepta los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-4'>
+    <Slider textColor='default' client:load />
+    <Slider textColor='primary' client:load />
+    <Slider textColor='secondary' client:load />
+    <Slider textColor='success' client:load />
+    <Slider textColor='warning' client:load />
+    <Slider textColor='danger' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider textColor='default' />
+<Slider textColor='primary' />
+<Slider textColor='secondary' />
+<Slider textColor='success' />
+<Slider textColor='warning' />
+<Slider textColor='danger' />
+```
+
+</CodeBlock>
+
+## Tamaño
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer el tamaño del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `size` en el componente `Slider`. Esta propiedad acepta los siguientes valores: `sm`, `md` y `lg`.
+
+<Preview>
+  <div className='flex flex-col gap-4'>
+    <Slider size='sm' client:load />
+    <Slider size='md' client:load />
+    <Slider size='lg' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider size='sm' />
+<Slider size='md' />
+<Slider size='lg' />
+```
+
+</CodeBlock>
+
+## Longitud del componente
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer el tamaño del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `sliderLength` en el componente `Slider`. Esta propiedad acepta los siguientes valores: `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div className='flex flex-col gap-4'>
+    <Slider sliderLength='sm' client:load />
+    <Slider sliderLength='md' client:load />
+    <Slider sliderLength='lg' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider sliderLength='sm' />
+<Slider sliderLength='md' />
+<Slider sliderLength='lg' />
+```
+
+</CodeBlock>
+
+## Radio de thumb
+
+El componente `Slider` también tiene una propiedad que se utiliza para establecer el radio de thumb del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `thumbRadius` en el componente `Slider`. Esta propiedad acepta los siguientes valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <div className='flex flex-col gap-4'>
+    <Slider thumbRadius='none' client:load />
+    <Slider thumbRadius='sm' client:load />
+    <Slider thumbRadius='md' client:load />
+    <Slider thumbRadius='lg' client:load />
+    <Slider thumbRadius='full' client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider thumbRadius='none' />
+<Slider thumbRadius='sm' />
+<Slider thumbRadius='md' />
+<Slider thumbRadius='lg' />
+<Slider thumbRadius='full' />
+```
+
+</CodeBlock>
+
+## Mostrar thumb
+
+El componente `Slider` también tiene una propiedad que se utiliza para mostrar o no el thumb del componente. Para utilizarla simplemente se debe establecer el valor de la propiedad `showThumb` en el componente `Slider`.
+
+<Preview>
+  <Slider showThumb={false} client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Slider showThumb={false} />
+```
+
+</CodeBlock>

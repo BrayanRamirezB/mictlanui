@@ -1,0 +1,203 @@
+---
+name: Spinner
+description: Indica que un componente está cargando.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Spinner from '../../components/Spinner.jsx'
+
+## Sobre el componente
+
+Este componente se utiliza para mostrar un indicador de carga para un componente o sección de la página web.
+
+## Uso básico
+
+Para utilizar el componente, simplemente se debe importar el componente e insertar su etiqueta en el lugar donde se desea mostrar el indicador de carga.
+
+<Preview>
+  <Spinner client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Spinner />
+```
+
+</CodeBlock>
+
+El código para el componente `Spinner` se muestra a continuación:
+
+<CodeBlock client:load>
+
+```jsx
+const Spinner = ({
+  label,
+  variant = 'default',
+  size = 'md',
+  color = 'default',
+  textColor = 'default'
+}) => {
+  const variants = {
+    default: 'backdrop-blur-sm shadow-lg',
+    light: ''
+  }
+
+  const sizes = {
+    xs: 'size-4',
+    sm: 'size-6',
+    md: 'size-8',
+    lg: 'size-10',
+    xl: 'size-12'
+  }
+
+  const firstCircleColors = {
+    default: 'border-zinc-500',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const secondCircleColors = {
+    default: 'border-zinc-400',
+    primary: 'border-blue-300',
+    secondary: 'border-indigo-300',
+    success: 'border-green-300',
+    warning: 'border-yellow-300',
+    danger: 'border-red-300'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-600',
+    secondary: 'text-indigo-800 dark:text-indigo-600',
+    success: 'text-green-800 dark:text-green-600',
+    warning: 'text-yellow-800 dark:text-yellow-600',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  return (
+    <div className='flex flex-col items-center justify-center space-y-2'>
+      <div className='relative'>
+        <div
+          className={`relative rounded-full ${variants[variant]} ${sizes[size]}`}
+        >
+          <div
+            className={`absolute w-full h-full rounded-full border-4 border-t-transparent border-r-transparent border-l-transparent ${firstCircleColors[color]} animate-spin`}
+          ></div>
+          <div
+            className={`absolute w-full h-full rounded-full border-4 border-t-transparent border-b-transparent border-l-transparent ${secondCircleColors[color]} animate-spin`}
+          ></div>
+        </div>
+      </div>
+      {label && (
+        <span className={`text-sm ${textColors[textColor]}`}>{label}</span>
+      )}
+    </div>
+  )
+}
+
+export default Spinner
+```
+
+</CodeBlock>
+
+## Variantes
+
+El componente `Spinner` dispone de algunas variantes que se pueden utilizar mediante el atributo `variant`. Los valores disponibles para este atributo son: `default` y `light`.
+
+<Preview>
+  <Spinner client:load />
+  <Spinner variant='light' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Spinner variant="default" />
+<Spinner variant="light" />
+```
+
+</CodeBlock>
+
+## Etiqueta de texto
+
+Para agregar una etiqueta de texto al componente `Spinner`, se puede utilizar el atributo `label`. Este atributo acepta cualquier valor que se desee mostrar como etiqueta.
+
+<Preview>
+  <Spinner label='Cargando...' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Spinner label='Cargando...' />
+```
+
+</CodeBlock>
+
+### Color del texto
+
+El componente `Spinner` también admite diferentes colores para el texto. Estos colores se pueden utilizar mediante el atributo `textColor`. Los valores disponibles para este atributo son: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <Spinner label='Default...' client:load />
+  <Spinner label='Primary...' textColor='primary' client:load />
+  <Spinner label='Secondary...' textColor='secondary' client:load />
+  <Spinner label='Success...' textColor='success' client:load />
+  <Spinner label='Warning...' textColor='warning' client:load />
+  <Spinner label='Danger...' textColor='danger' client:load />
+</Preview>
+
+## Colores
+
+El componente `Spinner` admite diferentes colores que se pueden utilizar para personalizar su apariencia. Estos colores se pueden utilizar mediante el atributo `color`. Los valores disponibles para este atributo son: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <Spinner client:load />
+  <Spinner color='primary' client:load />
+  <Spinner color='secondary' client:load />
+  <Spinner color='success' client:load />
+  <Spinner color='warning' client:load />
+  <Spinner color='danger' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Spinner color="default" />
+<Spinner color="primary" />
+<Spinner color="secondary" />
+<Spinner color="success" />
+<Spinner color="warning" />
+<Spinner color="danger" />
+```
+
+</CodeBlock>
+
+## Tamaño
+
+El componente `Spinner` también admite diferentes tamaños que se pueden utilizar para personalizar su apariencia. Estos tamaños se pueden utilizar mediante el atributo `size`. Los valores disponibles para este atributo son: `xs`, `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <Spinner size='xs' client:load />
+  <Spinner size='sm' client:load />
+  <Spinner size='md' client:load />
+  <Spinner size='lg' client:load />
+  <Spinner size='xl' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Spinner size="xs" />
+<Spinner size="sm" />
+<Spinner size="md" />
+<Spinner size="lg" />
+<Spinner size="xl" />
+```
+
+</CodeBlock>
