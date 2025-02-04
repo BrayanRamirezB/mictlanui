@@ -28,6 +28,9 @@ import Footer from '../components/Footer.astro';
 </html>
 
 <style is:global>
+	@import 'tailwindcss';
+	@config '../../tailwind.config.mjs';
+	
 	:root {
 		color-scheme: light dark;
 	}
@@ -52,5 +55,12 @@ import Footer from '../components/Footer.astro';
 	.custom-date-input::-webkit-calendar-picker-indicator {
 		display: none;
 		-webkit-appearance: none;
+	}
+
+	@layer base {
+		button:not(:disabled),
+		[role="button"]:not(:disabled) {
+			cursor: pointer;
+		}
 	}
 </style>

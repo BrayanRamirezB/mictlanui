@@ -1,0 +1,747 @@
+---
+name: 'Radio'
+description: 'Componente de selección de opciones.'
+---
+
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Preview from '../../components/Preview.astro'
+import CustomRadio from '../../components/Radio/CustomRadio.jsx'
+
+## Sobre el componente
+
+El componente `Radio` es una herramienta de selección de opciones que permite al usuario seleccionar una opción de una lista de opciones.
+
+## Uso básico
+
+Para utilizar el componente `RadioGroup`, es necesario utilizar el componente `Radio` con el atributo `value` dentro del componente, además de un estado para manejar la selección del usuario.
+
+<Preview>
+  <CustomRadio client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup selectedValue={selectedValue} onChange={handleChange}>
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+El código para el componente `Radio` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import { useState } from 'react'
+
+const Radio = ({
+  value,
+  isSelected = false,
+  isDisabled = false,
+  isReadOnly = false,
+  children,
+  description,
+  onChange,
+  color
+}) => {
+  const [isPressed, setIsPressed] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+
+  const handleChange = () => {
+    if (!isDisabled && !isReadOnly && onChange) {
+      onChange(value)
+    }
+  }
+
+  const handleMouseDown = () => {
+    if (!isDisabled && !isReadOnly) {
+      setIsPressed(true)
+    }
+  }
+
+  const handleMouseUp = () => {
+    setIsPressed(false)
+  }
+
+  const handleMouseEnter = () => {
+    if (!isDisabled && !isReadOnly) {
+      setIsHovered(true)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    setIsHovered(false)
+  }
+
+  const colors = {
+    default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
+    primary: 'bg-blue-500/50 ',
+    secondary: 'bg-indigo-500/50 ',
+    success: 'bg-green-500/60 ',
+    warning: 'bg-yellow-500/60 ',
+    danger: 'bg-red-500/50 '
+  }
+
+  return (
+    <div
+      data-selected={isSelected}
+      data-pressed={isPressed}
+      data-readonly={isReadOnly}
+      data-hover-unselected={isHovered && !isSelected}
+      data-hover={isHovered}
+      data-disabled={isDisabled}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleChange}
+      className={`flex items-center gap-2 ${
+        isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+      }`}
+    >
+      <input
+        type='radio'
+        value={value}
+        checked={isSelected}
+        disabled={isDisabled || isReadOnly}
+        onChange={handleChange}
+        className='hidden'
+      />
+
+      <div
+        className={`size-5 rounded-full flex items-center justify-center transition-colors ${
+          isSelected
+            ? colors[color]
+            : 'border-2 border-zinc-700/50 dark:border-neutral-100/50'
+        } ${isHovered ? 'bg-zinc-700/30 dark:bg-neutral-100/30' : ''}`}
+      >
+        {isSelected && (
+          <div
+            className={`size-3 border-2 rounded-full border-transparent ${colors[color]}`}
+          ></div>
+        )}
+      </div>
+
+      <div className='flex flex-col'>
+        <div className='text-sm font-medium'>{children}</div>
+
+        {description && <p className='text-sm font-light'>{description}</p>}
+      </div>
+    </div>
+  )
+}
+
+export default Radio
+```
+
+</CodeBlock>
+
+El código para el componente `RadioGroup` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+import React from 'react'
+
+const RadioGroup = ({
+  children,
+  orientation = 'vertical',
+  label,
+  description,
+  errorMessage,
+  isInvalid,
+  isDisabled,
+  selectedValue,
+  onChange,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md'
+}) => {
+  const variants = {
+    default: 'border-0 backdrop-blur-sm shadow-md',
+    bordered: 'border shadow-md',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/20 ',
+    warning: 'bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const borderColors = {
+    default: 'border-zinc-700/30 dark:border-neutral-100/20',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500 ',
+    success: 'border-green-500 ',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-600',
+    secondary: 'text-indigo-600',
+    success: 'text-green-600',
+    warning: 'text-yellow-600',
+    danger: 'text-red-600'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-xl',
+    xl: 'rounded-3xl'
+  }
+
+  return (
+    <div
+      className={`flex flex-col gap-3 px-4 py-3 ${variants[variant]} ${
+        variant === 'default' && colors[color]
+      } ${roundeds[rounded]} ${variant === 'bordered' && borderColors[color]}`}
+      data-orientation={orientation}
+      role='radiogroup'
+    >
+      {label && (
+        <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+          {label}
+        </span>
+      )}
+
+      <div
+        className={`flex ${
+          orientation === 'horizontal' ? 'flex-row gap-4' : 'flex-col gap-2'
+        } ${textColors[color]}`}
+      >
+        {React.Children.map(children, (child) =>
+          React.cloneElement(child, {
+            isSelected: child.props.value === selectedValue,
+            onChange: onChange,
+            color: color,
+            isDisabled: isDisabled || child.props.isDisabled
+          })
+        )}
+      </div>
+
+      {description && <p className='text-sm text-gray-500'>{description}</p>}
+
+      {isInvalid && errorMessage && (
+        <p className='text-sm text-red-600'>{errorMessage}</p>
+      )}
+    </div>
+  )
+}
+
+export default RadioGroup
+```
+
+</CodeBlock>
+
+## Orientación
+
+Para modificar la orientación se puede utilizar el atributo `orientation` en el componente `RadioGroup`. Este atributo acepta los valores: `horizontal` y `vertical`.
+
+<Preview>
+  <CustomRadio client:load orientation='horizontal' />
+  <CustomRadio client:load orientation='vertical' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleFruitChange}
+      orientation='horizontal'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleFruitChange}
+      orientation='vertical'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </>
+)
+```
+
+</CodeBlock>
+
+## Etiqueta
+
+Para agregar una etiqueta al componente, simplemente debes agregar el atributo `label` en el componente `RadioGroup`.
+
+<Preview>
+  <CustomRadio client:load label='Selecciona tu opción favorita' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      label='Selecciona tu opción favorita'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Descripción
+
+Para agregar una descripción al componente, simplemente debes agregar el atributo `description` en el componente `RadioGroup`.
+
+<Preview>
+  <CustomRadio
+    client:load
+    description='Esta es una descripción para el componente'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      description='Esta es una descripción para el componente'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Error de validación
+
+Para agregar un mensaje de error al componente, simplemente debes agregar el atributo `errorMessage` en el componente `RadioGroup`. Para indicar que el componente es inválido, se puede utilizar el atributo `isInvalid` en el componente `RadioGroup`. Este atributo acepta un booleano que determina si el componente es inválido o no.
+
+<Preview>
+  <CustomRadio
+    client:load
+    errorMessage='Debes seleccionar la opción 2'
+    IsInvalid={true}
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+const validOptions = ['option2']
+
+const isInvalid = !validOptions.includes(selectedValue)
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      errorMessage='Debes seleccionar la opción 2'
+      isInvalid={isInvalid}
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+Para deshabilitar el componente, se puede utilizar el atributo `isDisabled` en el componente `RadioGroup`. Este atributo acepta un booleano que determina si el componente está deshabilitado o no.
+
+<Preview>
+  <CustomRadio client:load isDisabled={true} />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      isDisabled
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `RadioGroup`. Este atributo acepta los valores: `default`, `bordered` y `light`.
+
+<Preview>
+  <CustomRadio client:load variant='default' />
+  <CustomRadio client:load variant='bordered' />
+  <CustomRadio client:load variant='light' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      variant='default'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      variant='bordered'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      variant='light'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Color
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `RadioGroup`. Este atributo acepta los valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className='flex flex-row flex-wrap gap-4 justify-center'>
+    <CustomRadio client:load color='default' />
+    <CustomRadio client:load color='primary' />
+    <CustomRadio client:load color='secondary' />
+    <CustomRadio client:load color='success' />
+    <CustomRadio client:load color='warning' />
+    <CustomRadio client:load color='danger' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      color='default'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      color='primary'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      color='secondary'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      color='success'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      color='warning'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      color='danger'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Redondeado
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `rounded` en el componente `RadioGroup`. Este atributo acepta los valores: `none`, `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div className='flex flex-row flex-wrap gap-4 justify-center'>
+    <CustomRadio client:load rounded='none' />
+    <CustomRadio client:load rounded='sm' />
+    <CustomRadio client:load rounded='md' />
+    <CustomRadio client:load rounded='lg' />
+    <CustomRadio client:load rounded='xl' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      rounded='none'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      rounded='sm'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      rounded='md'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      rounded='lg'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+
+    <RadioGroup
+      selectedValue={selectedValue}
+      onChange={handleChange}
+      rounded='xl'
+    >
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3'>Option 3</Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Radio con descripción
+
+Para agregar una descripción al componente, simplemente debes agregar el atributo `description` en el componente `Radio`. Este atributo acepta un string que representa la descripción del componente.
+
+<Preview>
+  <CustomRadio
+    client:load
+    itemDescription='Esta es una descripción para el componente'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup selectedValue={selectedValue} onChange={handleChange}>
+      <Radio value='option1' description='This is option 1'>
+        Option 1
+      </Radio>
+      <Radio value='option2' description='This is option 2'>
+        Option 2
+      </Radio>
+      <Radio value='option3' description='This is option 3'>
+        Option 3
+      </Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Radio deshabilitado
+
+Para deshabilitar un elemento de la lista de opciones, se puede utilizar el atributo `isDisabled` en el componente `Radio`. Este atributo acepta un booleano que determina si el elemento está deshabilitado o no.
+
+<Preview>
+  <CustomRadio client:load itemDisabled />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedValue, setSelectedValue] = useState(null)
+
+const handleChange = (value) => {
+  setSelectedValue(value)
+}
+
+return (
+  <div className='p-4'>
+    <RadioGroup selectedValue={selectedValue} onChange={handleChange}>
+      <Radio value='option1'>Option 1</Radio>
+      <Radio value='option2'>Option 2</Radio>
+      <Radio value='option3' isDisabled>
+        Option 3
+      </Radio>
+    </RadioGroup>
+  </div>
+)
+```
+
+</CodeBlock>

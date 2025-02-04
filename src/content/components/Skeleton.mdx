@@ -1,0 +1,111 @@
+---
+name: Skeleton
+description: Permite al usuario ver un contenido sin cargar.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomSkeleton from '../../components/Skeleton/CustomSkeleton.jsx'
+
+# Sobre el componente
+
+Este componente se utiliza para mostrar un estado de carga con la forma esperada de un componente.
+
+## Uso básico
+
+Para utilizar el componente `Skeleton`, debes envolver el contenido que tarda en cargase, luego debes agregar un estado booleano y pasarlo como el atributo `isLoaded` en el componente `Skeleton`.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomSkeleton client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isLoaded, setIsLoaded] = useState(false)
+
+const handleLoaded = () => {
+  setIsLoaded(!isLoaded)
+}
+
+return (
+  <div className='flex flex-col justify-center items-center gap-y-4'>
+    <Card maxWidth='xs' shadow='md' rounded='lg' color='default'>
+      <Skeleton isLoaded={isLoaded}>
+        <img
+          src='/img-preview1.webp'
+          alt='Card image'
+          className='w-full h-40 object-cover rounded-t-lg'
+        />
+        <CardHeader textSize='lg' padding='md' font='bold'>
+          <h3>Title</h3>
+        </CardHeader>
+        <CardContent textSize='sm'>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Mollitia
+            veniam at quaerat accusamus beatae, debitis nostrum minima iure!
+            Voluptas rem quo nihil inventore impedit harum? Voluptatum minima
+            iure blanditiis velit.
+          </p>
+        </CardContent>
+      </Skeleton>
+    </Card>
+    <Button onClick={handleLoaded}>Click me</Button>
+  </div>
+)
+```
+
+</CodeBlock>
+
+El código para el componente `Skeleton` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const Skeleton = ({ isLoaded, children, className }) => {
+  return (
+    <div
+      className={`relative overflow-hidden  ${
+        isLoaded ? '' : `backdrop-blur-sm shadow-lg animate-pulse ${className}`
+      }`}
+      data-loaded={isLoaded}
+    >
+      {!isLoaded && (
+        <div className='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse' />
+      )}
+      <div className={isLoaded ? '' : 'opacity-0'}>{children}</div>
+    </div>
+  )
+}
+
+export default Skeleton
+```
+
+</CodeBlock>
+
+## Uso del componente individual
+
+El componente `Skeleton` puede ser utilizado individualmente para mostrar un estado de carga en un componente individual. Para esto es necesario utilizar el atributo `className` en el componente `Skeleton` y asignarle un valor que se ajuste a la clase del componente que deseas mostrar el estado de carga.
+
+<Preview>
+  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
+    <CustomSkeleton onlyCard={false} client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<div className='flex flex-col items-center justify-center gap-y-2'>
+  <Skeleton className='flex w-20 h-20 rounded-lg' />
+  <div className='flex flex-col gap-3'>
+    <Skeleton className='flex w-40 h-3 rounded-lg' />
+    <Skeleton className='flex w-40 h-3 rounded-lg' />
+    <Skeleton className='flex w-40 h-3 rounded-lg' />
+  </div>
+</div>
+```
+
+</CodeBlock>

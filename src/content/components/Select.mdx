@@ -1,0 +1,423 @@
+---
+name: Select
+description: Permite al usuario seleccionar un valor de un conjunto de opciones.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomSelect from '../../components/Select/CustomSelect.jsx'
+
+# Sobre el componente
+
+Este componente se utiliza para permitir al usuario seleccionar una opción de una lista plegable con multiples opciones.
+
+## Uso básico
+
+Para utilizar el componente `Select`, es necesario utilizar un estado para manejar la lista de opciones y una función en el atributo `onChange` que actualiza el componente cuando se selecciona una opción. Luego, debes envolver los elementos `SelectItem` con el atributo `value` que deseas mostrar en el componente `Select`.
+
+<Preview>
+  <div className='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select onChange={handleFruitChange}>
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
+
+El código para el componente `SelectItem` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+El código para el componente `Select` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+## Label
+
+Para agregar un label al componente, simplemente debes agregar el atributo `label` en el componente `Select`.
+
+<Preview>
+  <div class='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect client:load label='Selecciona tu fruta favorita' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select onChange={handleFruitChange} label='Selecciona tu fruta favorita'>
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
+
+## Description
+
+Para agregar una descripción al componente, simplemente debes agregar el atributo `description` en el componente `Select`.
+
+<Preview>
+  <div class='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect
+      client:load
+      description='Esta es una descripción para el componente'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select
+    onChange={handleFruitChange}
+    description='Esta es una descripción para el componente'
+  >
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
+
+## Mensaje de error e inválido
+
+Para agregar un mensaje de error al componente, simplemente debes agregar el atributo `errorMessage` en el componente `Select`. Para indicar que el componente es inválido, se puede utilizar el atributo `isInvalid` en el componente `Select`. Este atributo acepta un booleano que determina si el componente es inválido o no.
+
+<Preview>
+  <div class='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect
+      client:load
+      errorMessage='Debes seleccionar una opción'
+      isInvalid={true}
+    />
+  </div>
+</Preview>
+
+## Deshabilitado
+
+Para deshabilitar el componente, se puede utilizar el atributo `disabled` en el componente `Select`. Este atributo acepta un booleano que determina si el componente está deshabilitado o no.
+
+<Preview>
+  <div class='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect client:load disabled={true} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select onChange={handleFruitChange} disabled={true}>
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
+
+### Opción deshabilitada
+
+Para agregar una opción deshabilitada al componente, simplemente debes agregar el atributo `isDisabled` en el componente `SelectItem`. Este atributo acepta un booleano que determina si la opción está deshabilitada o no.
+
+<Preview>
+  <div class='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect client:load isDisabled />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select onChange={handleFruitChange}>
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia' isDisabled>
+      Sandía 🍉
+    </SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
+
+## Placeholder
+
+Para agregar un placeholder al componente, simplemente debes agregar el atributo `placeholder` en el componente `Select`.
+
+<Preview>
+  <div class='flex items-start justify-center w-1/3 h-72 m-auto'>
+    <CustomSelect client:load placeholder='Selecciona una fruta' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select onChange={handleFruitChange} placeholder='Selecciona una fruta'>
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
+
+## Variantes
+
+Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `Select`. Este atributo acepta los valores: `default`, `bordered` y `light`.
+
+<Preview>
+  <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+    <CustomSelect client:load variant='default' />
+    <CustomSelect client:load variant='bordered' />
+    <CustomSelect client:load variant='light' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+    <Select onChange={handleFruitChange} variant='default'>
+      <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+      <SelectItem value='banana'>Banana 🍌</SelectItem>
+      <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+      <SelectItem value='uva'>Uva 🍇</SelectItem>
+      <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+    </Select>
+
+    <Select onChange={handleFruitChange} variant='bordered'>
+      <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+      <SelectItem value='banana'>Banana 🍌</SelectItem>
+      <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+      <SelectItem value='uva'>Uva 🍇</SelectItem>
+      <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+    </Select>
+
+    <Select onChange={handleFruitChange} variant='light'>
+      <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+      <SelectItem value='banana'>Banana 🍌</SelectItem>
+      <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+      <SelectItem value='uva'>Uva 🍇</SelectItem>
+      <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+    </Select>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Color
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `Select`. Este atributo acepta los valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div className=''>
+    <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+      <CustomSelect client:load color='default' />
+      <CustomSelect client:load color='primary' />
+      <CustomSelect client:load color='secondary' />
+    </div>
+    <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+      <CustomSelect client:load color='success' />
+      <CustomSelect client:load color='warning' />
+      <CustomSelect client:load color='danger' />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+    <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+        <Select onChange={handleFruitChange} color='default'>
+            <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+            <SelectItem value='banana'>Banana 🍌</SelectItem>
+            <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+            <SelectItem value='uva'>Uva 🍇</SelectItem>
+            <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+        </Select>
+
+        <Select onChange={handleFruitChange} color='primary'>
+            <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+            <SelectItem value='banana'>Banana 🍌</SelectItem>
+            <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+            <SelectItem value='uva'>Uva 🍇</SelectItem>
+            <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+        </Select>
+
+        <Select onChange={handleFruitChange} color='secondary'>
+            <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+            <SelectItem value='banana'>Banana 🍌</SelectItem>
+            <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+            <SelectItem value='uva'>Uva 🍇</SelectItem>
+            <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+        </Select>
+    </div>
+    <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+        <Select onChange={handleFruitChange} color='success'>
+            <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+            <SelectItem value='banana'>Banana 🍌</SelectItem>
+            <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+            <SelectItem value='uva'>Uva 🍇</SelectItem>
+            <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+        </Select>
+
+        <Select onChange={handleFruitChange} color='warning'>
+            <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+            <SelectItem value='banana'>Banana 🍌</SelectItem>
+            <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+            <SelectItem value='uva'>Uva 🍇</SelectItem>
+            <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+        </Select>
+
+        <Select onChange={handleFruitChange} color='danger'>
+            <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+            <SelectItem value='banana'>Banana 🍌</SelectItem>
+            <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+            <SelectItem value='uva'>Uva 🍇</SelectItem>
+            <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+        </Select>
+    </div>
+)
+```
+
+</CodeBlock>
+
+## Rounded
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `rounded` en el componente `Select`. Este atributo acepta los valores: `none`, `sm`, `md`, `lg`, `xl` y `full`.
+
+<Preview>
+  <div>
+    <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+      <CustomSelect client:load rounded='none' />
+      <CustomSelect client:load rounded='sm' />
+      <CustomSelect client:load rounded='md' />
+    </div>
+    <div className='flex flex-row items-start justify-center w-full h-72 gap-x-2'>
+      <CustomSelect client:load rounded='lg' />
+      <CustomSelect client:load rounded='xl' />
+      <CustomSelect client:load rounded='full' />
+    </div>
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [selectedFruit, setSelectedFruit] = useState('')
+
+const handleFruitChange = (value) => {
+  setSelectedFruit(value)
+}
+
+return (
+  <Select onChange={handleFruitChange} rounded={rounded}>
+    <SelectItem value='manzana'>Manzana 🍎</SelectItem>
+    <SelectItem value='banana'>Banana 🍌</SelectItem>
+    <SelectItem value='naranja'>Naranja 🍊</SelectItem>
+    <SelectItem value='uva'>Uva 🍇</SelectItem>
+    <SelectItem value='sandia'>Sandía 🍉</SelectItem>
+  </Select>
+)
+```
+
+</CodeBlock>
