@@ -53,6 +53,34 @@ import Footer from '../components/Footer.astro'
     overscroll-behavior: none;
   }
 
+  /* Ocultar la barra de scroll por defecto */
+  .scrollbar-hidden::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    opacity: 0;
+  }
+
+  /* Mostrar la barra de scroll al pasar el mouse */
+  .scrollbar-hidden:hover::-webkit-scrollbar {
+    opacity: 1;
+  }
+
+  /* Opcional: Estilizar la barra de desplazamiento */
+  .scrollbar-hidden::-webkit-scrollbar-thumb {
+    background-color: rgba(82, 83, 93, 0.4);
+    border-radius: 4px;
+  }
+
+  .dark .scrollbar-hidden::-webkit-scrollbar-thumb {
+    background-color: rgba(251, 250, 251, 0.4);
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar-track {
+    background: transparent;
+    margin-top: 24px; /* Ajusta el espacio desde arriba */
+    margin-bottom: 30px; /* Opcional: espacio inferior */
+  }
+
   pre.astro-code.github-dark {
     background-color: transparent !important;
   }

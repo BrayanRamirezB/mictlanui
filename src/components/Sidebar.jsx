@@ -13,7 +13,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='inline-flex items-center p-3 mt-10 ms-3 text-sm transition-transform duration-300 hover:-translate-y-1 gap-x-2 backdrop-blur-md shadow-xl text-gray-700 rounded-lg md:hidden hover:bg-gray-100 hover:text-[#0052D4] focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-300  dark:hover:bg-gray-700 dark:focus:ring-gray-600 '
+        className='inline-flex items-center p-3 mt-10 ms-3 text-sm transition-transform duration-300 hover:-translate-y-1 gap-x-2 backdrop-blur-md shadow-xl text-gray-700 rounded-lg lg:hidden hover:bg-gray-100 hover:text-[#0052D4] focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-300  dark:hover:bg-gray-700 dark:focus:ring-gray-600 '
         aria-label='Abrir menú'
       >
         <svg
@@ -37,11 +37,11 @@ const Sidebar = ({ components, overview, currentPath }) => {
       </button>
 
       <aside
-        className={`fixed md:sticky top-0 md:top-auto left-0 z-40 md:z-0 w-56 h-full autotransform ${
+        className={`fixed top-0 lg:top-auto left-0 z-40 lg:z-0 w-56 lg:h-7/8 h-full autotransform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform md:translate-x-0`}
+        } transition-transform lg:translate-x-0`}
       >
-        <div className='h-full overflow-y-auto px-3 py-4 shadow-lg backdrop-blur-sm border-gray-200 bg-black/5 dark:bg-white/5'>
+        <div className='h-full overflow-y-auto scrollbar-hidden px-3 py-4 backdrop-blur-sm border-gray-200 bg-black/5 dark:bg-white/5 lg:border-none lg:bg-transparent lg:dark:bg-transparent'>
           <ul className='space-y-4 font-medium'>
             <li className='py-1'>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
@@ -116,7 +116,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className='fixed inset-0 z-30 bg-gray-200/50 dark:bg-black/50 md:hidden'
+          className='fixed inset-0 z-30 bg-neutral-100/40 dark:bg-black/50 lg:hidden'
         ></div>
       )}
     </>
