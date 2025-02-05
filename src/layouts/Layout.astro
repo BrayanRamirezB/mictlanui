@@ -1,66 +1,71 @@
 ---
-import '@fontsource-variable/onest';
-import { ClientRouter } from 'astro:transitions';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import '@fontsource-variable/onest'
+import { ClientRouter } from 'astro:transitions'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
 ---
 
 <!doctype html>
-<html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/webp" href="/mictlan-logo.webp" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="MictlanUI - UI minimalista y moderno para tus proyectos." />
-		<title>MictlanUI</title>
-		<ClientRouter />
-	</head>
-	<body class="relative tex-black dark:text-white">
-		<div
-      class="absolute top-0 bottom-0 z-[-2] min-h-screen w-full bg-gray-50 dark:bg-gray-950
+<html lang='es'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width' />
+    <link rel='icon' type='image/webp' href='/mictlan-logo.webp' />
+    <meta name='generator' content={Astro.generator} />
+    <meta
+      name='description'
+      content='MictlanUI - UI minimalista y moderno para tus proyectos.'
+    />
+    <title>MictlanUI</title>
+    <ClientRouter />
+  </head>
+  <body class='relative tex-black dark:text-white'>
+    <div
+      class='absolute top-0 bottom-0 z-[-2] min-h-screen w-full bg-gray-50 dark:bg-gray-950
       bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(217,216,255,0.5),rgba(255,255,255,0.9))]
-      dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,78,146,0.5),rgba(15,12,41,0.2))]"></div>
-		<Header />
-		<slot />
-		<Footer />
-	</body>
+      dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,78,146,0.5),rgba(15,12,41,0.2))]'
+    >
+    </div>
+    <Header />
+    <slot />
+    <Footer />
+  </body>
 </html>
 
 <style is:global>
-	@import 'tailwindcss';
-	@config '../../tailwind.config.mjs';
-	
-	:root {
-		color-scheme: light dark;
-	}
+  @import 'tailwindcss';
+  @config '../../tailwind.config.mjs';
 
-	html {
-		background: rgba(0, 0, 0, 0.3);
-		font-family: 'Onest Variable', system-ui, sans-serif;
-		scroll-behavior: smooth;
-	}
+  :root {
+    color-scheme: light dark;
+  }
 
-	body {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-		overscroll-behavior: none;
-	}
+  html {
+    background: rgba(0, 0, 0, 0.3);
+    font-family: 'Onest Variable', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
 
-	pre.astro-code.github-dark {
-		background-color: transparent !important;
-	}
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
 
-	.custom-date-input::-webkit-calendar-picker-indicator {
-		display: none;
-		-webkit-appearance: none;
-	}
+  pre.astro-code.github-dark {
+    background-color: transparent !important;
+  }
 
-	@layer base {
-		button:not(:disabled),
-		[role="button"]:not(:disabled) {
-			cursor: pointer;
-		}
-	}
+  .custom-date-input::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  @layer base {
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+      cursor: pointer;
+    }
+  }
 </style>

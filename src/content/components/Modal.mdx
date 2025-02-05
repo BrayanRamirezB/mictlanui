@@ -1,0 +1,718 @@
+---
+name: Modal
+description: Muestra un mensaje en una ventana flotante que requiere una acción del usuario.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomModal from '../../components/Modal/CustomModal.jsx'
+
+## Sobre el componente
+
+El componente `Modal` es una herramienta para mostrar cuadros de diálogo interactivos y notificaciones a los usuarios.
+
+## Uso básico
+
+Para utilizar el componente, debemos utilizar los componentes `ModalContent`, `ModalHeader`, `ModalBody` y `ModalFooter` en el cuerpo del componente `Modal`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomModal client:load />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
+
+  return (
+
+    <Button onClick={openModal} color='primary'>
+        Open Modal
+    </Button>
+
+    <Modal isOpen={isModalOpen} isDismissable={true} onClose={closeModal}>
+        <ModalContent>
+            <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+            <ModalBody>
+            <p>This is the modal body content.</p>
+            </ModalBody>
+            <ModalFooter>
+            <Button onClick={closeModal} variant='bordered' color='danger'>
+                Close
+            </Button>
+            <Button variant='light' color='primary'>
+                Save changes
+            </Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
+  )
+```
+
+</CodeBlock>
+
+El código para el componente `ModalContent` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const ModalContent = ({ children }) => {
+  return <div className='p-6'>{children}</div>
+}
+
+export default ModalContent
+```
+
+</CodeBlock>
+
+El código para el componente `ModalHeader` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const ModalHeader = ({ children, onClose }) => {
+  return (
+    <div className='flex justify-between items-center pb-4 mb-4'>
+      <h3 className='text-lg font-semibold'>{children}</h3>
+      {onClose && (
+        <button
+          onClick={onClose}
+          className='p-2 transition duration-300 ease-in-out hover:text-red-700'
+          aria-label='Close'
+        >
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='currentColor'
+            className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+          >
+            <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+            <path
+              d='M12 2l.324 .001l.318 .004l.616 .017l.299 .013l.579 .034l.553 .046c4.785 .464 6.732 2.411 7.196 7.196l.046 .553l.034 .579c.005 .098 .01 .198 .013 .299l.017 .616l.005 .642l-.005 .642l-.017 .616l-.013 .299l-.034 .579l-.046 .553c-.464 4.785 -2.411 6.732 -7.196 7.196l-.553 .046l-.579 .034c-.098 .005 -.198 .01 -.299 .013l-.616 .017l-.642 .005l-.642 -.005l-.616 -.017l-.299 -.013l-.579 -.034l-.553 -.046c-4.785 -.464 -6.732 -2.411 -7.196 -7.196l-.046 -.553l-.034 -.579a28.058 28.058 0 0 1 -.013 -.299l-.017 -.616c-.003 -.21 -.005 -.424 -.005 -.642l.001 -.324l.004 -.318l.017 -.616l.013 -.299l.034 -.579l.046 -.553c.464 -4.785 2.411 -6.732 7.196 -7.196l.553 -.046l.579 -.034c.098 -.005 .198 -.01 .299 -.013l.616 -.017c.21 -.003 .424 -.005 .642 -.005zm-1.489 7.14a1 1 0 0 0 -1.218 1.567l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.497 1.32l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.32 -1.497l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.497 -1.32l-1.293 1.292l-1.293 -1.292l-.094 -.083z'
+              fill='currentColor'
+              strokeWidth='0'
+            />
+          </svg>
+        </button>
+      )}
+    </div>
+  )
+}
+
+export default ModalHeader
+```
+
+</CodeBlock>
+
+El código para el componente `ModalBody` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const ModalBody = ({ children }) => {
+  return <div className='mb-4'>{children}</div>
+}
+
+export default ModalBody
+```
+
+</CodeBlock>
+
+El código para el componente `ModalFooter` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const ModalFooter = ({ children }) => {
+  return <div className='flex justify-end space-x-2'>{children}</div>
+}
+
+export default ModalFooter
+```
+
+</CodeBlock>
+
+El código para el componente `Modal` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+## Non-Dismissable
+
+Para deshabilitar el cierre del componente, se puede utilizar el atributo `isDismissable={false}`. Este atributo permite que el modal sea cerrado solo por el botón de cierre.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomModal client:load isDismissable={false} />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
+
+  return (
+    <Button onClick={openModal} color='primary'>
+        Open Modal
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} isDismissable={false}>
+        <ModalContent>
+            <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+            <ModalBody>
+            <p>This is the modal body content.</p>
+            </ModalBody>
+            <ModalFooter>
+            <Button onClick={closeModal} variant='bordered' color='danger'>
+                Close
+            </Button>
+            <Button variant='light' color='primary'>
+                Save changes
+            </Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
+  )
+```
+
+</CodeBlock>
+
+## Efectos
+
+Para cambiar el efecto del componente, se puede utilizar el atributo `effect` en el componente `Modal`. Este atributo acepta los siguientes valores: `opaque`, `blur` y `transparent`.
+
+<Preview>
+  <div class='flex flex-col items-center justify-center gap-4 h-96'>
+    <CustomModal client:load effect='opaque' text='Open Modal Opaque' />
+    <CustomModal client:load effect='blur' text='Open Modal Blur' />
+    <CustomModal
+      client:load
+      effect='transparent'
+      text='Open Modal Transparent'
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+const openModal = () => setIsModalOpen(true)
+const closeModal = () => setIsModalOpen(false)
+
+return (
+  <>
+    <div className='p-4'>
+      <Button onClick={openModal} color='primary'>
+        Open Modal Opaque
+      </Button>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} effect='opaque'>
+        <ModalContent>
+          <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+          <ModalBody>
+            <p>This is the modal body content.</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={closeModal} variant='bordered' color='danger'>
+              Close
+            </Button>
+            <Button variant='light' color='primary'>
+              Save changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </div>
+
+    <div className='p-4'>
+      <Button onClick={openModal} color='primary'>
+        Open Modal Blur
+      </Button>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} effect='blur'>
+        <ModalContent>
+          <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+          <ModalBody>
+            <p>This is the modal body content.</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={closeModal} variant='bordered' color='danger'>
+              Close
+            </Button>
+            <Button variant='light' color='primary'>
+              Save changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </div>
+
+    <div className='p-4'>
+      <Button onClick={openModal} color='primary'>
+        Open Modal Transparent
+      </Button>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} effect='transparent'>
+        <ModalContent>
+          <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+          <ModalBody>
+            <p>This is the modal body content.</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={closeModal} variant='bordered' color='danger'>
+              Close
+            </Button>
+            <Button variant='light' color='primary'>
+              Save changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </div>
+  </>
+)
+```
+
+</CodeBlock>
+
+## Color
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `Modal`. Este atributo acepta los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <div class='flex flex-row flex-wrap items-center justify-center gap-4 h-96'>
+    <CustomModal client:load color='default' text='Open Modal Default' />
+    <CustomModal client:load color='primary' text='Open Modal Primary' />
+    <CustomModal client:load color='secondary' text='Open Modal Secondary' />
+    <CustomModal client:load color='success' text='Open Modal Success' />
+    <CustomModal client:load color='warning' text='Open Modal Warning' />
+    <CustomModal client:load color='danger' text='Open Modal Danger' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+const openModal = () => setIsModalOpen(true)
+const closeModal = () => setIsModalOpen(false)
+
+return (
+  <div className='p-4'>
+    <Button onClick={openModal} color='default'>
+      Open Modal Default
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} color='default'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Primary
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} color='primary'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='secondary'>
+      Open Modal Secondary
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} color='secondary'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='success'>
+      Open Modal Success
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} color='success'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='warning'>
+      Open Modal Warning
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} color='warning'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='danger'>
+      Open Modal Danger
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} color='danger'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Redondeado
+
+Para cambiar el redondeado del componente, se puede utilizar el atributo `rounded` en el componente `Modal`. Este atributo acepta los siguientes valores: `none`, `sm`, `md`, `lg` y `xl`.
+
+<Preview>
+  <div class='flex flex-row flex-wrap items-center justify-center gap-4 h-96'>
+    <CustomModal client:load rounded='none' text='Open Modal None' />
+    <CustomModal client:load rounded='sm' text='Open Modal Sm' />
+    <CustomModal client:load rounded='md' text='Open Modal Md' />
+    <CustomModal client:load rounded='lg' text='Open Modal Lg' />
+    <CustomModal client:load rounded='xl' text='Open Modal Xl' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+const openModal = () => setIsModalOpen(true)
+const closeModal = () => setIsModalOpen(false)
+
+return (
+  <div className='p-4'>
+    <Button onClick={openModal} color='primary'>
+      Open Modal None
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} rounded='none'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Sm
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} rounded='sm'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Md
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} rounded='md'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Lg
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} rounded='lg'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Xl
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} rounded='xl'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  </div>
+)
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en el componente `Modal`. Este atributo acepta los siguientes valores: `sm`, `md`, `lg`, `xl` y `full`.
+
+<Preview>
+  <div class='flex flex-row flex-wrap items-center justify-center gap-4 h-96'>
+    <CustomModal client:load size='sm' text='Open Modal Sm' />
+    <CustomModal client:load size='md' text='Open Modal Md' />
+    <CustomModal client:load size='lg' text='Open Modal Lg' />
+    <CustomModal client:load size='xl' text='Open Modal Xl' />
+    <CustomModal client:load size='full' text='Open Modal Xl' />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+const openModal = () => setIsModalOpen(true)
+const closeModal = () => setIsModalOpen(false)
+
+return (
+  <div className='p-4'>
+    <Button onClick={openModal} color='primary'>
+      Open Modal Sm
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} size='sm'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Md
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} size='md'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Lg
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} size='lg'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Xl
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} size='xl'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+    <Button onClick={openModal} color='primary'>
+      Open Modal Full
+    </Button>
+
+    <Modal isOpen={isModalOpen} onClose={closeModal} size='full'>
+      <ModalContent>
+        <ModalHeader onClose={closeModal}>Modal Title</ModalHeader>
+        <ModalBody>
+          <p>This is the modal body content.</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button onClick={closeModal} variant='bordered' color='danger'>
+            Close
+          </Button>
+          <Button variant='light' color='primary'>
+            Save changes
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  </div>
+)
+```
+
+</CodeBlock>

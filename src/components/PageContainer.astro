@@ -2,25 +2,43 @@
 const { title, description } = Astro.props
 
 const proseStyles = {
-    hStyles: "prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white",
-    pStyles: "prose-p:my-2 prose-p:text-gray-800 prose-p:dark:text-gray-300",
-    ulStyles: "prose-ul:text-gray-800 prose-ul:list-disc prose-ul:list-insid prose-ul:dark:text-gray-300",
-    blockquoteStyles: "prose-p:prose-blockquote:text-blue-800 dark:prose-p:prose-blockquote:text-blue-600 prose-blockquote:p-2 prose-blockquote:rounded-xl prose-blockquote:my-2 prose-blockquote:border-s-4 prose-blockquote:backdrop-blur-md prose-blockquote:shadow-lg prose-blockquote:border-blue-500 prose-blockquote:bg-blue-300/30 dark:prose-blockquote:shadow-md  dark:prose-blockquote:border-blue-500 dark:prose-blockquote:bg-blue-800/30",
-    preStyles: "prose-pre:m-0 prose-pre:p-0 prose-pre:text-sm prose-pre:font-medium",
-    codeStyles: "prose-code:bg-green-300/30 prose-code:text-green-600 prose-code:font-medium prose-code:px-2.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:backdrop-blur-md prose-code:shadow-lg" 
-}   
+  hStyles:
+    'prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white',
+  pStyles: 'prose-p:my-2 prose-p:text-gray-800 prose-p:dark:text-gray-300',
+  ulStyles:
+    'prose-ul:text-gray-800 prose-ul:list-disc prose-ul:list-insid prose-ul:dark:text-gray-300',
+  blockquoteStyles:
+    'prose-p:prose-blockquote:text-blue-800 dark:prose-p:prose-blockquote:text-blue-600 prose-blockquote:p-2 prose-blockquote:rounded-xl prose-blockquote:my-2 prose-blockquote:border-s-4 prose-blockquote:backdrop-blur-md prose-blockquote:shadow-lg prose-blockquote:border-blue-500 prose-blockquote:bg-blue-300/30 dark:prose-blockquote:shadow-md  dark:prose-blockquote:border-blue-500 dark:prose-blockquote:bg-blue-800/30',
+  preStyles:
+    'prose-pre:m-0 prose-pre:p-0 prose-pre:text-sm prose-pre:font-medium',
+  codeStyles:
+    'prose-code:bg-green-300/30 prose-code:text-green-600 prose-code:font-medium prose-code:px-2.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:backdrop-blur-md prose-code:shadow-lg'
+}
 ---
 
-<div class="p-4 flex-1 container mx-auto lg:max-w-5xl md:max-w-4xl sm:max-w-2xl">
-    <div class="p-8 rounded-lg shadow-xl backdrop-blur border-gray-200 bg-black/5 dark:bg-white/5">
-        <div class="mx-auto max-w-4xl">
-            <h1 class="pt-8 pb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-4xl lg:text-5xl">{title}</h1>
-            <p class="pb-8 text-lg font-semibold text-gray-500 lg:text-xl dark:text-gray-400">{description}</p>
-        </div>
-        
-        <div 
-            class=`pt-8 mx-auto max-w-4xl prose-base dark:prose-invert ${proseStyles.hStyles} ${proseStyles.pStyles} ${proseStyles.ulStyles} ${proseStyles.blockquoteStyles} ${proseStyles.preStyles} ${proseStyles.codeStyles}`>
-            <slot/>
-        </div>
+<div
+  class='p-4 flex-1 container mx-auto lg:max-w-5xl md:max-w-4xl sm:max-w-2xl'
+>
+  <div
+    class='p-8 rounded-lg shadow-xl backdrop-blur border-gray-200 bg-black/5 dark:bg-white/5'
+  >
+    <div class='mx-auto max-w-4xl'>
+      <h1
+        class='pt-8 pb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-4xl lg:text-5xl'
+      >
+        {title}
+      </h1>
+      <p
+        class='pb-8 text-lg font-semibold text-gray-500 lg:text-xl dark:text-gray-400'
+      >
+        {description}
+      </p>
     </div>
+
+    <div
+      class=`pt-8 mx-auto max-w-4xl prose-base dark:prose-invert ${proseStyles.hStyles} ${proseStyles.pStyles} ${proseStyles.ulStyles} ${proseStyles.blockquoteStyles} ${proseStyles.preStyles} ${proseStyles.codeStyles}`
+    >
+      <slot />
+    </div>
+  </div>
 </div>

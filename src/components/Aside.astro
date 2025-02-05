@@ -1,12 +1,17 @@
 ---
-import { getCollection } from "astro:content";
-import Sidebar from "./Sidebar.jsx";
+import { getCollection } from 'astro:content'
+import Sidebar from './Sidebar.jsx'
 
 const componentsData = await getCollection('components')
 const overviewData = await getCollection('overview')
-const currentPath = Astro.url.pathname; // Obtener la URL actual
+const currentPath = Astro.url.pathname // Obtener la URL actual
 ---
 
-<div class="w-56 min-h-full">
-    <Sidebar components={componentsData} overview={overviewData} currentPath={currentPath} client:only="react" />
+<div class='w-56'>
+  <Sidebar
+    components={componentsData}
+    overview={overviewData}
+    currentPath={currentPath}
+    client:only='react'
+  />
 </div>

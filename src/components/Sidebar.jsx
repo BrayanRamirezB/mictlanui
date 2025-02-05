@@ -41,7 +41,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform md:translate-x-0`}
       >
-        <div className='h-full px-3 py-4 overflow-y-auto shadow-lg backdrop-blur-sm border-gray-200 bg-black/5 dark:bg-white/5'>
+        <div className='h-full overflow-y-auto px-3 py-4 shadow-lg backdrop-blur-sm border-gray-200 bg-black/5 dark:bg-white/5'>
           <ul className='space-y-4 font-medium'>
             <li className='py-1'>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
@@ -116,7 +116,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className='fixed inset-0 z-30 bg-gray-200 bg-opacity-50 dark:bg-black dark:bg-opacity-50  md:hidden'
+          className='fixed inset-0 z-30 bg-gray-200/50 dark:bg-black/50 md:hidden'
         ></div>
       )}
     </>

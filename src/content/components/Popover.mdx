@@ -1,0 +1,322 @@
+---
+name: Popover
+description: Permite mostrar información sobre un elemento.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import CustomPopover from '../../components/Popover/CustomPopover.jsx'
+import Popover from '../../components/Popover/Popover.jsx'
+import PopoverTrigger from '../../components/Popover/PopoverTrigger.jsx'
+import PopoverContent from '../../components/Popover/PopoverContent.jsx'
+import Button from '../../components/Button'
+
+## Sobre el componente
+
+El componente `Popover` es una herramienta para mostrar información detallada dentro de un cuadro emergente en relación con un elemento cuando se hace clic en él.
+
+## Uso básico
+
+Para utilizar el componente `Popover`, es necesario utilizar el componente `PopoverTrigger` y el componente `PopoverContent` juntos. El componente `PopoverTrigger` se utiliza para activar el popover, mientras que el componente `PopoverContent` se utiliza para mostrar la información.
+
+<Preview>
+  <CustomPopover client:load />
+</Preview>
+
+El código para el componente `PopoverContent` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+El código para el componente `PopoverTrigger` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+El código para el componente `Popover` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+## Fondo
+
+Para cambiar el fondo del componente, se puede utilizar el atributo `backdrop` en el componente `Popover`. Este atributo acepta los valores: `transparent`, `opaque` y `blur`.
+
+<Preview>
+  <CustomPopover client:load backdrop='transparent' title='transparent' />
+  <CustomPopover client:load backdrop='opaque' title='opaque' />
+  <CustomPopover client:load backdrop='blur' title='blur' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Popover
+  backdrop='transparent'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>transparent</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  backdrop='opaque'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>opaque</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  backdrop='blur'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>blur</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+```
+
+</CodeBlock>
+
+## Posición
+
+Para cambiar la posición del componente, se puede utilizar el atributo `placement` en el componente `Popover`. Este atributo acepta los valores: `top`, `bottom`, `left` y `right`.
+
+<Preview>
+  <CustomPopover client:load placement='top' title='top' />
+  <CustomPopover client:load placement='bottom' title='bottom' />
+  <CustomPopover client:load placement='left' title='left' />
+  <CustomPopover client:load placement='right' title='right' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Popover
+  placement='top'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>top</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  placement='bottom'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>bottom</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  placement='left'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>left</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  placement='right'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>right</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+```
+
+</CodeBlock>
+
+## Color
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `Popover`. Este atributo acepta los valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+<Preview>
+  <CustomPopover client:load color='default' title='default' />
+  <CustomPopover client:load color='primary' title='primary' />
+  <CustomPopover client:load color='secondary' title='secondary' />
+  <CustomPopover client:load color='success' title='success' />
+  <CustomPopover client:load color='warning' title='warning' />
+  <CustomPopover client:load color='danger' title='danger' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Popover
+  color='default'
+>
+  <PopoverTrigger>
+    <Button variant='bordered'>default</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  color='primary'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='primary'>primary</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  color='secondary'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='secondary'>secondary</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  color='success'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='success'>success</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  color='warning'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='warning'>warning</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  color='danger'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='danger'>danger</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+```
+
+</CodeBlock>
+
+## Redondeado
+
+Para cambiar el redondeado del componente, se puede utilizar el atributo `rounded` en el componente `Popover`. Este atributo acepta los valores: `none`, `sm`, `md`, `lg` y `full`.
+
+<Preview>
+  <CustomPopover client:load rounded='none' title='none' />
+  <CustomPopover client:load rounded='sm' title='sm' />
+  <CustomPopover client:load rounded='md' title='md' />
+  <CustomPopover client:load rounded='lg' title='lg' />
+  <CustomPopover client:load rounded='full' title='full' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Popover
+  rounded='none'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='danger'>none</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  rounded='sm'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='danger'>sm</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  rounded='md'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='danger'>md</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  rounded='lg'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='danger'>lg</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+
+<Popover
+  rounded='full'
+>
+  <PopoverTrigger>
+    <Button variant='bordered' color='danger'>full</Button>
+  </PopoverTrigger>
+  <PopoverContent>
+    <p>This is the popover content!</p>
+  </PopoverContent>
+</Popover>
+```
+
+</CodeBlock>

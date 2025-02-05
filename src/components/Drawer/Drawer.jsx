@@ -33,8 +33,8 @@ const Drawer = ({
   }
 
   const backdropEffects = {
-    opaque: 'bg-black bg-opacity-50',
-    blur: 'backdrop-filter backdrop-blur-sm',
+    opaque: 'bg-black/50',
+    blur: 'backdrop-blur-sm',
     transparent: 'bg-transparent'
   }
 

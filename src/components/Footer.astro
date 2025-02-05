@@ -1,27 +1,46 @@
 ---
-import SocialPill from "./SocialPill.astro";
-import GitHubIcon from "./Icons/GitHub.astro";
-const currentYear = new Date().getFullYear();
+import SocialPill from './SocialPill.astro'
+import GitHubIcon from './Icons/GitHub.astro'
+const currentYear = new Date().getFullYear()
 ---
 
-<footer class="w-full h-auto mx-auto border-gray-200 shadow-lg bg-neutral-400/5 backdrop-blur-sm dark:bg-white/5 mt-auto">
-    <div class="mx-auto max-w-screen-3xl p-4 flex flex-wrap flex-col justify-center items-center sm:flex-row sm:justify-between">
-        <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            Creado y usado por <SocialPill href="https://github.com/BrayanRamirezB" class="text-blue-500 hover:underline">
-                BrayanRB</SocialPill > con ✨ en <span class="font-bold">{currentYear}</span>.
-                Basado en <SocialPill  href="https://www.styple.dev/" class="hover:underline">styple,</SocialPill> <SocialPill class="hover:underline" href="https://www.heroui.com/">HeroUI</SocialPill>y<SocialPill class="hover:underline" href="https://flowbite.com/">Flowbite.</SocialPill>
-        </span>
+<footer
+  class='w-full h-auto mx-auto border-gray-200 shadow-lg bg-neutral-400/5 backdrop-blur-sm dark:bg-white/5 mt-auto'
+>
+  <div
+    class='mx-auto max-w-screen-3xl p-4 flex flex-wrap flex-col justify-center items-center sm:flex-row sm:justify-between'
+  >
+    <span class='text-sm text-gray-500 sm:text-center dark:text-gray-400'>
+      Creado y usado por <SocialPill
+        href='https://github.com/BrayanRamirezB'
+        class='text-blue-500 hover:underline'
+      >
+        BrayanRB</SocialPill
+      > con ✨ en <span class='font-bold'>{currentYear}</span>. Basado en <SocialPill
+        href='https://www.styple.dev/'
+        class='hover:underline'>styple,</SocialPill
+      >
+      <SocialPill class='hover:underline' href='https://www.heroui.com/'
+        >HeroUI</SocialPill
+      >y<SocialPill class='hover:underline' href='https://flowbite.com/'
+        >Flowbite.</SocialPill
+      >
+    </span>
 
-        <div class="flex items-center mt-3 text-sm space-x-4 font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-            <a href="/" class="hover:underline">
-                Inicio
-            </a>
-            <a href="mailto:brbrayan1945@gmail.com" class="hover:underline">
-                Contacto
-            </a>
-            <SocialPill href="https://github.com/BrayanRamirezB/mictlanui" class="flex items-center justify-center gap-x-1 transition hover:underline">
-                <GitHubIcon class="size-5"/>
-            <SocialPill />
-        </div>
+    <div
+      class='flex items-center mt-3 text-sm space-x-4 font-medium text-gray-500 dark:text-gray-400 sm:mt-0'
+    >
+      <a href='/' class='hover:underline'> Inicio </a>
+      <a href='mailto:brbrayan1945@gmail.com' class='hover:underline'>
+        Contacto
+      </a>
+      <SocialPill
+        href='https://github.com/BrayanRamirezB/mictlanui'
+        class='flex items-center justify-center gap-x-1 transition hover:underline'
+      >
+        <GitHubIcon class='size-5' />
+        <SocialPill />
+      </SocialPill>
     </div>
+  </div>
 </footer>
