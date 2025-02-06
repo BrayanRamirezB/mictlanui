@@ -1,0 +1,718 @@
+---
+name: Input
+description: Permite a los usuarios ingresar información en un campo de texto.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Input from '../../components/Input/Input.jsx'
+import CustomInput from '../../components/Input/CustomInput.jsx'
+
+## Sobre el componente
+
+Este componente se puede utilizar para permitir a los usuarios ingresar sus datos en función de varios tipos de entrada, como texto, correo, número, contraseña, etc.
+
+## Uso básico
+
+Para utilizar este componente, agrega el componente `Input` con los atributos `placeholder`, `value` y `onValueChange` junto con un estado para manejar el valor del campo de texto.
+
+<Preview>
+  <CustomInput placeholder='Ingresa un texto' client:load />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    placeholder='Ingresa un texto'
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+El código para el componente `Input` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+
+```
+
+</CodeBlock>
+
+## Etiqueta
+
+Para agregar una etiqueta al componente, puedes utilizar el atributo `label` y establecer su valor.
+
+<Preview>
+  <CustomInput
+    label='Label para el input'
+    placeholder='Input con etiqueta'
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Label para el input'
+    placeholder='Input con etiqueta'
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Tipo de entrada
+
+Para cambiar el tipo de entrada del componente, puedes utilizar el atributo `type` y seleccionar su valor entre `text`, `email`, `number`, `password`, `tel`, entre otros.
+
+<Preview>
+  <div className='flex flex-col gap-2'>
+    <CustomInput
+      label='Texto'
+      placeholder='Ingresa un texto'
+      type='text'
+      client:load
+    />
+    <CustomInput
+      label='Correo electrónico'
+      placeholder='Ingresa un correo electrónico'
+      type='email'
+      client:load
+    />
+    <CustomInput
+      label='Número'
+      placeholder='Ingresa un número'
+      type='number'
+      client:load
+    />
+    <CustomInput
+      label='Contraseña'
+      placeholder='Ingresa una contraseña'
+      type='password'
+      client:load
+    />
+    <CustomInput
+      label='Teléfono'
+      placeholder='Ingresa un teléfono'
+      type='tel'
+      client:load
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Input
+  label='Texto'
+  placeholder='Ingresa un texto'
+  type='text'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Correo electrónico'
+  placeholder='Ingresa un correo electrónico'
+  type='email'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Número'
+  placeholder='Ingresa un número'
+  type='number'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Contraseña'
+  placeholder='Ingresa una contraseña'
+  type='password'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Teléfono'
+  placeholder='Ingresa un teléfono'
+  type='tel'
+  value={value}
+  onValueChange={setValue}
+/>
+```
+
+</CodeBlock>
+
+## Campo requerido
+
+Para marcar un campo como requerido, puedes utilizar el atributo `isRequired` y establecer su valor en `true`.
+
+<Preview>
+  <CustomInput
+    label='Campo requerido'
+    placeholder='Ingresa un texto'
+    isRequired
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Campo requerido'
+    placeholder='Ingresa un texto'
+    isRequired
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Botón de borrado
+
+Para mostrar un botón de borrado junto al componente, puedes utilizar el atributo `isClearable` y establecer su valor en `true`.
+
+<Preview>
+  <CustomInput
+    label='Botón de borrado'
+    placeholder='Ingresa un texto'
+    isClearable
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Botón de borrado'
+    placeholder='Ingresa un texto'
+    isClearable
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Validación y mensaje de error
+
+Para mostrar un mensaje de error cuando el campo no cumple con los requisitos, puedes utilizar el atributo `isInvalid` y establecer su regla de validación, además, agregar un mensaje de error utilizando el atributo `errorMessage`.
+
+<Preview>
+  <CustomInput
+    label='Validación'
+    placeholder='Ingresa un texto'
+    isInvalid
+    errorMessage='El campo debe incluir un @'
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Validación'
+    placeholder='Ingresa un texto'
+    isInvalid
+    errorMessage='El campo debe incluir un @'
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Descripción
+
+Para agregar una descripción al componente, puedes utilizar el atributo `description` y establecer su valor.
+
+<Preview>
+  <CustomInput
+    label='Descripción'
+    placeholder='Ingresa un texto'
+    description='Este es una descripción'
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Descripción'
+    placeholder='Ingresa un texto'
+    description='Este es una descripción'
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Longitud mínima y máxima
+
+Para establecer una longitud mínima y máxima para el campo, puedes utilizar el atributo `minLength` y `maxLength` respectivamente.
+
+<Preview>
+  <CustomInput
+    label='Longitud mínima y máxima'
+    placeholder='Ingresa un texto'
+    isInvalid
+    isMinLength
+    errorMessage={'El campo debe tener al menos 5 caracteres'}
+    minLength={5}
+    maxLength={10}
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Longitud mínima y máxima'
+    placeholder='Ingresa un texto'
+    isInvalid={value.length < 5}
+    errorMessage={'El campo debe tener al menos 5 caracteres'}
+    minLength={5}
+    maxLength={10}
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Patrón
+
+Para establecer un patrón para el campo, puedes utilizar el atributo `pattern` y establecer su valor.
+
+<Preview>
+  <CustomInput
+    type='tel'
+    label='Patrón'
+    placeholder='Ingresa un texto'
+    pattern='[0-9]{3}-[0-9]{2}-[0-9]{3}'
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    type='tel'
+    label='Patrón'
+    placeholder='Ingresa un texto'
+    pattern='[0-9]{3}-[0-9]{2}-[0-9]{3}'
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Solo lectura
+
+Para hacer el campo de texto de solo lectura, puedes utilizar el atributo `isReadOnly` y establecer su valor en `true`.
+
+<Preview>
+  <CustomInput
+    label='Solo lectura'
+    placeholder='Ingresa un texto'
+    isReadOnly
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Solo lectura'
+    placeholder='Ingresa un texto'
+    isReadOnly
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+Para deshabilitar el componente, puedes utilizar el atributo `isDisabled` y establecer su valor en `true`.
+
+<Preview>
+  <CustomInput
+    label='Deshabilitado'
+    placeholder='Ingresa un texto'
+    isDisabled
+    client:load
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+const [value, setValue] = useState('')
+
+return (
+  <Input
+    label='Deshabilitado'
+    placeholder='Ingresa un texto'
+    isDisabled
+    value={value}
+    onValueChange={setValue}
+  />
+)
+```
+
+</CodeBlock>
+
+## Variantes
+
+Este componente posee algunas variantes que puedes utilizar según tus necesidades. Para esto, puedes utilizar el atributo `variant` y cambiar su valor entre `default`, `bordered` o `light`.
+
+<Preview>
+  <div className='flex flex-col gap-2'>
+    <CustomInput
+      label='Variante default'
+      placeholder='Ingresa un texto'
+      variant='default'
+      client:load
+    />
+    <CustomInput
+      label='Variante bordeado'
+      placeholder='Ingresa un texto'
+      variant='bordered'
+      client:load
+    />
+    <CustomInput
+      label='Variante light'
+      placeholder='Ingresa un texto'
+      variant='light'
+      client:load
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Input
+  label='Variante default'
+  placeholder='Ingresa un texto'
+  variant='default'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Variante bordeado'
+  placeholder='Ingresa un texto'
+  variant='bordered'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Variante light'
+  placeholder='Ingresa un texto'
+  variant='light'
+  value={value}
+  onValueChange={setValue}
+/>
+```
+
+</CodeBlock>
+
+## Colores
+
+Para cambiar el color del componente, puedes utilizar el atributo `color` y seleccionar su valor entre `default`, `primary`, `secondary`, `success`, `warning` o `danger`.
+
+<Preview>
+  <div className='flex flex-col gap-2'>
+    <CustomInput
+      label='Color default'
+      placeholder='Ingresa un texto'
+      color='default'
+      client:load
+    />
+    <CustomInput
+      label='Color primary'
+      placeholder='Ingresa un texto'
+      color='primary'
+      client:load
+    />
+    <CustomInput
+      label='Color secondary'
+      placeholder='Ingresa un texto'
+      color='secondary'
+      client:load
+    />
+    <CustomInput
+      label='Color success'
+      placeholder='Ingresa un texto'
+      color='success'
+      client:load
+    />
+    <CustomInput
+      label='Color warning'
+      placeholder='Ingresa un texto'
+      color='warning'
+      client:load
+    />
+    <CustomInput
+      label='Color danger'
+      placeholder='Ingresa un texto'
+      color='danger'
+      client:load
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Input
+  label='Color default'
+  placeholder='Ingresa un texto'
+  color='default'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Color primary'
+  placeholder='Ingresa un texto'
+  color='primary'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Color secondary'
+  placeholder='Ingresa un texto'
+  color='secondary'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Color success'
+  placeholder='Ingresa un texto'
+  color='success'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Color warning'
+  placeholder='Ingresa un texto'
+  color='warning'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Color danger'
+  placeholder='Ingresa un texto'
+  color='danger'
+  value={value}
+  onValueChange={setValue}
+/>
+```
+
+</CodeBlock>
+
+## Redondeado
+
+Para cambiar el redondeo del componente, puedes utilizar el atributo `rounded` y seleccionar su valor entre `none`, `sm`, `md`, `lg` o `full`.
+
+<Preview>
+  <div className='flex flex-col gap-2'>
+    <CustomInput
+      label='Redondeado none'
+      placeholder='Ingresa un texto'
+      rounded='none'
+      client:load
+    />
+    <CustomInput
+      label='Redondeado sm'
+      placeholder='Ingresa un texto'
+      rounded='sm'
+      client:load
+    />
+    <CustomInput
+      label='Redondeado md'
+      placeholder='Ingresa un texto'
+      rounded='md'
+      client:load
+    />
+    <CustomInput
+      label='Redondeado lg'
+      placeholder='Ingresa un texto'
+      rounded='lg'
+      client:load
+    />
+    <CustomInput
+      label='Redondeado full'
+      placeholder='Ingresa un texto'
+      rounded='full'
+      client:load
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Input
+  label='Redondeado none'
+  placeholder='Ingresa un texto'
+  rounded='none'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Redondeado sm'
+  placeholder='Ingresa un texto'
+  rounded='sm'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Redondeado md'
+  placeholder='Ingresa un texto'
+  rounded='md'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Redondeado lg'
+  placeholder='Ingresa un texto'
+  rounded='lg'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Redondeado full'
+  placeholder='Ingresa un texto'
+  rounded='full'
+  value={value}
+  onValueChange={setValue}
+/>
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, puedes utilizar el atributo `size` y seleccionar su valor entre `sm`, `md` o `lg`.
+
+<Preview>
+  <div className='flex flex-col gap-2'>
+    <CustomInput
+      label='Tamaño sm'
+      placeholder='Ingresa un texto'
+      size='sm'
+      client:load
+    />
+    <CustomInput
+      label='Tamaño md'
+      placeholder='Ingresa un texto'
+      size='md'
+      client:load
+    />
+    <CustomInput
+      label='Tamaño lg'
+      placeholder='Ingresa un texto'
+      size='lg'
+      client:load
+    />
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Input
+  label='Tamaño sm'
+  placeholder='Ingresa un texto'
+  size='sm'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Tamaño md'
+  placeholder='Ingresa un texto'
+  size='md'
+  value={value}
+  onValueChange={setValue}
+/>
+
+<Input
+  label='Tamaño lg'
+  placeholder='Ingresa un texto'
+  size='lg'
+  value={value}
+  onValueChange={setValue}
+/>
+```
+
+</CodeBlock>

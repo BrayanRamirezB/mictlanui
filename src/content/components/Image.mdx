@@ -1,0 +1,357 @@
+---
+name: Image
+description: Permite a los usuarios visualizar imágenes en su sitio web.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Image from '../../components/Image.jsx'
+
+## Sobre el componente
+
+Este componente se puede utilizar para mostrar imágenes en su sitio web. Puedes personalizar el componente para que se adapte a tus necesidades.
+
+## Uso básico
+
+Para utilizar este componente, simplemente debes utilizar el componente `Image` con los atributos `src` y `alt`.
+
+<Preview>
+  <Image imageSrc='/img-preview1.webp' alt='Preview Image' />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Image imageSrc='/img-preview1.webp' alt='Preview Image' />
+```
+
+</CodeBlock>
+
+El código para el componente `Image` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const Image = ({
+  imageSrc,
+  alt = 'img preview',
+  zoomedWrapper,
+  filter,
+  rounded = 'md',
+  shadow = 'md',
+  className
+}) => {
+  const filters = {
+    none: '',
+    blur: 'blur-lg',
+    grayscale: 'grayscale',
+    sepia: 'sepia'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-md',
+    md: 'rounded-lg',
+    lg: 'rounded-2xl',
+    full: 'rounded-full'
+  }
+
+  const shadows = {
+    none: 'shadow-none',
+    sm: 'shadow-xs',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    xl: 'shadow-xl'
+  }
+
+  const zoomed = zoomedWrapper
+    ? 'transition-transform duration-500 ease-in-out transform group-hover:scale-110'
+    : ''
+
+  return (
+    <div className={`relative`}>
+      <div
+        className={`overflow-hidden group ${roundeds[rounded]} ${shadows[shadow]} dark:shadow-neutral-100/20`}
+      >
+        <img
+          src={imageSrc}
+          alt={alt}
+          className={`object-cover ${filters[filter]} ${
+            filter !== 'blur' && zoomed
+          } ${roundeds[rounded]} ${
+            className === '' && 'w-full h-full'
+          } ${className}`}
+        />
+
+        {filter === 'blur' && (
+          <div className={`absolute inset-0 flex items-center justify-center`}>
+            <img
+              src={imageSrc}
+              alt={alt}
+              className={`size-6/7 object-cover shadow-lg ${
+                roundeds[rounded]
+              } ${filter === 'blur' && zoomed}`}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default Image
+```
+
+</CodeBlock>
+
+## Tamaño de la imagen
+
+Para cambiar el tamaño de la imagen, puedes utilizar el atributo `className` y establecer su valor.
+
+<Preview>
+  <Image
+    imageSrc='/img-preview2.webp'
+    alt='Preview Image'
+    className='w-[200px]'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Image
+  imageSrc='/img-preview2.webp'
+  alt='Preview Image'
+  className='w-[200px]'
+/>
+```
+
+</CodeBlock>
+
+## Filtros
+
+Para aplicar filtros a la imagen, puedes utilizar el atributo `filter` y seleccionar su valor entre `none`, `blur`, `grayscale` o `sepia`.
+
+<Preview>
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    filter='blur'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    filter='grayscale'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    filter='sepia'
+    className='w-[200px]'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Image imageSrc='/img-preview3.webp' alt='Preview Image' filter='blur' className='w-[200px]' />
+<Image
+  imageSrc='/img-preview3.webp'
+  filter='grayscale'
+  className='w-[200px]'
+/>
+<Image imageSrc='/img-preview3.webp' alt='Preview Image' filter='sepia' className='w-[200px]' />
+```
+
+</CodeBlock>
+
+## Efecto de zoom
+
+Para aplicar un efecto de zoom a la imagen, puedes utilizar el atributo `zoomedWrapper` y establecer su valor en `true`.
+
+<Preview>
+  <Image
+    imageSrc='/img-preview4.webp'
+    alt='Preview Image'
+    zoomedWrapper
+    className='w-[200px]'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Image
+  imageSrc='/img-preview4.webp'
+  alt='Preview Image'
+  zoomedWrapper
+  className='w-[200px]'
+/>
+```
+
+</CodeBlock>
+
+### Combinación de filtros y zoom
+
+Para combinar filtros y zoom, puedes utilizar el atributo `filter` y seleccionar su valor entre `none`, `blur`, `grayscale` o `sepia`, y el atributo `zoomedWrapper`.
+
+<Preview>
+  <Image
+    imageSrc='/img-preview1.webp'
+    alt='Preview Image'
+    filter='blur'
+    zoomedWrapper
+    className='w-[500px] h-[300px]'
+    client:load
+  />
+</Preview>
+
+## Redondeado
+
+Para cambiar el redondeo de la imagen, puedes utilizar el atributo `rounded` y seleccionar su valor entre `none`, `sm`, `md`, `lg` o `full`.
+
+<Preview>
+  <Image
+    imageSrc='/img-preview4.webp'
+    alt='Preview Image'
+    rounded='none'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview4.webp'
+    alt='Preview Image'
+    rounded='sm'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview4.webp'
+    alt='Preview Image'
+    rounded='md'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview4.webp'
+    alt='Preview Image'
+    rounded='lg'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview4.webp'
+    alt='Preview Image'
+    rounded='full'
+    className='w-[200px]'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Image
+  imageSrc='/img-preview4.webp'
+  alt='Preview Image'
+  rounded='none'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview4.webp'
+  alt='Preview Image'
+  rounded='sm'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview4.webp'
+  alt='Preview Image'
+  rounded='md'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview4.webp'
+  alt='Preview Image'
+  rounded='lg'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview4.webp'
+  alt='Preview Image'
+  rounded='full'
+  className='w-[200px]'
+/>
+```
+
+</CodeBlock>
+
+## Sombra
+
+Para aplicar sombra a la imagen, puedes utilizar el atributo `shadow` y seleccionar su valor entre `none`, `sm`, `md`, `lg` o `xl`.
+
+<Preview>
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    shadow='none'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    shadow='sm'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    shadow='md'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    shadow='lg'
+    className='w-[200px]'
+  />
+  <Image
+    imageSrc='/img-preview3.webp'
+    alt='Preview Image'
+    shadow='xl'
+    className='w-[200px]'
+  />
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Image
+  imageSrc='/img-preview3.webp'
+  alt='Preview Image'
+  shadow='none'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview3.webp'
+  alt='Preview Image'
+  shadow='sm'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview3.webp'
+  alt='Preview Image'
+  shadow='md'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview3.webp'
+  alt='Preview Image'
+  shadow='lg'
+  className='w-[200px]'
+/>
+<Image
+  imageSrc='/img-preview3.webp'
+  alt='Preview Image'
+  shadow='xl'
+  className='w-[200px]'
+/>
+```
+
+</CodeBlock>

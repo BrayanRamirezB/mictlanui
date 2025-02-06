@@ -1,0 +1,409 @@
+---
+name: Link
+description: Permite a los usuarios navegar entre diferentes páginas web.
+---
+
+import Preview from '../../components/Preview.astro'
+import CodeBlock from '../../components/CodeBlock.jsx'
+import Link from '../../components/Link.jsx'
+
+## Sobre el componente
+
+Este componente se puede utilizar para establecer hipervínculos en el sitio web o para redireccionar a otra página web.
+
+## Uso básico
+
+Para establecer un hipervínculo, simplemente agrega el atributo `href` con el valor que desee.
+
+<Preview>
+  <Link href='#'>Enlace</Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#'>Enlace</Link>
+```
+
+</CodeBlock>
+
+El código para el componente `Link` es el siguiente:
+
+<CodeBlock client:load>
+
+```jsx
+const Link = ({
+  variant = 'light',
+  color = 'default',
+  rounded = 'md',
+  isDisabled = false,
+  size = 'md',
+  underline = 'hover',
+  isExternal = false,
+  defaultIcon = false,
+  children,
+  href = '#'
+}) => {
+  const variants = {
+    default: 'border-0 shadow-md backdrop-blur-sm px-3 py-1',
+    bordered: 'border shadow-lg px-3 py-1',
+    light: ''
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-600',
+    secondary: 'text-indigo-800 dark:text-indigo-600',
+    success: 'text-green-800 dark:text-green-600',
+    warning: 'text-yellow-800 dark:text-yellow-600',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const sizeStyles = {
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg'
+  }
+
+  const iconSizeStyles = {
+    sm: 'size-4',
+    md: 'size-5',
+    lg: 'size-6'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const underlineStyles = {
+    none: 'no-underline',
+    hover: 'hover:underline',
+    always: 'underline',
+    active: 'active:underline'
+  }
+
+  const disabledStyles = isDisabled
+    ? 'opacity-50 cursor-not-allowed pointer-events-none'
+    : ''
+
+  const className = `flex items-center justify-center text-center gap-2 transition-colors duration-200 ${
+    variants[variant]
+  } ${variant === 'default' && colors[color]} ${sizeStyles[size]} ${
+    textColors[color]
+  } ${variant === 'bordered' && borderColors[color]} ${
+    variant !== 'light' && roundeds[rounded]
+  } ${underlineStyles[underline]} ${disabledStyles}`
+
+  return (
+    <a
+      className={className}
+      target={`${isExternal ? '_blank' : ''}`}
+      rel={`${isExternal ? 'noopener noreferrer' : ''}`}
+      href={href}
+    >
+      {children}
+      {defaultIcon && (
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='2'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          className={iconSizeStyles[size]}
+        >
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path d='M9 15l6 -6' />
+          <path d='M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464' />
+          <path d='M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463' />
+        </svg>
+      )}
+    </a>
+  )
+}
+
+export default Link
+```
+
+</CodeBlock>
+
+## Variantes
+
+Este componente posee algunas variantes que puedes utilizar según tus necesidades. Para esto, puedes utilizar el atributo `variant` y cambiar su valor entre `default`, `bordered` o `light`.
+
+<Preview>
+  <Link href='#' variant='default'>
+    Default
+  </Link>
+  <Link href='#' variant='bordered'>
+    Bordered
+  </Link>
+  <Link href='#' variant='light'>
+    Light
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' variant='default'>
+  Default
+</Link>
+<Link href='#' variant='bordered'>
+  Bordered
+</Link>
+<Link href='#' variant='light'>
+  Light
+</Link>
+```
+
+</CodeBlock>
+
+## Colores
+
+Para cambiar el color del componente, puedes utilizar el atributo `color` y seleccionar su valor entre `default`, `primary`, `secondary`, `success`, `warning` o `danger`.
+
+<Preview>
+  <Link href='#' color='default'>
+    Default
+  </Link>
+  <Link href='#' color='primary'>
+    Primary
+  </Link>
+  <Link href='#' color='secondary'>
+    Secondary
+  </Link>
+  <Link href='#' color='success'>
+    Success
+  </Link>
+  <Link href='#' color='warning'>
+    Warning
+  </Link>
+  <Link href='#' color='danger'>
+    Danger
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' color='default'>
+  Default
+</Link>
+<Link href='#' color='primary'>
+  Primary
+</Link>
+<Link href='#' color='secondary'>
+  Secondary
+</Link>
+<Link href='#' color='success'>
+  Success
+</Link>
+<Link href='#' color='warning'>
+  Warning
+</Link>
+<Link href='#' color='danger'>
+  Danger
+</Link>
+```
+
+</CodeBlock>
+
+## Redondeado
+
+Para cambiar el redondeo del componente, puedes utilizar el atributo `rounded` y seleccionar su valor entre `none`, `sm`, `md`, `lg` o `full`.
+
+<Preview>
+  <Link href='#' variant='default' rounded='none'>
+    Rounded none
+  </Link>
+  <Link href='#' variant='default' rounded='sm'>
+    Rounded sm
+  </Link>
+  <Link href='#' variant='default' rounded='md'>
+    Rounded md
+  </Link>
+  <Link href='#' variant='default' rounded='lg'>
+    Rounded lg
+  </Link>
+  <Link href='#' variant='default' rounded='full'>
+    Rounded full
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' variant='default' rounded='none'>
+  Rounded none
+</Link>
+<Link href='#' variant='default' rounded='sm'>
+  Rounded sm
+</Link>
+<Link href='#' variant='default' rounded='md'>
+  Rounded md
+</Link>
+<Link href='#' variant='default' rounded='lg'>
+  Rounded lg
+</Link>
+<Link href='#' variant='default' rounded='full'>
+  Rounded full
+</Link>
+```
+
+</CodeBlock>
+
+## Deshabilitado
+
+Para deshabilitar este componente, puedes utilizar el atributo `isDisabled` y establecer su valor en `true`.
+
+<Preview>
+  <Link href='#' isDisabled>
+    Disabled
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' isDisabled>
+  Disabled
+</Link>
+```
+
+</CodeBlock>
+
+## Tamaños
+
+Para cambiar el tamaño del componente, puedes utilizar el atributo `size` y seleccionar su valor entre `sm`, `md` o `lg`.
+
+<Preview>
+  <Link href='#' size='sm'>
+    Size sm
+  </Link>
+  <Link href='#' size='md'>
+    Size md
+  </Link>
+  <Link href='#' size='lg'>
+    Size lg
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' size='sm'>
+  Size sm
+</Link>
+<Link href='#' size='md'>
+  Size md
+</Link>
+<Link href='#' size='lg'>
+  Size lg
+</Link>
+```
+
+</CodeBlock>
+
+## Subrayado
+
+Para cambiar el subrayado del componente, puedes utilizar el atributo `underline` y seleccionar su valor entre `none`, `hover`, `always` o `active`.
+
+<Preview>
+  <Link href='#' underline='none'>
+    No underline
+  </Link>
+  <Link href='#' underline='hover'>
+    Hover underline
+  </Link>
+  <Link href='#' underline='always'>
+    Always underline
+  </Link>
+  <Link href='#' underline='active'>
+    Active underline
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' underline='none'>
+  No underline
+</Link>
+<Link href='#' underline='hover'>
+  Hover underline
+</Link>
+<Link href='#' underline='always'>
+  Always underline
+</Link>
+<Link href='#' underline='active'>
+  Active underline
+</Link>
+```
+
+</CodeBlock>
+
+## Enlace externo
+
+Para establecer un enlace externo, puedes utilizar el atributo `isExternal` y establecer su valor en `true`.
+
+<Preview>
+  <Link href='#' isExternal>
+    Link externo
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='https://www.google.com' isExternal>
+  Link externo
+</Link>
+```
+
+</CodeBlock>
+
+## Icono por defecto
+
+Para mostrar un icono por defecto junto al componente, puedes utilizar el atributo `defaultIcon` y establecer su valor en `true`.
+
+<Preview>
+  <Link href='#' defaultIcon>
+    Default icon
+  </Link>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Link href='#' defaultIcon>
+  Default icon
+</Link>
+```
+
+</CodeBlock>
