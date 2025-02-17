@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Checkbox from './Checkbox'
+import Checkbox from '@/components/Checkbox'
 
 const CheckboxGroup = ({
   title = '',

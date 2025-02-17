@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PopoverContent from './PopoverContent'
-import PopoverTrigger from './PopoverTrigger'
+import PopoverContent from '@/components/Popover/PopoverContent'
+import PopoverTrigger from '@/components/Popover/PopoverTrigger'
 
 const Popover = ({
   children,

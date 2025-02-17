@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const Sidebar = ({ components, overview, currentPath }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -8,6 +8,33 @@ const Sidebar = ({ components, overview, currentPath }) => {
     'Principios de diseño',
     'Empezando'
   ]
+
+  // Guardar la posición del scroll en el localStorage
+  const saveScrollPosition = () => {
+    const sidebar = document.querySelector('.sidebar-content')
+    if (sidebar) {
+      localStorage.setItem('sidebarScrollPosition', sidebar.scrollTop)
+    }
+  }
+
+  // Restaurar la posición del scroll al montar el componente
+  useEffect(() => {
+    const savedPosition = localStorage.getItem('sidebarScrollPosition')
+    const sidebar = document.querySelector('.sidebar-content')
+    if (sidebar && savedPosition) {
+      sidebar.scrollTop = parseInt(savedPosition, 10)
+    }
+
+    // Limpiar el localStorage cuando el componente se desmonte
+    return () => {
+      saveScrollPosition()
+    }
+  }, [])
+
+  // Manejar el evento de scroll
+  const handleScroll = (e) => {
+    saveScrollPosition()
+  }
 
   return (
     <>
@@ -41,7 +68,10 @@ const Sidebar = ({ components, overview, currentPath }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform lg:translate-x-0`}
       >
-        <div className='h-full overflow-y-auto scrollbar-hidden px-3 py-4 backdrop-blur-sm border-gray-200 bg-black/5 dark:bg-white/5 lg:border-none lg:bg-transparent lg:dark:bg-transparent'>
+        <div
+          className='sidebar-content h-full overflow-y-auto scrollbar-hidden px-3 py-4 backdrop-blur-sm border-gray-200 bg-black/5 dark:bg-white/5 lg:border-none lg:bg-transparent lg:dark:bg-transparent'
+          onScroll={handleScroll}
+        >
           <ul className='space-y-4 font-medium'>
             <li className='py-1'>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>

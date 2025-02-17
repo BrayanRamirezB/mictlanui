@@ -1,6 +1,6 @@
-import Card from './Card.jsx'
-import CardHeader from './CardHeader.jsx'
-import CardContent from './CardContent.jsx'
+import Card from '@/components/Card/Card'
+import CardHeader from '@/components/Card/CardHeader'
+import CardContent from '@/components/Card/CardContent'
 
 const CustomCard = ({ title, description, imageUrl, actions }) => {
   return (

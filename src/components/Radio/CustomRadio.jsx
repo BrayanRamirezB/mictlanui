@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import RadioGroup from './RadioGroup.jsx'
-import Radio from './Radio.jsx'
+import RadioGroup from '@/components/Radio/RadioGroup.jsx'
+import Radio from '@/components/Radio/Radio.jsx'
 
 const CustomRadio = ({
   orientation,

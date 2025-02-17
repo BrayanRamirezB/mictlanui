@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import Drawer from './Drawer.jsx'
-import DrawerHeader from './DrawerHeader.jsx'
-import DrawerBody from './DrawerBody.jsx'
-import DrawerFooter from './DrawerFooter.jsx'
-import DrawerContent from './DrawerContent.jsx'
-import Button from '../Button.jsx'
+import Drawer from '@/components/Drawer/Drawer.jsx'
+import DrawerHeader from '@/components/Drawer/DrawerHeader.jsx'
+import DrawerBody from '@/components/Drawer/DrawerBody.jsx'
+import DrawerFooter from '@/components/Drawer/DrawerFooter.jsx'
+import DrawerContent from '@/components/Drawer/DrawerContent.jsx'
+import Button from '@/components/Button.jsx'
 
 const CustomDrawer = ({
   isDismissable = true,

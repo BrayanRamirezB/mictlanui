@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import BreadcrumbItem from './BreadcrumbItem'
-import BreadcrumbSeparator from './BreadcrumbSeparator'
+import BreadcrumbItem from '@/components/Breadcrumbs/BreadcrumbItem'
+import BreadcrumbSeparator from '@/components/Breadcrumbs/BreadcrumbSeparator'
 
 const Breadcrumbs = ({
   items = [],

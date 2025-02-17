@@ -1,5 +1,5 @@
-import Tabs from './Tabs'
-import Tab from './Tab'
+import Tabs from '@/components/Tabs/Tabs'
+import Tab from '@/components/Tabs/Tab'
 
 const CustomTab = ({
   variant,

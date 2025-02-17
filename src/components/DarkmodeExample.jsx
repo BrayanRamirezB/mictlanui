@@ -1,7 +1,7 @@
-import Card from './Card/Card'
-import CardContent from './Card/CardContent'
-import CardHeader from './Card/CardHeader'
-import Button from './Button'
+import Card from '@/components/Card/Card'
+import CardContent from '@/components/Card/CardContent'
+import CardHeader from '@/components/Card/CardHeader'
+import Button from '@/components/Button'
 import { useState } from 'react'
 
 const DarkmodeExample = () => {

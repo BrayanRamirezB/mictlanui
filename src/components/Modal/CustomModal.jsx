@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import Modal from './Modal'
-import ModalContent from './ModalContent'
-import ModalHeader from './ModalHeader'
-import ModalBody from './ModalBody'
-import ModalFooter from './ModalFooter'
-import Button from '../Button'
+import Modal from '@/components/Modal/Modal'
+import ModalContent from '@/components/Modal/ModalContent'
+import ModalHeader from '@/components/Modal/ModalHeader'
+import ModalBody from '@/components/Modal/ModalBody'
+import ModalFooter from '@/components/Modal/ModalFooter'
+import Button from '@/components/Button'
 
 const CustomModal = ({
   isDismissable,

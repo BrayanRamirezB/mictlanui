@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import AccordionItem from './AccordionItem.jsx'
+import AccordionItem from '@/components/Accordion/AccordionItem'
 
 const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
   const [activeIndexes, setActiveIndexes] = useState([])

@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import Card from './Card/Card'
-import CardContent from './Card/CardContent'
-import Button from './Button'
+import Card from '@/components/Card/Card'
+import CardContent from '@/components/Card/CardContent'
+import Button from '@/components/Button'
 
 const ColorsExample = () => {
   const [color, setColor] = useState('default')

@@ -1,7 +1,7 @@
-import Popover from './Popover'
-import PopoverTrigger from './PopoverTrigger'
-import PopoverContent from './PopoverContent'
-import Button from '../Button'
+import Popover from '@/components/Popover/Popover'
+import PopoverTrigger from '@/components/Popover/PopoverTrigger'
+import PopoverContent from '@/components/Popover/PopoverContent'
+import Button from '@/components/Button'
 
 const CustomPopover = ({
   title = 'Mostrar Popover',

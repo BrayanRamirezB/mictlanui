@@ -1,8 +1,8 @@
-import Skeleton from './Skeleton.jsx'
-import Button from '../Button.jsx'
-import Card from '../Card/Card.jsx'
-import CardHeader from '../Card/CardHeader.jsx'
-import CardContent from '../Card/CardContent.jsx'
+import Skeleton from '@/components/Skeleton/Skeleton.jsx'
+import Button from '@/components/Button.jsx'
+import Card from '@/components/Card/Card.jsx'
+import CardHeader from '@/components/Card/CardHeader.jsx'
+import CardContent from '@/components/Card/CardContent.jsx'
 import { useState } from 'react'
 
 const CustomSkeleton = ({ onlyCard = true }) => {

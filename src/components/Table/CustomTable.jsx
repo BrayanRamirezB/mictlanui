@@ -1,10 +1,9 @@
-import { useState } from 'react'
-import Table from './Table.jsx'
-import TableHeader from './TableHeader.jsx'
-import TableBody from './TableBody.jsx'
-import TableRow from './TableRow.jsx'
-import TableCell from './TableCell.jsx'
-import TableColumn from './TableColumn.jsx'
+import Table from '@/components/Table/Table.jsx'
+import TableHeader from '@/components/Table/TableHeader.jsx'
+import TableBody from '@/components/Table/TableBody.jsx'
+import TableRow from '@/components/Table/TableRow.jsx'
+import TableCell from '@/components/Table/TableCell.jsx'
+import TableColumn from '@/components/Table/TableColumn.jsx'
 
 const CustomTable = ({
   variant,
