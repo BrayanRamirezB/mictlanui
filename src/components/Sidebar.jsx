@@ -40,7 +40,7 @@ const Sidebar = ({ components, overview, currentPath }) => {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='inline-flex items-center p-3 mt-10 ms-3 text-sm transition-transform duration-300 hover:-translate-y-1 gap-x-2 backdrop-blur-md shadow-xl text-gray-700 rounded-lg lg:hidden hover:bg-gray-100 hover:text-[#0052D4] focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-300  dark:hover:bg-gray-700 dark:focus:ring-gray-600 '
+        className='inline-flex items-center p-3 m-3 text-sm transition-transform duration-300 hover:-translate-y-1 gap-x-2 backdrop-blur-md shadow-xl text-gray-700 rounded-lg lg:hidden hover:bg-gray-100 hover:text-[#0052D4] focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-300  dark:hover:bg-gray-700 dark:focus:ring-gray-600 '
         aria-label='Abrir menú'
       >
         <svg

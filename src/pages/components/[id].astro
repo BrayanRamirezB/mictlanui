@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content'
-import Layout from '../../layouts/Layout.astro'
-import Aside from '../../components/Aside.astro'
-import PageContainer from '../../components/PageContainer.astro'
+import Layout from '@/layouts/Layout.astro'
+import Aside from '@/components/Aside.astro'
+import PageContainer from '@/components/PageContainer.astro'
 
 export async function getStaticPaths() {
   const components = await getCollection('components')
@@ -23,7 +23,7 @@ const { Content } = await render(component)
 <Layout transition:name='layout'>
   <main class='md:flex md:flex-1'>
     <div
-      class='flex lg:flex-row flex-col md:min-h-full md:min-w-full flex-nowrap mt-10 md:mt-16 pt-6 md:pt-0'
+      class='flex lg:flex-row flex-col md:min-w-full flex-nowrap mt-26 md:mt-22 lg:mt-16 pt-6 md:pt-0'
     >
       <Aside />
 
