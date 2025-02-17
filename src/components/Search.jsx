@@ -32,11 +32,12 @@ const Search = () => {
       <input
         type='text'
         placeholder='Buscar componente...'
-        className='w-full p-2 border-0 shadow-lg rounded-md dark:shadow-md dark:shadow-neutral-100/20 backdrop-blur-md bg-neutral-100/30 dark:bg-zinc-700/40 text-zinc-800 dark:text-neutral-100'
+        className='focus:outline-none w-full p-2 border-0 shadow-lg rounded-md dark:shadow-md dark:shadow-neutral-100/20 backdrop-blur-md bg-neutral-100/30 dark:bg-zinc-700/40 text-zinc-800 dark:text-neutral-100'
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
       />
+
       {query && (
         <ul className='rounded-md absolute w-full backdrop-blur-lg bg-neutral-100/90 dark:bg-zinc-700/90 '>
           {filteredPages.map((page, index) => (

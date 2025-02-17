@@ -11,19 +11,14 @@ const Alert = ({
   const [visible, setVisible] = useState(true)
 
   if (!visible) return null
+
   const typeAlert = {
-    default:
-      'bg-neutral-100/40 dark:bg-zinc-700/60 dark:shadow-neutral-100/5 text-gray-800 dark:text-gray-300',
-    primary:
-      'bg-blue-500/40 dark:shadow-blue-500/20 text-blue-800 dark:text-blue-500',
-    secondary:
-      'bg-indigo-500/40 dark:shadow-indigo-500/20 text-indigo-800 dark:text-indigo-500',
-    success:
-      'bg-green-400/50 dark:shadow-green-500/20 text-green-800 dark:text-green-500',
-    warning:
-      'bg-yellow-500/40 dark:shadow-yellow-500/20 text-yellow-800 dark:text-yellow-500',
-    danger:
-      'bg-red-500/40 dark:shadow-red-500/20 text-red-800 dark:text-red-500'
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: ' text-blue-800 dark:text-blue-500',
+    secondary: ' text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: ' text-red-800 dark:text-red-500'
   }
 
   const variants = {
@@ -31,17 +26,17 @@ const Alert = ({
     light:
       'border-t-4 border-current rounded-lg shadow-lg bg-transparent dark:bg-transparent',
     bordered:
-      'border border-current shadow-md rounded-lg bg-transparent dark:bg-transparent',
+      'border border-current rounded-lg shadow-md bg-transparent dark:bg-transparent',
     complete: 'border border-current rounded-lg shadow-lg backdrop-blur-md'
   }
 
   const colorType = {
-    default: 'bg-neutral-500/20',
-    primary: 'bg-blue-500/20',
-    secondary: 'bg-indigo-500/20',
-    success: 'bg-green-500/40',
-    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20',
-    danger: 'bg-red-500/20'
+    default: 'bg-neutral-100/40 dark:bg-zinc-700/60 dark:shadow-neutral-100/5 ',
+    primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
+    secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
+    success: 'bg-green-400/50 dark:shadow-green-500/20 ',
+    warning: 'bg-yellow-500/40 dark:shadow-yellow-500/20 ',
+    danger: 'bg-red-500/40 dark:shadow-red-500/20'
   }
 
   const iconVar = {
@@ -131,7 +126,11 @@ const Alert = ({
 
   return (
     <div
-      className={`flex items-center justify-center gap-4 py-2 px-4 my-2 ${typeClass} ${variantClass}`}
+      className={`flex items-center justify-center gap-4 py-2 px-4 my-2 ${typeClass} ${variantClass} ${
+        styleVariant === 'default' || styleVariant === 'complete'
+          ? colorClass
+          : ''
+      }`}
     >
       {icon && (
         <div
