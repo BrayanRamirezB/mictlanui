@@ -3,9 +3,9 @@ name: 'Textarea'
 description: 'Permite al usuario ingresar un texto en múltiples líneas.'
 ---
 
-import Preview from '@/components/Preview.astro'
-import CodeBlock from '@/components/CodeBlock.jsx'
-import Textarea from '@/components/Textarea.jsx'
+import CodeBlock from '@/components/landing/CodeBlock.jsx'
+import Preview from '@/components/landing/Preview.astro'
+import Textarea from '@/components/react/Textarea.jsx'
 
 ## Sobre el componente
 
@@ -93,7 +93,8 @@ const Textarea = ({
   }
 
   const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
+    default:
+      'text-zinc-800 dark:text-neutral-100 placeholder-zinc-800/30 dark:placeholder-neutral-100/30',
     danger: 'text-red-800 dark:text-red-500'
   }
 
@@ -103,7 +104,7 @@ const Textarea = ({
   `
 
   const inputClasses = `
-    w-full p-2 rounded-lg transition-colors
+    w-full p-2 rounded-lg transition focus:outline-none
     ${variants[variant]}
     ${variant === 'default' && colors['default']}
     ${textColors['default']}
@@ -361,3 +362,4 @@ Para establecer un valor por defecto al componente, simplemente debes agregar el
 ```
 
 </CodeBlock>
+@/components/landing/CodeBlock.jsx

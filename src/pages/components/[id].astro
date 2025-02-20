@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content'
 import Layout from '@/layouts/Layout.astro'
-import Aside from '@/components/Aside.astro'
-import PageContainer from '@/components/PageContainer.astro'
+import Aside from '@/sections/Aside.astro'
+import PageContainer from '@/sections/PageContainer.astro'
 
 export async function getStaticPaths() {
   const components = await getCollection('components')

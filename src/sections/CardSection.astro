@@ -1,0 +1,24 @@
+---
+import Timeline from '@/components/Icons/Timeline.astro'
+import Paint from '@/components/Icons/Paint.astro'
+import Sun from '@/components/Icons/Sun.astro'
+import Card from '@/components/landing/Card.astro'
+---
+
+<div class='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mx-auto'>
+  <Card title='Customizable'>
+    <Paint class='size-5' slot={'icon'} />
+    MictlanUI es altamente personalizable, lo que significa que puedes modificar
+    completamente el diseño de cada componente para adaptarlo a tus necesidades.
+  </Card>
+  <Card title='Temas Claro y Oscuro'>
+    <Sun class='size-5' slot={'icon'} />
+    Todos los componentes cuentan con un tema claro y oscuro para que puedas personalizar
+    el color de tu aplicación según tus preferencias.
+  </Card>
+  <Card title='Rapidez'>
+    <Timeline class='size-5' slot={'icon'} />
+    Rápido y eficiente, lo que significa que puedes crear aplicaciones web de alta
+    calidad en minutos, incluso sin tener experiencia en desarrollo web.
+  </Card>
+</div>
