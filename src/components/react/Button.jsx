@@ -34,12 +34,12 @@ const Button = ({
   }
 
   const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/30 ',
-    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/5',
+    primary: 'bg-blue-500/20',
+    secondary: 'bg-indigo-500/20',
+    success: 'bg-green-500/20',
+    warning: 'bg-yellow-500/30',
+    danger: 'bg-red-500/20'
   }
 
   const shadowColors = {
@@ -72,11 +72,11 @@ const Button = ({
 
   const hoverColors = {
     default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
-    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
-    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
-    success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
-    warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
-    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+    primary: 'hover:bg-blue-500/30',
+    secondary: 'hover:bg-indigo-500/40',
+    success: 'hover:bg-green-500/50',
+    warning: 'hover:bg-yellow-500/60',
+    danger: 'hover:bg-red-500/30'
   }
 
   const buttonClasses = `

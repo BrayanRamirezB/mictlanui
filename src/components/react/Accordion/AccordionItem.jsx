@@ -5,24 +5,48 @@ const AccordionItem = ({
   content,
   isActive,
   toggle,
-  styleVariant
+  styleVariant,
+  color = 'default'
 }) => {
   const variants = {
-    default:
-      'border-0 shadow-lg dark:shadow-neutral-100/5 backdrop-blur-md bg-neutral-100/20 dark:bg-zinc-700/30 hover:bg-white/50 dark:hover:bg-zinc-800 ',
-    light: 'border-b-2 border-zinc-700/20 dark:border-neutral-100/30',
-    bordered:
-      'border rounded-sm border-zinc-700/20 dark:border-neutral-100/30 hover:bg-white/50 dark:hover:bg-zinc-800',
-    complete:
-      'border backdrop-blur-sm border-neutral-100/20 dark:border-zinc-700/20 bg-neutral-100/20 dark:bg-zinc-700/30 hover:bg-white/50 dark:hover:bg-zinc-800'
+    default: 'border-0 shadow-lg backdrop-blur-md ',
+    light: 'border-b-2',
+    bordered: 'border rounded-sm',
+    complete: 'border backdrop-blur-sm shadow-lg'
   }
 
   const bodyVariants = {
-    default: 'backdrop-blur-md bg-neutral-200/30 dark:bg-zinc-700/20',
+    default: 'backdrop-blur-md',
     light: 'bg-transparent dark:bg-transparent',
-    bordered: 'border-x-[1px] border-zinc-700/20 dark:border-neutral-100/30',
-    complete:
-      'backdrop-blur-sm bg-neutral-100/20 dark:bg-zinc-700/30 border-x-[1px] border-neutral-100/20 dark:border-zinc-700/20'
+    bordered: 'border-x-[1px] ',
+    complete: 'backdrop-blur-sm border-x-[1px]'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/5',
+    primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
+    secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
+    success: 'bg-green-400/50 dark:shadow-green-500/20 ',
+    warning: 'bg-yellow-500/40 dark:shadow-yellow-500/20 ',
+    danger: 'bg-red-500/40 dark:shadow-red-500/20'
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-white/50 dark:hover:bg-zinc-800',
+    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
+    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
+    success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
+    warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
+    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+  }
+
+  const borderColors = {
+    default: 'border-zinc-700/20 dark:border-neutral-100/30',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
   }
 
   const variantClass = variants[styleVariant]
@@ -33,9 +57,15 @@ const AccordionItem = ({
       <h2 id={`accordion-heading-${index}`}>
         <button
           type='button'
-          className={`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-gray-800 dark:text-gray-300 ${variantClass}  ${
+          className={`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 ${variantClass}  ${
             isActive ? 'rounded-t-xl' : ''
-          } `}
+          } ${
+            styleVariant !== 'light' &&
+            styleVariant !== 'bordered' &&
+            colors[color]
+          } ${styleVariant !== 'default' && borderColors[color]} ${
+            hoverColors[color]
+          }`}
           onClick={() => toggle(index)}
           aria-expanded={isActive}
           aria-controls={`accordion-body-${index}`}
@@ -45,7 +75,7 @@ const AccordionItem = ({
               {title}
             </span>
             {subtitle && (
-              <p className='text-left text-sm font-light text-gray-500 dark:text-gray-400'>
+              <p className='text-left text-sm font-light text-zinc-700 dark:text-neutral-200'>
                 {subtitle}
               </p>
             )}
@@ -75,9 +105,15 @@ const AccordionItem = ({
         id={`accordion-body-${index}`}
         className={`overflow-hidden ${
           isActive ? '' : 'hidden'
-        } p-5  ${bodyVariantClass}`}
+        } p-5  ${bodyVariantClass} ${
+          styleVariant !== 'light' &&
+          styleVariant !== 'bordered' &&
+          colors[color]
+        } ${styleVariant !== 'default' && borderColors[color]} `}
       >
-        <p className='mb-2 text-gray-600 dark:text-gray-500'>{content}</p>
+        <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
+          {content}
+        </p>
       </div>
     </div>
   )

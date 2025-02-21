@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import AccordionItem from '@/components/react/Accordion/AccordionItem'
 
-const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
+const Accordion = ({
+  items,
+  multiple = false,
+  styleVariant = 'default',
+  color
+}) => {
   const [activeIndexes, setActiveIndexes] = useState([])
 
   const toggleAccordion = (index) => {
@@ -19,7 +24,7 @@ const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
   }
 
   return (
-    <div id='accordion' className='w-full shadow-sm'>
+    <div id='accordion' className='w-full'>
       {items.map((item, index) => (
         <AccordionItem
           key={index}
@@ -30,6 +35,7 @@ const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
           isActive={activeIndexes.includes(index)}
           toggle={toggleAccordion}
           styleVariant={styleVariant}
+          color={color}
         />
       ))}
     </div>

@@ -31,7 +31,7 @@ const Alert = ({
   }
 
   const colorType = {
-    default: 'bg-neutral-100/40 dark:bg-zinc-700/60 dark:shadow-neutral-100/5 ',
+    default: 'bg-neutral-100/40 dark:bg-zinc-700/60 dark:shadow-neutral-100/5',
     primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
     secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
     success: 'bg-green-400/50 dark:shadow-green-500/20 ',

@@ -529,4 +529,319 @@ Si colocamos el atributo `styleVariant` en `complete`.
 ```
 
 </CodeBlock>
-@/components/landing/CodeBlock.jsx
+
+## Colores
+
+Para cambiar el color del componente, se puede utilizar el atributo `color` en el componente `Accordion`. Este atributo acepta los siguientes valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.
+
+### Default
+
+El color por defecto del componente es el `default`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      color='default'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  color='default'
+/>
+```
+
+</CodeBlock>
+
+### Primary
+
+Si colocamos el atributo `color` en `primary`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      color='primary'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  color='primary'
+/>
+```
+
+</CodeBlock>
+
+### Secondary
+
+Si colocamos el atributo `color` en `secondary`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      color='secondary'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  color='secondary'
+/>
+```
+
+</CodeBlock>
+
+### Success
+
+Si colocamos el atributo `color` en `success`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      color='success'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  color='success'
+/>
+```
+
+</CodeBlock>
+
+### Warning
+
+Si colocamos el atributo `color` en `warning`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      color='warning'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  color='warning'
+/>
+```
+
+</CodeBlock>
+
+### Danger
+
+Si colocamos el atributo `color` en `danger`.
+
+<Preview>
+  <div class='w-1/2 m-auto'>
+    <Accordion
+      client:load
+      items={[
+        {
+          title: 'Accordion 1',
+          content: '1st content to show in the accordion'
+        },
+        {
+          title: 'Accordion 2',
+          content: '2nd content to show in the accordion'
+        },
+        {
+          title: 'Accordion 3',
+          content: '3rd content to show in the accordion'
+        }
+      ]}
+      color='danger'
+    />
+
+  </div>
+</Preview>
+
+<CodeBlock client:load>
+
+```jsx
+<Accordion
+  items={[
+    {
+      title: 'Accordion 1',
+      content: '1st content to show in the accordion'
+    },
+    {
+      title: 'Accordion 2',
+      content: '2nd content to show in the accordion'
+    },
+    {
+      title: 'Accordion 3',
+      content: '3rd content to show in the accordion'
+    }
+  ]}
+  color='danger'
+/>
+```
+
+</CodeBlock>
