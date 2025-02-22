@@ -70,7 +70,7 @@ const Tabs = ({
   }
 
   const hoverColors = {
-    default: 'hover:text-neutral-100/80 dark:hover:text-zinc-700/80 ',
+    default: 'hover:text-gray-800/80 dark:hover:dark:text-gray-300/80 ',
     primary: 'hover:text-blue-500/50 dark:hover:text-blue-500/50',
     secondary: 'hover:text-indigo-500/50 dark:hover:text-indigo-500/50',
     success: 'hover:text-green-500/80 dark:hover:text-green-500/60',
