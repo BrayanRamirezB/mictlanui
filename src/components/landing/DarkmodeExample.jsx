@@ -2,6 +2,8 @@ import Card from '@/components/react/Card/Card'
 import CardContent from '@/components/react/Card/CardContent'
 import CardHeader from '@/components/react/Card/CardHeader'
 import Button from '@/components/react/Button'
+import Image from '@/components/react/Image'
+import Slider from '@/components/react/Slider'
 import { useState } from 'react'
 
 const DarkmodeExample = () => {
@@ -19,10 +21,12 @@ const DarkmodeExample = () => {
   return (
     <Card maxWidth='xs' shadow='lg' rounded='lg'>
       <CardHeader padding='lg'>
-        <img
-          src='/img-preview1.webp'
+        <Image
+          imageSrc='/img-preview1.webp'
           alt='Card image'
-          className='w-full h-40 object-cover rounded-xl shadow-xl'
+          filter='blur'
+          zoomedWrapper
+          className='w-full h-40'
         />
       </CardHeader>
       <CardContent textSize='sm'>
@@ -75,8 +79,14 @@ const DarkmodeExample = () => {
             MictlanUI best comp
           </h1>
 
-          <div className='w-full bg-neutral-300/30 rounded-full h-2.5 dark:bg-zinc-700/30 backdrop-blur-md shadow-lg border-0'>
-            <div className='bg-blue-500 h-2.5 rounded-full w-1/3'></div>
+          <div className='w-full'>
+            <Slider
+              color='default'
+              value={70}
+              showThumb={false}
+              showValue={false}
+              size='sm'
+            />
           </div>
         </div>
 

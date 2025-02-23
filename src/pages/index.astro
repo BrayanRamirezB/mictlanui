@@ -8,6 +8,7 @@ import EsloganSection from '@/sections/EsloganSection.astro'
 import GlassSection from '@/sections/GlassSection.astro'
 import DarkSection from '@/sections/DarkSection.astro'
 import ColorSection from '@/sections/ColorSection.astro'
+import News from '@/sections/News.astro'
 ---
 
 <Layout transition:name='layout'>
@@ -22,6 +23,12 @@ import ColorSection from '@/sections/ColorSection.astro'
       class='py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl'
     >
       <CardSection />
+    </SectionContainer>
+
+    <SectionContainer
+      class='py-8 md:py-12 lg:max-w-4xl md:max-w-3xl sm:max-w-xl'
+    >
+      <News />
     </SectionContainer>
 
     <SectionContainer

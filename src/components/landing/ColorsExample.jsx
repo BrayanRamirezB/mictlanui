@@ -31,7 +31,7 @@ const ColorsExample = () => {
 
   return (
     <div className='flex flex-col gap-y-2 justify-center items-center'>
-      <div>
+      <div className='flex items-center justify-center gap-2 flex-wrap md:flex-nowrap'>
         <Button variant='light' onClick={() => handleColor('default')}>
           <div className='flex flex-col gap-y-1 items-center justify-center'>
             <svg
@@ -185,7 +185,7 @@ const ColorsExample = () => {
       </div>
       <Card maxWidth='xl' shadow='xl' rounded='lg' color={color}>
         <CardContent textSize='sm'>
-          <div className='flex flex-row items-center justify-between gap-x-4'>
+          <div className='flex flex-col md:flex-row items-center justify-between gap-x-4'>
             <div
               className={`flex justify-center items-center h-40 w-3/4 p-4 rounded-xl ${bgGradientColors[color]}`}
             >

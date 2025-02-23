@@ -144,6 +144,20 @@ Para combinar filtros y zoom, puedes utilizar el atributo `filter` y seleccionar
   />
 </Preview>
 
+<CodeBlock client:load>
+
+```jsx
+<Image
+  imageSrc='/img-preview1.webp'
+  alt='Preview Image'
+  filter='blur'
+  zoomedWrapper
+  className='w-[500px] h-[300px]'
+/>
+```
+
+</CodeBlock>
+
 ## Redondeado
 
 Para cambiar el redondeo de la imagen, puedes utilizar el atributo `rounded` y seleccionar su valor entre `none`, `sm`, `md`, `lg` o `full`.

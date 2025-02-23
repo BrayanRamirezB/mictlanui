@@ -17,8 +17,18 @@ const Search = () => {
       )
     } else if (e.key === 'ArrowUp') {
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev))
-    } else if (e.key === 'Enter' && selectedIndex >= 0) {
-      window.location.href = filteredPages[selectedIndex].path // Redirige
+    } else if (e.key === 'Enter') {
+      // No redirigir si la consulta está vacía
+      if (query.trim() === '') return
+
+      // No redirigir si no hay coincidencias
+      if (filteredPages.length === 0) return
+
+      // Si se ha seleccionado un elemento, redirigir a ese,
+      // de lo contrario, redirigir al primer elemento encontrado
+      const page =
+        selectedIndex >= 0 ? filteredPages[selectedIndex] : filteredPages[0]
+      window.location.href = page.path
     }
   }
 
