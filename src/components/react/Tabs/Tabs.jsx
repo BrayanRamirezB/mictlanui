@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, Children } from 'react'
 
 const Tabs = ({
   children,
@@ -104,7 +104,7 @@ const Tabs = ({
         ${variant !== 'light' && roundeds[radius]}
         `}
       >
-        {React.Children.map(children, (child, index) => {
+        {Children.map(children, (child, index) => {
           const isDisabled = child.props.disabled
           const isLink = child.props.href
 
@@ -144,7 +144,7 @@ const Tabs = ({
 
       {/* Contenido de las pestañas */}
       <div className={`p-4 ${textColors[color]}`}>
-        {React.Children.map(children, (child, index) =>
+        {Children.map(children, (child, index) =>
           activeTab === index ? child.props.children : null
         )}
       </div>

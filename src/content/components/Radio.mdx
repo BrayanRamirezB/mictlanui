@@ -6,6 +6,9 @@ description: 'Componente de selección de opciones.'
 import CodeBlock from '@/components/landing/CodeBlock.jsx'
 import Preview from '@/components/landing/Preview.astro'
 import CustomRadio from '@/components/react/Radio/CustomRadio.jsx'
+import CodeTabs from '@/components/landing/CodeTabs.jsx'
+import { RadioReact, RadioGroupReact } from '@/const/componentsReact'
+import { RadioTs, RadioGroupTs } from '@/const/componentsTs'
 
 ## Sobre el componente
 
@@ -43,217 +46,23 @@ return (
 
 El código para el componente `Radio` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import { useState } from 'react'
-
-const Radio = ({
-  value,
-  isSelected = false,
-  isDisabled = false,
-  isReadOnly = false,
-  children,
-  description,
-  onChange,
-  color
-}) => {
-  const [isPressed, setIsPressed] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-
-  const handleChange = () => {
-    if (!isDisabled && !isReadOnly && onChange) {
-      onChange(value)
-    }
-  }
-
-  const handleMouseDown = () => {
-    if (!isDisabled && !isReadOnly) {
-      setIsPressed(true)
-    }
-  }
-
-  const handleMouseUp = () => {
-    setIsPressed(false)
-  }
-
-  const handleMouseEnter = () => {
-    if (!isDisabled && !isReadOnly) {
-      setIsHovered(true)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-  }
-
-  const colors = {
-    default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
-    primary: 'bg-blue-500/50 ',
-    secondary: 'bg-indigo-500/50 ',
-    success: 'bg-green-500/60 ',
-    warning: 'bg-yellow-500/60 ',
-    danger: 'bg-red-500/50 '
-  }
-
-  return (
-    <div
-      data-selected={isSelected}
-      data-pressed={isPressed}
-      data-readonly={isReadOnly}
-      data-hover-unselected={isHovered && !isSelected}
-      data-hover={isHovered}
-      data-disabled={isDisabled}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleChange}
-      className={`flex items-center gap-2 ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      }`}
-    >
-      <input
-        type='radio'
-        value={value}
-        checked={isSelected}
-        disabled={isDisabled || isReadOnly}
-        onChange={handleChange}
-        className='hidden'
-      />
-
-      <div
-        className={`size-5 rounded-full flex items-center justify-center transition-colors ${
-          isSelected
-            ? colors[color]
-            : 'border-2 border-zinc-700/50 dark:border-neutral-100/50'
-        } ${isHovered ? 'bg-zinc-700/30 dark:bg-neutral-100/30' : ''}`}
-      >
-        {isSelected && (
-          <div
-            className={`size-3 border-2 rounded-full border-transparent ${colors[color]}`}
-          ></div>
-        )}
-      </div>
-
-      <div className='flex flex-col'>
-        <div className='text-sm font-medium'>{children}</div>
-
-        {description && <p className='text-sm font-light'>{description}</p>}
-      </div>
-    </div>
-  )
-}
-
-export default Radio
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: RadioReact },
+    { label: 'TypeScript', code: RadioTs }
+  ]}
+/>
 
 El código para el componente `RadioGroup` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import React from 'react'
-
-const RadioGroup = ({
-  children,
-  orientation = 'vertical',
-  label,
-  description,
-  errorMessage,
-  isInvalid,
-  isDisabled,
-  selectedValue,
-  onChange,
-  variant = 'default',
-  color = 'default',
-  rounded = 'md'
-}) => {
-  const variants = {
-    default: 'border-0 backdrop-blur-sm shadow-md',
-    bordered: 'border shadow-md',
-    light: ''
-  }
-
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/20 ',
-    warning: 'bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
-  }
-
-  const borderColors = {
-    default: 'border-zinc-700/30 dark:border-neutral-100/20',
-    primary: 'border-blue-500',
-    secondary: 'border-indigo-500 ',
-    success: 'border-green-500 ',
-    warning: 'border-yellow-500',
-    danger: 'border-red-500 '
-  }
-
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-600',
-    secondary: 'text-indigo-600',
-    success: 'text-green-600',
-    warning: 'text-yellow-600',
-    danger: 'text-red-600'
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-xl',
-    xl: 'rounded-3xl'
-  }
-
-  return (
-    <div
-      className={`flex flex-col gap-3 px-4 py-3 ${variants[variant]} ${
-        variant === 'default' && colors[color]
-      } ${roundeds[rounded]} ${variant === 'bordered' && borderColors[color]}`}
-      data-orientation={orientation}
-      role='radiogroup'
-    >
-      {label && (
-        <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
-          {label}
-        </span>
-      )}
-
-      <div
-        className={`flex ${
-          orientation === 'horizontal' ? 'flex-row gap-4' : 'flex-col gap-2'
-        } ${textColors[color]}`}
-      >
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child, {
-            isSelected: child.props.value === selectedValue,
-            onChange: onChange,
-            color: color,
-            isDisabled: isDisabled || child.props.isDisabled
-          })
-        )}
-      </div>
-
-      {description && <p className='text-sm text-gray-500'>{description}</p>}
-
-      {isInvalid && errorMessage && (
-        <p className='text-sm text-red-600'>{errorMessage}</p>
-      )}
-    </div>
-  )
-}
-
-export default RadioGroup
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: RadioGroupReact },
+    { label: 'TypeScript', code: RadioGroupTs }
+  ]}
+/>
 
 ## Orientación
 

@@ -72,7 +72,6 @@ const Input = ({
 
   return (
     <div className={`flex flex-col space-y-2 ${textColors[color]}`}>
-      {/* Label */}
       {label && (
         <label className='text-sm font-medium'>
           {label}
@@ -80,15 +79,12 @@ const Input = ({
         </label>
       )}
 
-      {/* Main Wrapper */}
       <div className='relative'>
-        {/* Input Wrapper */}
         <div
           className={`flex items-center ${variants[variant]} ${
             roundeds[rounded]
           } ${variant === 'default' && colors[color]} ${borderColors[color]} `}
         >
-          {/* Inner Wrapper */}
           <div className='flex-1 relative'>
             <input
               type={type}
@@ -108,7 +104,6 @@ const Input = ({
               } ${sizes[size]}`}
             />
 
-            {/* Clear Button */}
             {type !== 'password' && isClearable && value && (
               <button
                 type='button'
@@ -138,7 +133,6 @@ const Input = ({
         </div>
       </div>
 
-      {/* Helper Wrapper */}
       <div className='text-sm'>
         {description && <p className='font-normal'>{description}</p>}
         {isInvalid && errorMessage && (

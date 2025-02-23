@@ -1,9 +1,9 @@
-import Table from '@/components/react/Table/Table.jsx'
-import TableHeader from '@/components/react/Table/TableHeader.jsx'
-import TableBody from '@/components/react/Table/TableBody.jsx'
-import TableRow from '@/components/react/Table/TableRow.jsx'
-import TableCell from '@/components/react/Table/TableCell.jsx'
-import TableColumn from '@/components/react/Table/TableColumn.jsx'
+import Table from '@/components/react/Table/Table'
+import TableHeader from '@/components/react/Table/TableHeader'
+import TableBody from '@/components/react/Table/TableBody'
+import TableRow from '@/components/react/Table/TableRow'
+import TableCell from '@/components/react/Table/TableCell'
+import TableColumn from '@/components/react/Table/TableColumn'
 
 const CustomTable = ({
   variant,

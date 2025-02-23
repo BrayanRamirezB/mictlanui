@@ -32,13 +32,13 @@ const Modal = ({
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('mousedown', handleClickOutside)
-      document.body.style.overflow = 'hidden' // Prevent scrolling
+      document.body.style.overflow = 'hidden'
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handleClickOutside)
-      document.body.style.overflow = 'auto' // Restore scrolling
+      document.body.style.overflow = 'auto'
     }
   }, [isOpen, isDismissable, onClose])
 

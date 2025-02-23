@@ -1,5 +1,5 @@
-import Select from '@/components/react/Select/Select.jsx'
-import SelectItem from '@/components/react/Select/SelectItem.jsx'
+import Select from '@/components/react/Select/Select'
+import SelectItem from '@/components/react/Select/SelectItem'
 import { useState } from 'react'
 
 const CustomSelect = ({

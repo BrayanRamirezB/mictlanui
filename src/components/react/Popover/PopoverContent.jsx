@@ -1,6 +1,6 @@
-import React from 'react'
+import { forwardRef } from 'react'
 
-const PopoverContent = React.forwardRef(
+const PopoverContent = forwardRef(
   ({ children, isOpen, backdrop, placement, color, rounded }, ref) => {
     if (!isOpen) return null
 

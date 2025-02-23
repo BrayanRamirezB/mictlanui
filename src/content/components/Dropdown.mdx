@@ -23,6 +23,21 @@ import {
   CustomDropdown15,
   CustomDropdown16
 } from '@/components/react/Dropdown/CustomDropdown.jsx'
+import CodeTabs from '@/components/landing/CodeTabs.jsx'
+import {
+  DropdownReact,
+  DropdownItemReact,
+  DropdownMenuReact,
+  DropdownSectionReact,
+  DropdownTriggerReact
+} from '@/const/componentsReact'
+import {
+  DropdownTs,
+  DropdownItemTs,
+  DropdownMenuTs,
+  DropdownSectionTs,
+  DropdownTriggerTs
+} from '@/const/componentsTs'
 
 ## Sobre el componente
 
@@ -56,405 +71,53 @@ Para utilizar el componente, debemos hacer uso de los componentes `Dropdown`, `D
 
 Y el código para el componente `Dropdown` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import { createContext, useContext, useState } from 'react'
-
-const DropdownContext = createContext()
-
-const Dropdown = ({ children, ...props }) => {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
-
-  return (
-    <DropdownContext.Provider value={{ isOpen, toggleDropdown }}>
-      <div className='relative inline-block' {...props}>
-        {children}
-      </div>
-    </DropdownContext.Provider>
-  )
-}
-
-export const useDropdown = () => {
-  const context = useContext(DropdownContext)
-  if (!context) {
-    throw new Error('useDropdown must be used within a Dropdown')
-  }
-  return context
-}
-
-export default Dropdown
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: DropdownReact },
+    { label: 'TypeScript', code: DropdownTs }
+  ]}
+/>
 
 El código para el componente `DropdownTrigger` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import { useDropdown } from './Dropdown'
-
-const DropdownTrigger = ({
-  children,
-  variant = 'default',
-  color = 'default',
-  rounded = 'md',
-  size = 'md',
-  ...props
-}) => {
-  const variants = {
-    default: 'border-0 shadow-lg backdrop-blur-sm',
-    bordered: 'border shadow-md',
-    light: ''
-  }
-
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/20 ',
-    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
-  }
-
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-800 dark:text-blue-500',
-    secondary: 'text-indigo-800 dark:text-indigo-500',
-    success: 'text-green-800 dark:text-green-500',
-    warning: 'text-yellow-800 dark:text-yellow-500',
-    danger: 'text-red-800 dark:text-red-500'
-  }
-
-  const borderColors = {
-    default: 'border-gray-800 dark:border-gray-300',
-    primary: 'border-blue-800 dark:border-blue-500',
-    secondary: 'border-indigo-800 dark:border-indigo-500',
-    success: 'border-green-800 dark:border-green-500',
-    warning: 'border-yellow-800 dark:border-yellow-500',
-    danger: 'border-red-800 dark:border-red-500'
-  }
-
-  const hoverColors = {
-    default: 'hover:bg-neutral-100/30 dark:hover:bg-zinc-700/50 ',
-    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
-    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/10',
-    success: 'hover:bg-green-500/30 dark:hover:bg-green-500/10',
-    warning: 'hover:bg-yellow-500/30 dark:hover:bg-yellow-500/10',
-    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
-  }
-
-  const sizes = {
-    sm: 'font-light text-xs px-2 py-1.5',
-    md: 'font-medium text-sm px-4 py-2',
-    lg: 'font-medium text-base px-8 py-2.5'
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    full: 'rounded-full'
-  }
-
-  const { toggleDropdown } = useDropdown()
-
-  return (
-    <button
-      className={`inline-flex justify-center items-center
-        ${variants[variant]} 
-        ${sizes[size]} 
-        ${textColors[color]} 
-        ${variant === 'bordered' && borderColors[color]}
-        ${variant === 'default' && colors[color]}
-        ${roundeds[rounded]} 
-        ${hoverColors[color]}
-      `}
-      onClick={toggleDropdown}
-      {...props}
-    >
-      {children}
-    </button>
-  )
-}
-
-export default DropdownTrigger
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: DropdownTriggerReact },
+    { label: 'TypeScript', code: DropdownTriggerTs }
+  ]}
+/>
 
 El código para el componente `DropdownMenu` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import { useDropdown } from './Dropdown'
-
-const DropdownMenu = ({
-  children,
-  variant = 'default',
-  color = 'default',
-  rounded = 'md',
-  ...props
-}) => {
-  const variants = {
-    default: 'border-0 shadow-lg backdrop-blur-sm',
-    bordered: 'border shadow-md',
-    light: ''
-  }
-
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/20 ',
-    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
-  }
-
-  const borderColors = {
-    default: 'border-gray-800 dark:border-gray-300',
-    primary: 'border-blue-800 dark:border-blue-500',
-    secondary: 'border-indigo-800 dark:border-indigo-500',
-    success: 'border-green-800 dark:border-green-500',
-    warning: 'border-yellow-800 dark:border-yellow-500',
-    danger: 'border-red-800 dark:border-red-500'
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg'
-  }
-
-  const { isOpen } = useDropdown()
-
-  return (
-    <div
-      className={`origin-top-right flex flex-col right-0 mt-2 w-full ${
-        isOpen ? 'block' : 'hidden'
-      }
-        ${variants[variant]} 
-        ${variant === 'default' && colors[color]}
-        ${variant === 'bordered' && borderColors[color]}
-        ${roundeds[rounded]}
-      `}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-}
-
-export default DropdownMenu
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: DropdownMenuReact },
+    { label: 'TypeScript', code: DropdownMenuTs }
+  ]}
+/>
 
 El código para el componente `DropdownSection` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-const DropdownSection = ({
-  children,
-  heading,
-  showDivider,
-  variant = 'light',
-  color = 'default',
-  font = 'md',
-  rounded = 'md',
-  ...props
-}) => {
-  const variants = {
-    default: 'border-0 shadow-lg backdrop-blur-sm',
-    bordered: 'border shadow-md',
-    light: ''
-  }
-
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/5 dark:shadow-zinc-700/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/20 ',
-    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
-  }
-
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-800 dark:text-blue-500',
-    secondary: 'text-indigo-800 dark:text-indigo-500',
-    success: 'text-green-800 dark:text-green-500',
-    warning: 'text-yellow-800 dark:text-yellow-500',
-    danger: 'text-red-800 dark:text-red-500'
-  }
-
-  const borderColors = {
-    default: 'border-gray-800 dark:border-gray-300',
-    primary: 'border-blue-800 dark:border-blue-500',
-    secondary: 'border-indigo-800 dark:border-indigo-500',
-    success: 'border-green-800 dark:border-green-500',
-    warning: 'border-yellow-800 dark:border-yellow-500',
-    danger: 'border-red-800 dark:border-red-500'
-  }
-
-  const fonts = {
-    sm: 'font-normal',
-    md: 'font-medium',
-    lg: 'font-semibold',
-    xl: 'font-bold'
-  }
-
-  const dividerColors = {
-    default: 'bg-zinc-700 dark:bg-neutral-100/70',
-    primary: 'bg-blue-500',
-    secondary: 'bg-indigo-500',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    danger: 'bg-red-500'
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg'
-  }
-
-  return (
-    <div className='flex flex-col' {...props}>
-      {heading && (
-        <h3
-          className={`px-4 ${variants[variant]} ${
-            variant !== 'light' && roundeds[rounded]
-          } ${textColors[color]} ${fonts[font]} ${
-            variant === 'default' && colors[color]
-          } ${variant === 'bordered' && borderColors[color]}`}
-        >
-          {heading}
-        </h3>
-      )}
-      {children}
-      {showDivider && (
-        <div className={`my-2 h-px ${dividerColors[color]}`}></div>
-      )}
-    </div>
-  )
-}
-
-export default DropdownSection
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: DropdownSectionReact },
+    { label: 'TypeScript', code: DropdownSectionTs }
+  ]}
+/>
 
 El código para el componente `DropdownItem` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-const DropdownItem = ({
-  children,
-  title,
-  description,
-  selected,
-  onClick,
-  variant = 'light',
-  color = 'default',
-  rounded = 'md',
-  disabled = false,
-  ...props
-}) => {
-  const variants = {
-    default: 'border-0 shadow-lg backdrop-blur-sm',
-    bordered: 'border shadow-md',
-    light: ''
-  }
-
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/20 ',
-    warning: 'bg-yellow-500/20 dark:bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
-  }
-
-  const selectedColors = {
-    default: 'bg-neutral-100/50 dark:bg-zinc-700/60 ',
-    primary: 'bg-blue-500/40 dark:bg-blue-500/40',
-    secondary: 'bg-indigo-500/40 dark:bg-indigo-500/40',
-    success: 'bg-green-500/40 dark:bg-green-500/40',
-    warning: 'bg-yellow-500/40 dark:bg-yellow-500/40',
-    danger: 'bg-red-500/40 dark:bg-red-500/40'
-  }
-
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-800 dark:text-blue-500',
-    secondary: 'text-indigo-800 dark:text-indigo-500',
-    success: 'text-green-800 dark:text-green-500',
-    warning: 'text-yellow-800 dark:text-yellow-500',
-    danger: 'text-red-800 dark:text-red-500'
-  }
-
-  const borderColors = {
-    default: 'border-gray-800 dark:border-gray-300',
-    primary: 'border-blue-800 dark:border-blue-500',
-    secondary: 'border-indigo-800 dark:border-indigo-500',
-    success: 'border-green-800 dark:border-green-500',
-    warning: 'border-yellow-800 dark:border-yellow-500',
-    danger: 'border-red-800 dark:border-red-500'
-  }
-
-  const hoverColors = {
-    default: 'hover:bg-neutral-100/30 dark:hover:bg-zinc-700/50 ',
-    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
-    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/10',
-    success: 'hover:bg-green-500/30 dark:hover:bg-green-500/10',
-    warning: 'hover:bg-yellow-500/30 dark:hover:bg-yellow-500/10',
-    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg'
-  }
-
-  return (
-    <button
-      className={`flex w-full px-7 py-2 text-sm ${
-        disabled ? 'opacity-50 cursor-not-allowed' : ''
-      } ${roundeds[rounded]} ${variants[variant]} ${textColors[color]} ${
-        variant === 'default' && !selected && colors[color]
-      } ${variant === 'bordered' && borderColors[color]} ${
-        !disabled && hoverColors[color]
-      } ${selected && selectedColors[color]}`}
-      onClick={onClick}
-      {...props}
-    >
-      <div className='flex flex-col text-left'>
-        <span className='text-sm font-medium'>{title}</span>
-        {description && <p className='text-sm'>{description}</p>}
-      </div>
-      {children}
-    </button>
-  )
-}
-
-export default DropdownItem
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: DropdownItemReact },
+    { label: 'TypeScript', code: DropdownItemTs }
+  ]}
+/>
 
 ### DropdownTrigger
 

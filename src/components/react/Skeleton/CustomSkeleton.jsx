@@ -1,4 +1,4 @@
-import Skeleton from '@/components/react/Skeleton/Skeleton.jsx'
+import Skeleton from '@/components/react/Skeleton/Skeleton'
 import Button from '@/components/react/Button.jsx'
 import Card from '@/components/react/Card/Card.jsx'
 import CardHeader from '@/components/react/Card/CardHeader.jsx'

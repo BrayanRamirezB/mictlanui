@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import { useState, useRef, Children, cloneElement } from 'react'
 
 const Select = ({
   label,
@@ -120,8 +120,8 @@ const Select = ({
           className={`listbox-wrapper absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 ${colors[color]}`}
         >
           <ul className='listbox'>
-            {React.Children.map(children, (child) =>
-              React.cloneElement(child, {
+            {Children.map(children, (child) =>
+              cloneElement(child, {
                 onSelect: handleSelect,
                 selectedValue,
                 color

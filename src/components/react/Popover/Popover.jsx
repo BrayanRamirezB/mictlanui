@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Children, cloneElement } from 'react'
 import PopoverContent from '@/components/react/Popover/PopoverContent'
 import PopoverTrigger from '@/components/react/Popover/PopoverTrigger'
 
@@ -37,14 +37,14 @@ const Popover = ({
 
   return (
     <div className='relative' ref={popoverRef}>
-      {React.Children.map(children, (child) => {
+      {Children.map(children, (child) => {
         if (child.type === PopoverTrigger) {
-          return React.cloneElement(child, {
+          return cloneElement(child, {
             onClick: () => setIsOpen(!isOpen)
           })
         }
         if (child.type === PopoverContent) {
-          return React.cloneElement(child, {
+          return cloneElement(child, {
             isOpen,
             backdrop,
             placement,

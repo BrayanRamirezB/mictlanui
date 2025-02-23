@@ -10,6 +10,17 @@ import Popover from '@/components/react/Popover/Popover.jsx'
 import PopoverTrigger from '@/components/react/Popover/PopoverTrigger.jsx'
 import PopoverContent from '@/components/react/Popover/PopoverContent.jsx'
 import Button from '@/components/react/Button'
+import CodeTabs from '@/components/landing/CodeTabs.jsx'
+import {
+  PopoverReact,
+  PopoverContentReact,
+  PopoverTriggerReact
+} from '@/const/componentsReact'
+import {
+  PopoverTs,
+  PopoverContentTs,
+  PopoverTriggerTs
+} from '@/const/componentsTs'
 
 ## Sobre el componente
 
@@ -25,156 +36,33 @@ Para utilizar el componente `Popover`, es necesario utilizar el componente `Popo
 
 El código para el componente `PopoverContent` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import React from 'react'
-
-const PopoverContent = React.forwardRef(
-  ({ children, isOpen, backdrop, placement, color, rounded }, ref) => {
-    if (!isOpen) return null
-
-    const backdropClass = {
-      transparent: 'bg-transparent',
-      opaque: 'bg-gray-200/50 dark:bg-black/50',
-      blur: 'backdrop-blur-sm'
-    }
-
-    const placementStyles = {
-      top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
-      bottom: 'top-full left-1/2 transform -translate-x-1/2 mt-2',
-      left: 'right-full top-1/2 transform -translate-y-1/2 mr-2',
-      right: 'left-full top-1/2 transform -translate-y-1/2 ml-2'
-    }
-
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-md',
-      lg: 'rounded-lg',
-      full: 'rounded-full'
-    }
-
-    const colors = {
-      default: 'bg-neutral-100/80 dark:bg-zinc-800/80 dark:shadow-zinc-700/10',
-      primary: 'bg-blue-500/80 ',
-      secondary: 'bg-indigo-500/80 ',
-      success: 'bg-green-500/80 dark:bg-green-600/80 ',
-      warning: 'bg-yellow-500/80 ',
-      danger: 'bg-red-500/80 '
-    }
-
-    return (
-      <>
-        <div className={`fixed inset-0 ${backdropClass[backdrop]}`}></div>
-        <div
-          className={`absolute z-10 ${placementStyles[placement]}`}
-          ref={ref}
-        >
-          <div
-            className={`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 ${colors[color]} ${roundeds[rounded]}`}
-          >
-            {children}
-          </div>
-        </div>
-      </>
-    )
-  }
-)
-
-export default PopoverContent
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: PopoverContentReact },
+    { label: 'TypeScript', code: PopoverContentTs }
+  ]}
+/>
 
 El código para el componente `PopoverTrigger` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-const PopoverTrigger = ({ children, onClick }) => {
-  return (
-    <div className='cursor-pointer' onClick={onClick}>
-      {children}
-    </div>
-  )
-}
-
-export default PopoverTrigger
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: PopoverTriggerReact },
+    { label: 'TypeScript', code: PopoverTriggerTs }
+  ]}
+/>
 
 El código para el componente `Popover` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-import React, { useState, useRef, useEffect } from 'react'
-import PopoverContent from './PopoverContent'
-import PopoverTrigger from './PopoverTrigger'
-
-const Popover = ({
-  children,
-  backdrop = 'transparent',
-  placement = 'bottom',
-  color = 'default',
-  rounded = 'md'
-}) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const popoverRef = useRef(null)
-  const contentRef = useRef(null)
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (contentRef.current && !contentRef.current.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleEscape)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleEscape)
-    }
-  }, [])
-
-  return (
-    <div className='relative' ref={popoverRef}>
-      {React.Children.map(children, (child) => {
-        if (child.type === PopoverTrigger) {
-          return React.cloneElement(child, {
-            onClick: () => setIsOpen(!isOpen)
-          })
-        }
-        if (child.type === PopoverContent) {
-          return React.cloneElement(child, {
-            isOpen,
-            backdrop,
-            placement,
-            color,
-            rounded,
-            ref: contentRef
-          })
-        }
-        return child
-      })}
-    </div>
-  )
-}
-
-export default Popover
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: PopoverReact },
+    { label: 'TypeScript', code: PopoverTs }
+  ]}
+/>
 
 ## Fondo
 

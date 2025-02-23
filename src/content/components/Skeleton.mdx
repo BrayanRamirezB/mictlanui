@@ -6,6 +6,9 @@ description: Permite al usuario ver un contenido sin cargar.
 import CodeBlock from '@/components/landing/CodeBlock.jsx'
 import Preview from '@/components/landing/Preview.astro'
 import CustomSkeleton from '@/components/react/Skeleton/CustomSkeleton.jsx'
+import CodeTabs from '@/components/landing/CodeTabs.jsx'
+import { SkeletonReact } from '@/const/componentsReact'
+import { SkeletonTs } from '@/const/componentsTs'
 
 # Sobre el componente
 
@@ -61,29 +64,13 @@ return (
 
 El código para el componente `Skeleton` es el siguiente:
 
-<CodeBlock client:load>
-
-```jsx
-const Skeleton = ({ isLoaded, children, className }) => {
-  return (
-    <div
-      className={`relative overflow-hidden  ${
-        isLoaded ? '' : `backdrop-blur-sm shadow-lg animate-pulse ${className}`
-      }`}
-      data-loaded={isLoaded}
-    >
-      {!isLoaded && (
-        <div className='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse' />
-      )}
-      <div className={isLoaded ? '' : 'opacity-0'}>{children}</div>
-    </div>
-  )
-}
-
-export default Skeleton
-```
-
-</CodeBlock>
+<CodeTabs
+  client:load
+  tabs={[
+    { label: 'React', code: SkeletonReact },
+    { label: 'TypeScript', code: SkeletonTs }
+  ]}
+/>
 
 ## Uso del componente individual
 

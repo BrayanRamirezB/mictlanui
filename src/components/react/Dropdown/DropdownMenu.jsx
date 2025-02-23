@@ -1,4 +1,4 @@
-import { useDropdown } from './Dropdown'
+import { useDropdown } from '@/components/react/Dropdown/Dropdown'
 
 const DropdownMenu = ({
   children,

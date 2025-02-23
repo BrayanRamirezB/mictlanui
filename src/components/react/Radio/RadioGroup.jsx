@@ -1,4 +1,4 @@
-import React from 'react'
+import { Children, cloneElement } from 'react'
 
 const RadioGroup = ({
   children,
@@ -74,8 +74,8 @@ const RadioGroup = ({
           orientation === 'horizontal' ? 'flex-row gap-4' : 'flex-col gap-2'
         } ${textColors[color]}`}
       >
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child, {
+        {Children.map(children, (child) =>
+          cloneElement(child, {
             isSelected: child.props.value === selectedValue,
             onChange: onChange,
             color: color,

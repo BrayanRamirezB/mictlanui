@@ -1,8 +1,8 @@
-import Dropdown from '@/components/react/Dropdown/Dropdown.jsx'
-import DropdownTrigger from '@/components/react/Dropdown/DropdownTrigger.jsx'
-import DropdownMenu from '@/components/react/Dropdown/DropdownMenu.jsx'
-import DropdownItem from '@/components/react/Dropdown/DropdownItem.jsx'
-import DropdownSection from '@/components/react/Dropdown/DropdownSection.jsx'
+import Dropdown from '@/components/react/Dropdown/Dropdown'
+import DropdownTrigger from '@/components/react/Dropdown/DropdownTrigger'
+import DropdownMenu from '@/components/react/Dropdown/DropdownMenu'
+import DropdownItem from '@/components/react/Dropdown/DropdownItem'
+import DropdownSection from '@/components/react/Dropdown/DropdownSection'
 
 const CustomDropdown = () => {
   return (
