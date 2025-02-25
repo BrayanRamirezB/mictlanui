@@ -5,6 +5,7 @@ import GitHubIcon from '@/components/Icons/GitHub.astro'
 import Theme from '@/components/landing/Theme.jsx'
 import ComponentIcon from '@/components/Icons/ComponentIcon.astro'
 import Search from '@/components/landing/Search.jsx'
+import DocumentationIcon from '@/components/Icons/Documentation.astro'
 ---
 
 <header
@@ -13,7 +14,7 @@ import Search from '@/components/landing/Search.jsx'
   <nav
     class='max-w-screen-3xl flex flex-wrap flex-col md:flex-row items-center justify-center md:justify-between mx-auto py-2 gap-y-2'
   >
-    <div class='order-1 flex items-center px-6'>
+    <div class='flex items-center px-6'>
       <a href='/' class='flex items-center transition hover:animate-tada'>
         <img src='/mictlan-logo.webp' class='h-8' alt='Mictlan Logo' />
         <span
@@ -27,13 +28,13 @@ import Search from '@/components/landing/Search.jsx'
       >
     </div>
 
-    <div class='order-3 md:order-2 flex items-center px-6'>
-      <Search client:load />
-    </div>
-
     <div
-      class='order-2 md:order-3 flex items-center px-6 text-base font-medium space-x-5'
+      class='flex flex-wrap md:flex-row items-center justify-center px-2 sm:px-6 text-base font-medium gap-x-4 gap-y-2'
     >
+      <div class='flex items-center'>
+        <Search client:load />
+      </div>
+
       <a
         href='/'
         class='flex items-center justify-center gap-x-1 transition duration-300 hover:-translate-y-1 text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]'
@@ -43,6 +44,13 @@ import Search from '@/components/landing/Search.jsx'
       </a>
       <a
         href='/overview/introduction'
+        class='flex items-center justify-center gap-x-1 transition duration-300 hover:-translate-y-1 text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]'
+      >
+        <DocumentationIcon class='size-5' />
+        Documentación
+      </a>
+      <a
+        href='/components/accordion'
         class='flex items-center justify-center gap-x-1 transition duration-300 text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:-translate-y-1'
       >
         <ComponentIcon class='size-5' />
@@ -50,14 +58,13 @@ import Search from '@/components/landing/Search.jsx'
       </a>
       <SocialPill
         href='https://github.com/BrayanRamirezB/mictlanui'
-        class='mr-0 transition text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]'
+        class='transition text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7]'
       >
         <GitHubIcon
           class='size-5 hover:scale-110 transition-transform duration-300 ease-in-out'
         />
-        <SocialPill />
-        <Theme client:only='react' />
       </SocialPill>
+      <Theme client:only='react' />
     </div>
   </nav>
 </header>
