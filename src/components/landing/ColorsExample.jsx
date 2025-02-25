@@ -7,6 +7,7 @@ const ColorsExample = () => {
   const [color, setColor] = useState('default')
   const [size, setSize] = useState('h-full')
   const [like, setLike] = useState(false)
+  const [background, setBackground] = useState('complete')
 
   const handleLike = () => {
     setLike(!like)
@@ -20,6 +21,10 @@ const ColorsExample = () => {
     setColor(c)
   }
 
+  const handleBackground = (b) => {
+    setBackground(b)
+  }
+
   const bgGradientColors = {
     default: 'bg-gradient-to-r from-slate-900 to-slate-700',
     primary: 'bg-gradient-to-r from-blue-500 to-blue-700',
@@ -27,6 +32,20 @@ const ColorsExample = () => {
     success: 'bg-gradient-to-r from-green-500 to-green-700',
     warning: 'bg-gradient-to-r from-yellow-500 to-yellow-700',
     danger: 'bg-gradient-to-r from-red-500 to-red-700'
+  }
+
+  const borderColors = {
+    default: 'border-neutral-100 dark:border-zinc-700',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const backgroundFill = {
+    complete: bgGradientColors[color],
+    bordered: `border-2 ${borderColors[color]}`
   }
 
   return (
@@ -187,7 +206,7 @@ const ColorsExample = () => {
         <CardContent textSize='sm'>
           <div className='flex flex-col md:flex-row items-center justify-between gap-x-4'>
             <div
-              className={`flex justify-center items-center h-40 w-3/4 p-4 rounded-xl ${bgGradientColors[color]}`}
+              className={`flex justify-center items-center h-40 w-3/4 p-4 rounded-xl ${backgroundFill[background]}`}
             >
               <img
                 src='/mictlan-logo.webp'
@@ -282,10 +301,19 @@ const ColorsExample = () => {
                 </Button>
               </div>
               <div className='flex flex-row items-center justify-start gap-x-3'>
-                <Button rounded='lg' color={color}>
+                <Button
+                  rounded='lg'
+                  color={color}
+                  onClick={() => handleBackground('complete')}
+                >
                   Complete
                 </Button>
-                <Button rounded='lg' variant='bordered' color={color}>
+                <Button
+                  rounded='lg'
+                  variant='bordered'
+                  color={color}
+                  onClick={() => handleBackground('bordered')}
+                >
                   Bordered
                 </Button>
               </div>

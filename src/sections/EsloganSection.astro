@@ -30,13 +30,19 @@ import PlayIcon from '@/components/Icons/PlayIcon.astro'
     </a>
   </div>
   <div class='grid grid-rows-1 gap-4 md:grid-rows-2 mx-auto py-8 px-4'>
-    <a href='/overview/introduction' class=''>
+    <a
+      href='/overview/introduction'
+      class='hover:-translate-y-1 transition-transform duration-300 ease-in-out'
+    >
       <Card title='Empieza con MictlanUI'>
         <PlayIcon class='size-5' slot={'icon'} />
         MictlanUI te esta esperando, ¡empieza a crear tu primer proyecto!
       </Card>
     </a>
-    <a href='/overview/getting-started' class=''>
+    <a
+      href='/overview/getting-started'
+      class='hover:translate-y-1 transition-transform duration-300 ease-in-out'
+    >
       <Card title='Compatibilidad con Astro'>
         <AstroIcon class='size-5' slot={'icon'} />
         Significa que puedes crear aplicaciones web de alta calidad en minutos, incluso

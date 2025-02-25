@@ -58,7 +58,7 @@ const Accordion: FC<AccordionProps> = ({
 export default Accordion
 `
 
-export const AccordionItemTs = `import { type FC } from 'react'
+export const AccordionItemTs = `import { type FC, useRef, useState, useEffect } from 'react'
 
 interface AccordionItemProps {
   index: number
@@ -81,6 +81,17 @@ const AccordionItem: FC<AccordionItemProps> = ({
   styleVariant,
   color = 'default'
 }) => {
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [contentHeight, setContentHeight] = useState<string>('0px')
+
+  useEffect(() => {
+    if (isActive && contentRef.current) {
+      setContentHeight(\`\${contentRef.current.scrollHeight}px\`)
+    } else {
+      setContentHeight('0px')
+    }
+  }, [isActive])
+
   const variants = {
     default: 'border-0 shadow-lg backdrop-blur-md ',
     light: 'border-b-2',
@@ -130,11 +141,13 @@ const AccordionItem: FC<AccordionItemProps> = ({
       <h2 id={\`accordion-heading-\${index}\`}>
         <button
           type='button'
-          className={\`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 \${variantClass}  \${
-  isActive ? 'rounded-t-xl' : ''
-} \${styleVariant !== 'light' && styleVariant !== 'bordered' && colors[color]} \${
-  styleVariant !== 'default' && borderColors[color]
-} \${hoverColors[color]}\`}
+          className={\`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 \${variantClass} \${
+            styleVariant !== 'light' &&
+            styleVariant !== 'bordered' &&
+            colors[color]
+          } \${styleVariant !== 'default' && borderColors[color]} \${
+            hoverColors[color]
+          }\`}
           onClick={() => toggle(index)}
           aria-expanded={isActive}
           aria-controls={\`accordion-body-\${index}\`}
@@ -171,22 +184,27 @@ const AccordionItem: FC<AccordionItemProps> = ({
       </h2>
 
       <div
+        ref={contentRef}
         id={\`accordion-body-\${index}\`}
-        className={\`overflow-hidden \${
-          isActive ? '' : 'hidden'
-        } p-5  \${bodyVariantClass} \${
-  styleVariant !== 'light' && styleVariant !== 'bordered' && colors[color]
-} \${styleVariant !== 'default' && borderColors[color]} \`}
+        style={{ maxHeight: contentHeight }}
+        className={\`overflow-hidden transition-all duration-300 ease-in-out \${bodyVariantClass} \${
+          styleVariant !== 'light' &&
+          styleVariant !== 'bordered' &&
+          colors[color]
+        } \${styleVariant !== 'default' && borderColors[color]}\`}
       >
-        <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
-          {content}
-        </p>
+        <div className='p-5'>
+          <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
+            {content}
+          </p>
+        </div>
       </div>
     </div>
   )
 }
 
 export default AccordionItem
+
 `
 
 export const AlertTs = `import React, { useState } from 'react'
@@ -876,29 +894,23 @@ export default Breadcrumbs
 export const ButtonTs = `import { type FC } from 'react'
 
 interface ButtonProps {
-  text?: string
   variant?: 'default' | 'bordered' | 'light' | 'complete'
   disabled?: boolean
   size?: 'sm' | 'md' | 'lg' | 'xl'
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   isLoading?: boolean
-  icon?: boolean
-  iconOnly?: boolean
   onClick?: () => void
   children?: React.ReactNode
 }
 
 const Button: FC<ButtonProps> = ({
-  text,
   variant = 'default',
   disabled = false,
   size = 'md',
   rounded = 'md',
   color = 'default',
   isLoading = false,
-  icon = false,
-  iconOnly = false,
   onClick,
   children
 }) => {
@@ -1019,39 +1031,6 @@ const Button: FC<ButtonProps> = ({
         </svg>
       )}
 
-      {icon && !iconOnly && (
-        <span className={\`mr-2 \${iconColors[color]}\`}>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='currentColor'
-            className={\`\${iconColors[color]}\`}
-          >
-            <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-            <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
-          </svg>
-        </span>
-      )}
-
-      {!iconOnly && text}
-
-      {iconOnly && (
-        <span className={\`\${iconColors[color]}\`}>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='currentColor'
-            className={\`\${iconColors[color]}\`}
-          >
-            <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-            <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
-          </svg>
-        </span>
-      )}
       {children}
     </button>
   )
@@ -1340,7 +1319,7 @@ const Checkbox: FC<CheckboxProps> = ({
     >
       <div
         id={id}
-        className={\`relative w-5 h-5 flex items-center justify-center transition duration-300 ease-in \${
+        className={\`relative w-5 h-5 flex items-center justify-center transition duration-300 ease-in-out \${
           checkColors[color]
         } \${roundeds[rounded]} \${textColors[color]} cursor-pointer \${
           disabled

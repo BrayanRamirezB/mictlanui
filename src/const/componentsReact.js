@@ -39,122 +39,142 @@ const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
 export default Accordion
 `
 
-export const AccordionItemReact = `const AccordionItem = ({
-    index,
-    title,
-    subtitle,
-    content,
-    isActive,
-    toggle,
-    styleVariant,
-    color = 'default'
-  }) => {
-    const variants = {
-      default: 'border-0 shadow-lg backdrop-blur-md ',
-      light: 'border-b-2',
-      bordered: 'border rounded-sm',
-      complete: 'border backdrop-blur-sm shadow-lg'
+export const AccordionItemReact = `import { useRef, useState, useEffect } from 'react'
+
+const AccordionItem = ({
+  index,
+  title,
+  subtitle,
+  content,
+  isActive,
+  toggle,
+  styleVariant,
+  color = 'default'
+}) => {
+  const contentRef = useRef(null)
+  const [contentHeight, setContentHeight] = useState('0px')
+
+  useEffect(() => {
+    if (isActive && contentRef.current) {
+      setContentHeight(\`\${contentRef.current.scrollHeight}px\`)
+    } else {
+      setContentHeight('0px')
     }
-  
-    const bodyVariants = {
-      default: 'backdrop-blur-md',
-      light: 'bg-transparent dark:bg-transparent',
-      bordered: 'border-x-[1px] ',
-      complete: 'backdrop-blur-sm border-x-[1px]'
-    }
-  
-    const colors = {
-      default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/5',
-      primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
-      secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
-      success: 'bg-green-400/50 dark:shadow-green-500/20 ',
-      warning: 'bg-yellow-500/40 dark:shadow-yellow-500/20 ',
-      danger: 'bg-red-500/40 dark:shadow-red-500/20'
-    }
-  
-    const hoverColors = {
-      default: 'hover:bg-white/50 dark:hover:bg-zinc-800',
-      primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
-      secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
-      success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
-      warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
-      danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
-    }
-  
-    const borderColors = {
-      default: 'border-zinc-700/20 dark:border-neutral-100/30',
-      primary: 'border-blue-800 dark:border-blue-500',
-      secondary: 'border-indigo-800 dark:border-indigo-500',
-      success: 'border-green-800 dark:border-green-500',
-      warning: 'border-yellow-800 dark:border-yellow-500',
-      danger: 'border-red-800 dark:border-red-500'
-    }
-  
-    const variantClass = variants[styleVariant]
-    const bodyVariantClass = bodyVariants[styleVariant]
-  
-    return (
-      <div>
-        <h2 id={\`accordion-heading-\${index}\`}>
-          <button
-            type='button'
-            className={\`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 \${variantClass}  \${
-    isActive ? 'rounded-t-xl' : ''
-  } \${styleVariant !== 'light' && styleVariant !== 'bordered' && colors[color]} \${
-    styleVariant !== 'default' && borderColors[color]
-  } \${hoverColors[color]}\`}
-            onClick={() => toggle(index)}
-            aria-expanded={isActive}
-            aria-controls={\`accordion-body-\${index}\`}
-          >
-            <div className='w-full max-w-full'>
-              <span className='flex justify-start items-center max-w-full'>
-                {title}
-              </span>
-              {subtitle && (
-                <p className='text-left text-sm font-light text-zinc-700 dark:text-neutral-200'>
-                  {subtitle}
-                </p>
-              )}
-            </div>
-            <svg
-              data-accordion-icon
-              className={\`w-3 h-3 shrink-0 transition duration-300 ease-in \${
-                isActive ? 'rotate-180' : ''
-              }\`}
-              aria-hidden='true'
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 10 6'
-            >
-              <path
-                stroke='currentColor'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M9 5 5 1 1 5'
-              />
-            </svg>
-          </button>
-        </h2>
-  
-        <div
-          id={\`accordion-body-\${index}\`}
-          className={\`overflow-hidden \${
-            isActive ? '' : 'hidden'
-          } p-5  \${bodyVariantClass} \${
-    styleVariant !== 'light' && styleVariant !== 'bordered' && colors[color]
-  } \${styleVariant !== 'default' && borderColors[color]} \`}
+  }, [isActive])
+
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-md ',
+    light: 'border-b-2',
+    bordered: 'border rounded-sm',
+    complete: 'border backdrop-blur-sm shadow-lg'
+  }
+
+  const bodyVariants = {
+    default: 'backdrop-blur-md',
+    light: 'bg-transparent dark:bg-transparent',
+    bordered: 'border-x-[1px] ',
+    complete: 'backdrop-blur-sm border-x-[1px]'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/5',
+    primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
+    secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
+    success: 'bg-green-400/50 dark:shadow-green-500/20 ',
+    warning: 'bg-yellow-500/40 dark:shadow-yellow-500/20 ',
+    danger: 'bg-red-500/40 dark:shadow-red-500/20'
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-white/50 dark:hover:bg-zinc-800',
+    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
+    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
+    success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
+    warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
+    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+  }
+
+  const borderColors = {
+    default: 'border-zinc-700/20 dark:border-neutral-100/30',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const variantClass = variants[styleVariant]
+  const bodyVariantClass = bodyVariants[styleVariant]
+
+  return (
+    <div>
+      <h2 id={\`accordion-heading-\${index}\`}>
+        <button
+          type='button'
+          className={\`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 \${variantClass} \${
+            styleVariant !== 'light' &&
+            styleVariant !== 'bordered' &&
+            colors[color]
+          } \${styleVariant !== 'default' && borderColors[color]} \${
+            hoverColors[color]
+          }\`}
+          onClick={() => toggle(index)}
+          aria-expanded={isActive}
+          aria-controls={\`accordion-body-\${index}\`}
         >
+          <div className='w-full max-w-full'>
+            <span className='flex justify-start items-center max-w-full'>
+              {title}
+            </span>
+            {subtitle && (
+              <p className='text-left text-sm font-light text-zinc-700 dark:text-neutral-200'>
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <svg
+            data-accordion-icon
+            className={\`w-3 h-3 shrink-0 transition duration-300 ease-in \${
+              isActive ? 'rotate-180' : ''
+            }\`}
+            aria-hidden='true'
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 10 6'
+          >
+            <path
+              stroke='currentColor'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              d='M9 5 5 1 1 5'
+            />
+          </svg>
+        </button>
+      </h2>
+
+      <div
+        ref={contentRef}
+        id={\`accordion-body-\${index}\`}
+        style={{ maxHeight: contentHeight }}
+        className={\`overflow-hidden transition-all duration-300 ease-in-out \${bodyVariantClass} \${
+          styleVariant !== 'light' &&
+          styleVariant !== 'bordered' &&
+          colors[color]
+        } \${styleVariant !== 'default' && borderColors[color]}\`}
+      >
+        <div className='p-5'>
           <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
             {content}
           </p>
         </div>
       </div>
-    )
-  }
-  
-  export default AccordionItem
+    </div>
+  )
+}
+
+export default AccordionItem
+
   `
 
 export const AlertReact = `import { useState } from 'react'
@@ -752,174 +772,139 @@ export const BreadcrumbsReact = `import { useState } from 'react'
   `
 
 export const ButtonReact = `const Button = ({
-    text,
-    variant = 'default',
-    disabled = false,
-    size = 'md',
-    rounded = 'md',
-    color = 'default',
-    isLoading = false,
-    icon = false,
-    iconOnly = false,
-    onClick,
-    children
-  }) => {
-    const variants = {
-      default: 'border-0 shadow-md backdrop-blur-sm',
-      bordered: 'border border-current shadow-md',
-      light: '',
-      complete: 'backdrop-blur-xl'
-    }
-  
-    const sizes = {
-      sm: 'px-3 py-2 text-xs',
-      md: 'px-4 py-2.5 text-sm',
-      lg: 'px-5 py-3 text-base',
-      xl: 'px-6 py-3.5 text-lg'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-md',
-      lg: 'rounded-lg',
-      full: 'rounded-full'
-    }
-  
-    const colors = {
-      default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/5',
-      primary: 'bg-blue-500/20',
-      secondary: 'bg-indigo-500/20',
-      success: 'bg-green-500/20',
-      warning: 'bg-yellow-500/30',
-      danger: 'bg-red-500/20'
-    }
-  
-    const shadowColors = {
-      default:
-        'shadow-lg shadow-zinc-700/30 shadow-current dark:shadow-neutral-100/20',
-      primary: 'shadow-lg shadow-blue-500/20',
-      secondary: 'shadow-lg shadow-indigo-500/20 shadow-current',
-      success: 'shadow-lg shadow-green-500/30 shadow-current ',
-      warning: 'shadow-lg shadow-yellow-500/20 shadow-current',
-      danger: 'shadow-lg shadow-red-500/20 shadow-current'
-    }
-  
-    const textColors = {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-800 dark:text-blue-600',
-      secondary: 'text-indigo-800 dark:text-indigo-600',
-      success: 'text-green-800 dark:text-green-600',
-      warning: 'text-yellow-800 dark:text-yellow-600',
-      danger: 'text-red-800 dark:text-red-500'
-    }
-  
-    const iconColors = {
-      default: 'fill-gray-800 dark:fill-gray-300',
-      primary: 'fill-blue-800 dark:fill-blue-500',
-      secondary: 'fill-indigo-800 dark:fill-indigo-500',
-      success: 'fill-green-800 dark:fill-green-500',
-      warning: 'fill-yellow-800 dark:fill-yellow-500',
-      danger: 'fill-red-800 dark:fill-red-500'
-    }
-  
-    const hoverColors = {
-      default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
-      primary: 'hover:bg-blue-500/30',
-      secondary: 'hover:bg-indigo-500/40',
-      success: 'hover:bg-green-500/50',
-      warning: 'hover:bg-yellow-500/60',
-      danger: 'hover:bg-red-500/30'
-    }
-  
-    const buttonClasses = \`
-        inline-flex items-center justify-center font-medium text-center 
-        transition duration-300 
-        \${variants[variant]} 
-        \${sizes[size]} 
-        \${roundeds[rounded]} 
-        \${
-          variant === 'bordered' || variant === 'light'
-            ? \`bg-transparent\`
-            : colors[color]
-        }
-        \${
-          variant === 'complete'
-            ? \`text-black dark:text-white \${shadowColors[color]}\`
-            : textColors[color]
-        }
-        \${hoverColors[color]}
-        \${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
-      \`
-  
-    return (
-      <button
-        onClick={onClick}
-        disabled={disabled || isLoading}
-        className={buttonClasses.trim()}
-      >
-        {isLoading && (
-          <svg
-            className={\`animate-spin mr-2 h-5 w-5 \${iconColors[color]}\`}
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-          >
-            <circle
-              className='opacity-25'
-              cx='12'
-              cy='12'
-              r='10'
-              stroke='currentColor'
-              strokeWidth='4'
-            ></circle>
-            <path
-              className='opacity-75'
-              fill='currentColor'
-              d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-            ></path>
-          </svg>
-        )}
-  
-        {icon && !iconOnly && (
-          <span className={\`mr-2 \${iconColors[color]}\`}>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='currentColor'
-              className={\`\${iconColors[color]}\`}
-            >
-              <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-              <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
-            </svg>
-          </span>
-        )}
-  
-        {!iconOnly && text}
-  
-        {iconOnly && (
-          <span className={\`\${iconColors[color]}\`}>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='currentColor'
-              className={\`\${iconColors[color]}\`}
-            >
-              <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-              <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
-            </svg>
-          </span>
-        )}
-        {children}
-      </button>
-    )
+  variant = 'default',
+  disabled = false,
+  size = 'md',
+  rounded = 'md',
+  color = 'default',
+  isLoading = false,
+  onClick,
+  children
+}) => {
+  const variants = {
+    default: 'border-0 shadow-md backdrop-blur-sm',
+    bordered: 'border border-current shadow-md',
+    light: '',
+    complete: 'backdrop-blur-xl'
   }
-  
-  export default Button
+
+  const sizes = {
+    sm: 'px-3 py-2 text-xs',
+    md: 'px-4 py-2.5 text-sm',
+    lg: 'px-5 py-3 text-base',
+    xl: 'px-6 py-3.5 text-lg'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/5',
+    primary: 'bg-blue-500/20',
+    secondary: 'bg-indigo-500/20',
+    success: 'bg-green-500/20',
+    warning: 'bg-yellow-500/30',
+    danger: 'bg-red-500/20'
+  }
+
+  const shadowColors = {
+    default:
+      'shadow-lg shadow-zinc-700/30 shadow-current dark:shadow-neutral-100/20',
+    primary: 'shadow-lg shadow-blue-500/20',
+    secondary: 'shadow-lg shadow-indigo-500/20 shadow-current',
+    success: 'shadow-lg shadow-green-500/30 shadow-current ',
+    warning: 'shadow-lg shadow-yellow-500/20 shadow-current',
+    danger: 'shadow-lg shadow-red-500/20 shadow-current'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-600',
+    secondary: 'text-indigo-800 dark:text-indigo-600',
+    success: 'text-green-800 dark:text-green-600',
+    warning: 'text-yellow-800 dark:text-yellow-600',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const iconColors = {
+    default: 'fill-gray-800 dark:fill-gray-300',
+    primary: 'fill-blue-800 dark:fill-blue-500',
+    secondary: 'fill-indigo-800 dark:fill-indigo-500',
+    success: 'fill-green-800 dark:fill-green-500',
+    warning: 'fill-yellow-800 dark:fill-yellow-500',
+    danger: 'fill-red-800 dark:fill-red-500'
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
+    primary: 'hover:bg-blue-500/30',
+    secondary: 'hover:bg-indigo-500/40',
+    success: 'hover:bg-green-500/50',
+    warning: 'hover:bg-yellow-500/60',
+    danger: 'hover:bg-red-500/30'
+  }
+
+  const buttonClasses = \`
+      group inline-flex items-center justify-center font-medium text-center 
+      transition duration-300 
+      \${variants[variant]} 
+      \${sizes[size]} 
+      \${roundeds[rounded]} 
+      \${
+        variant === 'bordered' || variant === 'light'
+          ? \`bg-transparent\`
+          : colors[color]
+      }
+      \${
+        variant === 'complete'
+          ? \`text-black dark:text-white \${shadowColors[color]}\`
+          : textColors[color]
+      }
+      \${hoverColors[color]}
+      \${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+    \`
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled || isLoading}
+      className={buttonClasses.trim()}
+    >
+      {isLoading && (
+        <svg
+          className={\`animate-spin mr-2 h-5 w-5 \${iconColors[color]}\`}
+          xmlns='http://www.w3.org/2000/svg'
+          fill='none'
+          viewBox='0 0 24 24'
+        >
+          <circle
+            className='opacity-25'
+            cx='12'
+            cy='12'
+            r='10'
+            stroke='currentColor'
+            strokeWidth='4'
+          ></circle>
+          <path
+            className='opacity-75'
+            fill='currentColor'
+            d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+          ></path>
+        </svg>
+      )}
+
+      {children}
+    </button>
+  )
+}
+
+export default Button
+
   `
 
 export const ButtonGroupReact = `const ButtonGroup = ({
@@ -1169,7 +1154,7 @@ const Checkbox = ({
     >
       <div
         id={id}
-        className={\`relative w-5 h-5 flex items-center justify-center transition duration-300 ease-in \${
+        className={\`relative w-5 h-5 flex items-center justify-center transition duration-300 ease-in-out \${
           checkColors[color]
         } \${roundeds[rounded]} \${textColors[color]} cursor-pointer \${
           disabled

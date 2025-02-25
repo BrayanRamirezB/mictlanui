@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC, useRef, useState, useEffect } from 'react'
 
 interface AccordionItemProps {
   index: number
@@ -21,6 +21,17 @@ const AccordionItem: FC<AccordionItemProps> = ({
   styleVariant,
   color = 'default'
 }) => {
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [contentHeight, setContentHeight] = useState<string>('0px')
+
+  useEffect(() => {
+    if (isActive && contentRef.current) {
+      setContentHeight(`${contentRef.current.scrollHeight}px`)
+    } else {
+      setContentHeight('0px')
+    }
+  }, [isActive])
+
   const variants = {
     default: 'border-0 shadow-lg backdrop-blur-md ',
     light: 'border-b-2',
@@ -70,9 +81,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
       <h2 id={`accordion-heading-${index}`}>
         <button
           type='button'
-          className={`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 ${variantClass}  ${
-            isActive ? 'rounded-t-xl' : ''
-          } ${
+          className={`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 ${variantClass}   ${
             styleVariant !== 'light' &&
             styleVariant !== 'bordered' &&
             colors[color]
@@ -115,18 +124,20 @@ const AccordionItem: FC<AccordionItemProps> = ({
       </h2>
 
       <div
+        ref={contentRef}
         id={`accordion-body-${index}`}
-        className={`overflow-hidden ${
-          isActive ? '' : 'hidden'
-        } p-5  ${bodyVariantClass} ${
+        style={{ maxHeight: contentHeight }}
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${bodyVariantClass} ${
           styleVariant !== 'light' &&
           styleVariant !== 'bordered' &&
           colors[color]
-        } ${styleVariant !== 'default' && borderColors[color]} `}
+        } ${styleVariant !== 'default' && borderColors[color]}`}
       >
-        <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
-          {content}
-        </p>
+        <div className='p-5'>
+          <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
+            {content}
+          </p>
+        </div>
       </div>
     </div>
   )

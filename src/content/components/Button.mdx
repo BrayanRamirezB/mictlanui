@@ -16,18 +16,18 @@ Este componente se utiliza para llevar a cabo una acción en un sitio web con un
 
 ## Uso básico
 
-Para utilizar el componente, simplemente debes definir el atributo `text`.
+Para utilizar el componente, simplemente debes definir el contenido del componente.
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load text='Default' />
+    <Button client:load>Default</Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Default' />
+<Button>Default</Button>
 ```
 
 </CodeBlock>
@@ -48,20 +48,28 @@ Para cambiar el estilo del componente, se puede utilizar el atributo `variant` e
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load text='Default' variant='default' />
-    <Button client:load text='Bordered' variant='bordered' />
-    <Button client:load text='Light' variant='light' />
-    <Button client:load text='Complete' variant='complete' />
+    <Button client:load variant='default'>
+      Default
+    </Button>
+    <Button client:load variant='bordered'>
+      Bordered
+    </Button>
+    <Button client:load variant='light'>
+      Light
+    </Button>
+    <Button client:load variant='complete'>
+      Complete
+    </Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Default' variant='default' />
-<Button text='Bordered' variant='bordered' />
-<Button text='Light' variant='light' />
-<Button text='Complete' variant='complete' />
+<Button variant='default'>Default</Button>
+<Button variant='bordered'>Bordered</Button>
+<Button variant='light'>Light</Button>
+<Button variant='complete'>Complete</Button>
 ```
 
 </CodeBlock>
@@ -72,20 +80,36 @@ Para cambiar el tamaño del componente, se puede utilizar el atributo `size` en 
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load text='Size sm' size='sm' />
-    <Button client:load text='Size md' size='md' />
-    <Button client:load text='Size lg' size='lg' />
-    <Button client:load text='Size xl' size='xl' />
+    <Button client:load size='sm'>
+      Size sm
+    </Button>
+    <Button client:load size='md'>
+      Size md
+    </Button>
+    <Button client:load size='lg'>
+      Size lg
+    </Button>
+    <Button client:load size='xl'>
+      Size xl
+    </Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Size sm' size='sm' />
-<Button text='Size md' size='md' />
-<Button text='Size lg' size='lg' />
-<Button text='Size xl' size='xl' />
+<Button size='sm'>
+  Size sm
+</Button>
+<Button size='md'>
+  Size md
+</Button>
+<Button size='lg'>
+  Size lg
+</Button>
+<Button size='xl'>
+  Size xl
+</Button>
 ```
 
 </CodeBlock>
@@ -97,46 +121,84 @@ Este componente tiene un atributo para cambiar su color. Para esto tenemos los s
 <Preview>
   <div className='flex flex-col gap-2'>
     <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-      <Button client:load text='Default' color='default' />
-      <Button client:load text='Primary' color='primary' />
-      <Button client:load text='Secondary' color='secondary' />
-      <Button client:load text='Success' color='success' />
-      <Button client:load text='Warning' color='warning' />
-      <Button client:load text='Danger' color='danger' />
+      <Button client:load color='default'>
+        Default
+      </Button>
+      <Button client:load color='primary'>
+        Primary
+      </Button>
+      <Button client:load color='secondary'>
+        Secondary
+      </Button>
+      <Button client:load color='success'>
+        Success
+      </Button>
+      <Button client:load color='warning'>
+        Warning
+      </Button>
+      <Button client:load color='danger'>
+        Danger
+      </Button>
     </div>
     <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-      <Button client:load text='Default' color='default' variant='bordered' />
-      <Button client:load text='Primary' color='primary' variant='bordered' />
-      <Button
-        client:load
-        text='Secondary'
-        color='secondary'
-        variant='bordered'
-      />
-      <Button client:load text='Success' color='success' variant='bordered' />
-      <Button client:load text='Warning' color='warning' variant='bordered' />
-      <Button client:load text='Danger' color='danger' variant='bordered' />
+      <Button client:load color='default' variant='bordered'>
+        Default
+      </Button>
+      <Button client:load color='primary' variant='bordered'>
+        Primary
+      </Button>
+      <Button client:load color='secondary' variant='bordered'>
+        Secondary
+      </Button>
+      <Button client:load color='success' variant='bordered'>
+        Success
+      </Button>
+      <Button client:load color='warning' variant='bordered'>
+        Warning
+      </Button>
+      <Button client:load color='danger' variant='bordered'>
+        Danger
+      </Button>
     </div>
     <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-      <Button client:load text='Default' color='default' variant='light' />
-      <Button client:load text='Primary' color='primary' variant='light' />
-      <Button client:load text='Secondary' color='secondary' variant='light' />
-      <Button client:load text='Success' color='success' variant='light' />
-      <Button client:load text='Warning' color='warning' variant='light' />
-      <Button client:load text='Danger' color='danger' variant='light' />
+      <Button client:load color='default' variant='light'>
+        Default
+      </Button>
+      <Button client:load color='primary' variant='light'>
+        Primary
+      </Button>
+      <Button client:load color='secondary' variant='light'>
+        Secondary
+      </Button>
+      <Button client:load color='success' variant='light'>
+        Success
+      </Button>
+      <Button client:load color='warning' variant='light'>
+        Warning
+      </Button>
+      <Button client:load color='danger' variant='light'>
+        Danger
+      </Button>
     </div>
     <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-      <Button client:load text='Default' color='default' variant='complete' />
-      <Button client:load text='Primary' color='primary' variant='complete' />
-      <Button
-        client:load
-        text='Secondary'
-        color='secondary'
-        variant='complete'
-      />
-      <Button client:load text='Success' color='success' variant='complete' />
-      <Button client:load text='Warning' color='warning' variant='complete' />
-      <Button client:load text='Danger' color='danger' variant='complete' />
+      <Button client:load color='default' variant='complete'>
+        Default
+      </Button>
+      <Button client:load color='primary' variant='complete'>
+        Primary
+      </Button>
+      <Button client:load color='secondary' variant='complete'>
+        Secondary
+      </Button>
+      <Button client:load color='success' variant='complete'>
+        Success
+      </Button>
+      <Button client:load color='warning' variant='complete'>
+        Warning
+      </Button>
+      <Button client:load color='danger' variant='complete'>
+        Danger
+      </Button>
     </div>
   </div>
 </Preview>
@@ -144,33 +206,79 @@ Este componente tiene un atributo para cambiar su color. Para esto tenemos los s
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Default' color='default' />
-<Button text='Primary' color='primary' />
-<Button text='Secondary' color='secondary' />
-<Button text='Success' color='success' />
-<Button text='Warning' color='warning' />
-<Button text='Danger' color='danger' />
+<Button color='default'>
+  Default
+</Button>
+<Button color='primary'>
+  Primary
+</Button>
+<Button color='secondary'>
+  Secondary
+</Button>
+<Button color='success'>
+  Success
+</Button>
+<Button color='warning'>
+  Warning
+</Button>
+<Button color='danger'>
+  Danger
+</Butto
+<Button color='default' variant='bordered'>
+  Default
+</Button>
+<Button color='primary' variant='bordered'>
+  Primary
+</Button>
+<Button color='secondary' variant='bordered'>
+  Secondary
+</Button>
+<Button color='success' variant='bordered'>
+  Success
+</Button>
+<Button color='warning' variant='bordered'>
+  Warning
+</Button>
+<Button color='danger' variant='bordered'>
+  Danger
+</Button>
+<Button color='default' variant='light'>
+  Default
+</Button>
+<Button color='primary' variant='light'>
+  Primary
+</Button>
+<Button color='secondary' variant='light'>
+  Secondary
+</Button>
+<Button color='success' variant='light'>
+  Success
+</Button>
+<Button color='warning' variant='light'>
+  Warning
+</Button>
+<Button color='danger' variant='light'>
+  Danger
+</Button>
 
-<Button text='Default' color='default' variant='bordered' />
-<Button text='Primary' color='primary' variant='bordered' />
-<Button text='Secondary' color='secondary' variant='bordered' />
-<Button text='Success' color='success' variant='bordered' />
-<Button text='Warning' color='warning' variant='bordered' />
-<Button text='Danger' color='danger' variant='bordered' />
-
-<Button text='Default' color='default' variant='light' />
-<Button text='Primary' color='primary' variant='light' />
-<Button text='Secondary' color='secondary' variant='light' />
-<Button text='Success' color='success' variant='light' />
-<Button text='Warning' color='warning' variant='light' />
-<Button text='Danger' color='danger' variant='light' />
-
-<Button text='Default' color='default' variant='complete' />
-<Button text='Primary' color='primary' variant='complete' />
-<Button text='Secondary' color='secondary' variant='complete' />
-<Button text='Success' color='success' variant='complete' />
-<Button text='Warning' color='warning' variant='complete' />
-<Button text='Danger' color='danger' variant='complete' />
+<Button color='default' variant='complete'>
+  Default
+</Button>
+<Button color='primary' variant='complete'>
+  Primary
+</Button>
+<Button color='secondary' variant='complete'>
+  Secondary
+</Button>
+<Button color='success' variant='complete'>
+  Success
+</Button>
+<Button color='warning' variant='complete'>
+  Warning
+</Button>
+<Button color='danger' variant='complete'>
+  Danger
+</Button>
 ```
 
 </CodeBlock>
@@ -181,58 +289,62 @@ Para cambiar el estilo del componente, se puede utilizar el atributo `rounded` e
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load text='Rounded none' color='primary' rounded='none' />
-    <Button client:load text='Rounded sm' color='primary' rounded='sm' />
-    <Button client:load text='Rounded md' color='primary' rounded='md' />
-    <Button client:load text='Rounded lg' color='primary' rounded='lg' />
-    <Button client:load text='Rounded full' color='primary' rounded='full' />
+    <Button client:load color='primary' rounded='none'>
+      Rounded none
+    </Button>
+    <Button client:load text='Rounded sm' color='primary' rounded='sm'>
+      Rounded sm
+    </Button>
+    <Button client:load text='Rounded md' color='primary' rounded='md'>
+      Rounded md
+    </Button>
+    <Button client:load text='Rounded lg' color='primary' rounded='lg'>
+      Rounded lg
+    </Button>
+    <Button client:load text='Rounded full' color='primary' rounded='full'>
+      Rounded full
+    </Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Rounded none' color='primary' rounded='none' />
-<Button text='Rounded sm' color='primary' rounded='sm' />
-<Button text='Rounded md' color='primary' rounded='md' />
-<Button text='Rounded lg' color='primary' rounded='lg' />
-<Button text='Rounded full' color='primary' rounded='full' />
+<Button rounded='none'>
+  Rounded none
+</Button>
+<Button color='primary' rounded='sm'>
+  Rounded sm
+</Button>
+<Button color='primary' rounded='md'>
+  Rounded md
+</Button>
+<Button color='primary' rounded='lg'>
+  Rounded lg
+</Button>
+<Button color='primary' rounded='full'>
+  Rounded full
+</Button>
 ```
 
 </CodeBlock>
 
 ## Icono
 
-Para agregar un icono al componente, simplemente debes agregar el atributo `icon={true}` en el componente `Button`.
+Para agregar un icono al componente, simplemente debes agregar el icono en el componente `Button`.
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load text='Icon' color='danger' icon={true} />
+    <Button client:load color='danger'>
+      🍎
+    </Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Icon' color='danger' icon={true} />
-```
-
-</CodeBlock>
-
-### Icono solamente
-
-Para mostrar solo el icono del componente, simplemente debes agregar el atributo `iconOnly={true}` en el componente `Button`.
-
-<Preview>
-  <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load color='success' iconOnly={true} />
-  </div>
-</Preview>
-
-<CodeBlock client:load>
-
-```jsx
-<Button color='success' iconOnly={true} />
+<Button color='danger'>🍎</Button>
 ```
 
 </CodeBlock>
@@ -243,14 +355,18 @@ Para mostrar un botón de carga, simplemente debes agregar el atributo `isLoadin
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load color='warning' text='Loading' isLoading={true} />
+    <Button client:load color='warning' isLoading={true}>
+      Loading
+    </Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Loading' color='warning' isLoading={true} />
+<Button color='warning' isLoading={true}>
+  Loading
+</Button>
 ```
 
 </CodeBlock>
@@ -261,14 +377,18 @@ Para deshabilitar el componente, simplemente debes agregar el atributo `disabled
 
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
-    <Button client:load text='Disabled' color='secondary' disabled={true} />
+    <Button client:load color='secondary' disabled={true}>
+      Disabled
+    </Button>
   </div>
 </Preview>
 
 <CodeBlock client:load>
 
 ```jsx
-<Button text='Disabled' color='secondary' disabled={true} />
+<Button color='secondary' disabled={true}>
+  Disabled
+</Button>
 ```
 
 </CodeBlock>

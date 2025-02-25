@@ -39,14 +39,32 @@ const Search = () => {
 
   return (
     <div className='w-full max-w-lg mx-auto relative'>
-      <input
-        type='text'
-        placeholder='Buscar componente...'
-        className='focus:outline-none w-full p-2 border-0 shadow-lg rounded-md dark:shadow-md dark:shadow-neutral-100/20 backdrop-blur-md bg-neutral-100/30 dark:bg-zinc-700/40 text-zinc-800 dark:text-neutral-100'
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
+      <div className='relative'>
+        <input
+          type='text'
+          placeholder='Buscar componente...'
+          className='focus:outline-none w-full pl-10 p-2 border-0 shadow-sm rounded-md dark:shadow-neutral-100/20 backdrop-blur-md bg-neutral-100/30 dark:bg-zinc-700/40 text-zinc-800 dark:text-neutral-100'
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            className='h-5 w-5 text-zinc-700/30 dark:text-neutral-100/40'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke='currentColor'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+            />
+          </svg>
+        </div>
+      </div>
 
       {query && (
         <ul className='rounded-md absolute w-full backdrop-blur-lg bg-neutral-100/90 dark:bg-zinc-700/90 '>

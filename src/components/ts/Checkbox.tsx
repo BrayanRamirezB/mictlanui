@@ -109,7 +109,7 @@ const Checkbox: FC<CheckboxProps> = ({
     >
       <div
         id={id}
-        className={`relative w-5 h-5 flex items-center justify-center transition duration-300 ease-in ${
+        className={`relative w-5 h-5 flex items-center justify-center transition duration-300 ease-in-out ${
           checkColors[color]
         } ${roundeds[rounded]} ${textColors[color]} cursor-pointer ${
           disabled
