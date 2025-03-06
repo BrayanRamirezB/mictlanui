@@ -22,7 +22,7 @@ Para utilizar el componente, simplemente debemos definir el atributo `content` d
 <Preview>
   <div class='flex items-center justify-center gap-x-2 w-full m-auto'>
     <Tooltip client:load content='Este es un tooltip'>
-      <Button text='Botón con tooltip' />
+      <Button>Botón con tooltip</Button>
     </Tooltip>
   </div>
 </Preview>
@@ -31,7 +31,7 @@ Para utilizar el componente, simplemente debemos definir el atributo `content` d
 
 ```jsx
 <Tooltip content='Este es un tooltip'>
-  <Button text='Botón con tooltip' />
+  <Button>Botón con tooltip</Button>
 </Tooltip>
 ```
 
@@ -54,19 +54,19 @@ Para cambiar el posicionamiento del componente, se puede utilizar el atributo `p
 <Preview>
   <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
     <Tooltip client:load content='Este es un tooltip' placement='right'>
-      <Button text='Right tooltip' />
+      <Button>Right tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' placement='left'>
-      <Button text='Left tooltip' />
+      <Button>Left tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' placement='bottom'>
-      <Button text='Bottom tooltip' />
+      <Button>Bottom tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' placement='top'>
-      <Button text='Top tooltip' />
+      <Button>Top tooltip</Button>
     </Tooltip>
 
   </div>
@@ -76,19 +76,19 @@ Para cambiar el posicionamiento del componente, se puede utilizar el atributo `p
 
 ```jsx
 <Tooltip content='Este es un tooltip' placement='right'>
-  <Button text='Right tooltip' />
+  <Button>Right tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' placement='left'>
-  <Button text='Left tooltip' />
+  <Button>Left tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' placement='bottom'>
-  <Button text='Bottom tooltip' />
+  <Button>Bottom tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' placement='top'>
-  <Button text='Top tooltip' />
+  <Button>Top tooltip</Button>
 </Tooltip>
 ```
 
@@ -101,27 +101,27 @@ Este componente tiene un atributo para cambiar su color. Para esto tenemos los s
 <Preview>
   <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
     <Tooltip client:load content='Este es un tooltip' color='default'>
-      <Button text='Default tooltip' />
+      <Button>Default tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' color='primary'>
-      <Button text='Primary tooltip' />
+      <Button>Primary tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' color='secondary'>
-      <Button text='Secondary tooltip' />
+      <Button>Secondary tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' color='success'>
-      <Button text='Success tooltip' />
+      <Button>Success tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' color='warning'>
-      <Button text='Warning tooltip' />
+      <Button>Warning tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' color='danger'>
-      <Button text='Danger tooltip' />
+      <Button>Danger tooltip</Button>
     </Tooltip>
 
   </div>
@@ -131,27 +131,27 @@ Este componente tiene un atributo para cambiar su color. Para esto tenemos los s
 
 ```jsx
 <Tooltip content='Este es un tooltip' color='default'>
-  <Button text='Default tooltip' />
+  <Button>Default tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' color='primary'>
-  <Button text='Primary tooltip' />
+  <Button>Primary tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' color='secondary'>
-  <Button text='Secondary tooltip' />
+  <Button>Secondary tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' color='success'>
-  <Button text='Success tooltip' />
+  <Button>Success tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' color='warning'>
-  <Button text='Warning tooltip' />
+  <Button>Warning tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' color='danger'>
-  <Button text='Danger tooltip' />
+  <Button>Danger tooltip</Button>
 </Tooltip>
 ```
 
@@ -164,23 +164,23 @@ Para cambiar el borde del componente, se puede utilizar el atributo `rounded`. E
 <Preview>
   <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
     <Tooltip client:load content='Este es un tooltip' rounded='none'>
-      <Button text='None tooltip' />
+      <Button>None tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' rounded='sm'>
-      <Button text='Small tooltip' />
+      <Button>Small tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' rounded='md'>
-      <Button text='Medium tooltip' />
+      <Button>Medium tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' rounded='lg'>
-      <Button text='Large tooltip' />
+      <Button>Large tooltip</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' rounded='full'>
-      <Button text='Full tooltip' />
+      <Button>Full tooltip</Button>
     </Tooltip>
 
   </div>
@@ -190,23 +190,23 @@ Para cambiar el borde del componente, se puede utilizar el atributo `rounded`. E
 
 ```jsx
 <Tooltip content='Este es un tooltip' rounded='none'>
-  <Button text='None tooltip' />
+  <Button>None tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' rounded='sm'>
-  <Button text='Small tooltip' />
+  <Button>Small tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' rounded='md'>
-  <Button text='Medium tooltip' />
+  <Button>Medium tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' rounded='lg'>
-  <Button text='Large tooltip' />
+  <Button>Large tooltip</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' rounded='full'>
-  <Button text='Full tooltip' />
+  <Button>Full tooltip</Button>
 </Tooltip>
 ```
 
@@ -219,15 +219,15 @@ Para cambiar el tiempo de espera antes de mostrar el componente, se puede utiliz
 <Preview>
   <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
     <Tooltip client:load content='Este es un tooltip' delay={1000}>
-      <Button text='Tooltip with delay 1000ms' />
+      <Button>Tooltip with delay 1000ms</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' delay={2000}>
-      <Button text='Tooltip with delay 2000ms' />
+      <Button>Tooltip with delay 2000ms</Button>
     </Tooltip>
 
     <Tooltip client:load content='Este es un tooltip' delay={3000}>
-      <Button text='Tooltip with delay 3000ms' />
+      <Button>Tooltip with delay 3000ms</Button>
     </Tooltip>
 
   </div>
@@ -237,15 +237,15 @@ Para cambiar el tiempo de espera antes de mostrar el componente, se puede utiliz
 
 ```jsx
 <Tooltip content='Este es un tooltip' delay={1000}>
-  <Button text='Tooltip with delay 1000ms' />
+  <Button>Tooltip with delay 1000ms</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' delay={2000}>
-  <Button text='Tooltip with delay 2000ms' />
+  <Button>Tooltip with delay 2000ms</Button>
 </Tooltip>
 
 <Tooltip content='Este es un tooltip' delay={3000}>
-  <Button text='Tooltip with delay 3000ms' />
+  <Button>Tooltip with delay 3000ms</Button>
 </Tooltip>
 ```
 
@@ -258,7 +258,7 @@ Para deshabilitar el componente, se puede utilizar el atributo `isDisabled = {tr
 <Preview>
   <div class='flex flex-col items-center justify-center gap-4 w-full m-auto'>
     <Tooltip client:load content='Este es un tooltip' isDisabled={true}>
-      <Button text='Disabled tooltip' />
+      <Button>Disabled tooltip</Button>
     </Tooltip>
   </div>
 </Preview>
@@ -267,7 +267,7 @@ Para deshabilitar el componente, se puede utilizar el atributo `isDisabled = {tr
 
 ```jsx
 <Tooltip content='Este es un tooltip' isDisabled={true}>
-  <Button text='Disabled tooltip' />
+  <Button>Disabled tooltip</Button>
 </Tooltip>
 ```
 
