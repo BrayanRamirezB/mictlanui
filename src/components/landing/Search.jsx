@@ -1,36 +1,38 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { pages } from '../../content/searchData'
 
 const Search = () => {
   const [query, setQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(-1)
 
-  const filteredPages = pages.filter((page) =>
-    page.title.toLowerCase().includes(query.toLowerCase())
+  // Memorizar el resultado de las páginas filtradas
+  const filteredPages = useMemo(
+    () =>
+      pages.filter((page) =>
+        page.title.toLowerCase().includes(query.toLowerCase())
+      ),
+    [query]
   )
 
   // Manejar teclas de flecha y Enter
-  const handleKeyDown = (e) => {
-    if (e.key === 'ArrowDown') {
-      setSelectedIndex((prev) =>
-        prev + 1 < filteredPages.length ? prev + 1 : prev
-      )
-    } else if (e.key === 'ArrowUp') {
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev))
-    } else if (e.key === 'Enter') {
-      // No redirigir si la consulta está vacía
-      if (query.trim() === '') return
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'ArrowDown') {
+        setSelectedIndex((prev) =>
+          prev + 1 < filteredPages.length ? prev + 1 : prev
+        )
+      } else if (e.key === 'ArrowUp') {
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev))
+      } else if (e.key === 'Enter') {
+        if (query.trim() === '' || filteredPages.length === 0) return
 
-      // No redirigir si no hay coincidencias
-      if (filteredPages.length === 0) return
-
-      // Si se ha seleccionado un elemento, redirigir a ese,
-      // de lo contrario, redirigir al primer elemento encontrado
-      const page =
-        selectedIndex >= 0 ? filteredPages[selectedIndex] : filteredPages[0]
-      window.location.href = page.path
-    }
-  }
+        const page =
+          selectedIndex >= 0 ? filteredPages[selectedIndex] : filteredPages[0]
+        window.location.href = page.path
+      }
+    },
+    [filteredPages, query, selectedIndex]
+  )
 
   // Resetear selección si la consulta cambia
   useEffect(() => {
@@ -67,7 +69,7 @@ const Search = () => {
       </div>
 
       {query && (
-        <ul className='rounded-md absolute w-full backdrop-blur-lg bg-neutral-100/90 dark:bg-zinc-700/90 '>
+        <ul className='rounded-md absolute w-full backdrop-blur-lg bg-neutral-100/90 dark:bg-zinc-700/90'>
           {filteredPages.map((page, index) => (
             <li
               key={page.path}
@@ -78,6 +80,8 @@ const Search = () => {
               }`}
               onClick={() => (window.location.href = page.path)}
               onMouseEnter={() => setSelectedIndex(index)}
+              role='option'
+              aria-selected={index === selectedIndex}
             >
               {page.title}
             </li>
