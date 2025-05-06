@@ -16,6 +16,23 @@ import Footer from '@/sections/Footer.astro'
       name='description'
       content='MictlanUI - UI minimalista y moderno para tus proyectos.'
     />
+    <meta property='og:title' content='MictlanUI - UI minimalista y moderno' />
+    <meta
+      property='og:description'
+      content='UI minimalista y moderno para tus proyectos.'
+    />
+    <meta property='og:image' content='/mictlan-logo.webp' />
+    <meta property='og:url' content='https://mictlanuidev.netlify.app/' />
+    <meta name='twitter:card' content='summary_large_image' />
+
+    <script type='application/ld+json'>
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "MictlanUI",
+        "url": "https://mictlanuidev.netlify.app/"
+      }
+    </script>
     <title>MictlanUI</title>
     <ClientRouter />
   </head>
