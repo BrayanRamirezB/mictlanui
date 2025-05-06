@@ -2,8 +2,12 @@ import Tab from '@/components/react/Tabs/Tab.jsx'
 import Tabs from '@/components/react/Tabs/Tabs.jsx'
 import CodeBlock from '@/components/landing/CodeBlock'
 
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import dark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
+import jsx from 'react-syntax-highlighter/dist/esm/languages/prism/jsx'
+import oneDark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
+
+// Registrar solo el lenguaje necesario
+SyntaxHighlighter.registerLanguage('jsx', jsx)
 
 const CodeTabs = ({ tabs }) => {
   return (
@@ -12,7 +16,7 @@ const CodeTabs = ({ tabs }) => {
         {tabs.map((tab) => (
           <Tab key={tab.label} label={tab.label}>
             <CodeBlock>
-              <SyntaxHighlighter language='jsx' style={dark}>
+              <SyntaxHighlighter language='jsx' style={oneDark}>
                 {tab.code}
               </SyntaxHighlighter>
             </CodeBlock>
