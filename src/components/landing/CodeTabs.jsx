@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import Tab from '@/components/react/Tabs/Tab.jsx'
 import Tabs from '@/components/react/Tabs/Tabs.jsx'
 import CodeBlock from '@/components/landing/CodeBlock'
