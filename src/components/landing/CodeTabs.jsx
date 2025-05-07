@@ -1,24 +1,35 @@
+import React, { useMemo } from 'react'
 import Tab from '@/components/react/Tabs/Tab.jsx'
 import Tabs from '@/components/react/Tabs/Tabs.jsx'
 import CodeBlock from '@/components/landing/CodeBlock'
-
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
-import jsx from 'react-syntax-highlighter/dist/esm/languages/prism/jsx'
-import oneDark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
-
-// Registrar solo el lenguaje necesario
-SyntaxHighlighter.registerLanguage('jsx', jsx)
+import { highlightOneDark } from '@/utils/highlight'
 
 const CodeTabs = ({ tabs }) => {
+  const highlightedTabs = useMemo(() => {
+    return tabs.map((tab) => ({
+      ...tab,
+      highlightedCode: highlightOneDark(tab.code)
+    }))
+  }, [tabs])
+
   return (
-    <div className='max-w-3xl w-auto mx-auto p-2'>
+    <div className='max-w-3xl w-auto mx-auto p-2 not-prose'>
       <Tabs variant='light'>
-        {tabs.map((tab) => (
+        {highlightedTabs.map((tab) => (
           <Tab key={tab.label} label={tab.label}>
             <CodeBlock>
-              <SyntaxHighlighter language='jsx' style={oneDark}>
-                {tab.code}
-              </SyntaxHighlighter>
+              <pre
+                className='p-4 rounded-md overflow-auto'
+                aria-label={`Code snippet for ${tab.label}`}
+                role='region'
+              >
+                <code
+                  className='font-mono'
+                  dangerouslySetInnerHTML={{
+                    __html: tab.highlightedCode
+                  }}
+                ></code>
+              </pre>
             </CodeBlock>
           </Tab>
         ))}
