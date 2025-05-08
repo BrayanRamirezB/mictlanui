@@ -27,7 +27,7 @@ const tokenRegex = new RegExp(
     // nombres de propiedad CSS antes de “:”
     '(?<property>\\b[a-zA-Z_-][\\w-]*)(?=\\s*:\\s*)',
     // nombres de etiqueta HTML
-    '(?<tag><\\/?[a-zA-Z][\\w:-]*)(?=[\\s>\\/])',
+    '(?<tag></?[A-Za-z][w:-]*(?:s+[A-Za-z:-]+(?:=(?:"[^"]*"|\'[^\']*\'))?)*s*/?>)',
     // atributos HTML antes de =
     '(?<attr_name>[a-zA-Z:-]+)(?=\\=)',
     // valor de atributo entre comillas
