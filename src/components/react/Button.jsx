@@ -101,6 +101,10 @@ const Button = ({
       onClick={onClick}
       disabled={disabled || isLoading}
       className={buttonClasses.trim()}
+      aria-disabled={disabled || isLoading}
+      role='button'
+      aria-busy={isLoading}
+      aria-label={isLoading ? 'Loading' : 'button'}
     >
       {isLoading && (
         <svg
@@ -108,6 +112,7 @@ const Button = ({
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
+          aria-hidden='true'
         >
           <circle
             className='opacity-25'
