@@ -119,6 +119,14 @@ const Checkbox: FC<CheckboxProps> = ({
         role='checkbox'
         aria-checked={isChecked}
         onClick={handleCheckboxChange}
+        aria-labelledby={`${id}-label`}
+        tabIndex={disabled ? -1 : 0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleCheckboxChange()
+          }
+        }}
       >
         {isChecked && (
           <svg
@@ -131,6 +139,7 @@ const Checkbox: FC<CheckboxProps> = ({
             strokeWidth='2'
             strokeLinecap='round'
             strokeLinejoin='round'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M5 12l5 5l10 -10' />
@@ -138,6 +147,7 @@ const Checkbox: FC<CheckboxProps> = ({
         )}
       </div>
       <label
+        id={`${id}-label`}
         htmlFor={id}
         onClick={handleCheckboxChange}
         className={`ms-2 cursor-pointer ${textColors[color]}`}
