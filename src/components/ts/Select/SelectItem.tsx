@@ -52,6 +52,9 @@ const SelectItem = ({
       data-selected={isSelected}
       data-hover={isHovered}
       data-pressed={isPressed}
+      role='option'
+      aria-selected={isSelected}
+      aria-disabled={isDisabled}
     >
       {children}
     </li>

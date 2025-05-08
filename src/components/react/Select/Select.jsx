@@ -80,10 +80,20 @@ const Select = ({
       data-invalid={isInvalid}
     >
       {label && (
-        <label className='block text-sm font-medium mb-1'>{label}</label>
+        <label
+          htmlFor='select-trigger'
+          className='block text-sm font-medium mb-1'
+        >
+          {label}
+        </label>
       )}
 
       <div
+        id='select-trigger'
+        role='button'
+        aria-haspopup='listbox'
+        aria-expanded={isOpen}
+        aria-disabled={isDisabled}
         className={`trigger flex items-center justify-between p-2 ${
           variants[variant]
         } ${variant === 'default' && colors[color]} ${textColors[color]} ${
@@ -96,7 +106,7 @@ const Select = ({
           {selectedValue ? selectedLabel : placeholder}
         </div>
 
-        <div className='selector-icon' data-open={isOpen}>
+        <div className='selector-icon' data-open={isOpen} aria-hidden='true'>
           <svg
             className={`w-4 h-4 transition-transform ${
               isOpen ? 'rotate-180' : ''
@@ -119,7 +129,11 @@ const Select = ({
         <div
           className={`listbox-wrapper absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 ${colors[color]}`}
         >
-          <ul className='listbox'>
+          <ul
+            className='listbox'
+            role='listbox'
+            aria-labelledby='select-trigger'
+          >
             {Children.map(children, (child) =>
               cloneElement(child, {
                 onSelect: handleSelect,
@@ -134,7 +148,9 @@ const Select = ({
       {description && <p className='text-sm mt-1'>{description}</p>}
 
       {isInvalid && errorMessage && (
-        <p className='text-sm text-red-500 mt-1'>{errorMessage}</p>
+        <p className='text-sm text-red-500 mt-1' role='alert'>
+          {errorMessage}
+        </p>
       )}
     </div>
   )
