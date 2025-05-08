@@ -98,6 +98,24 @@ const Slider = ({
     document.removeEventListener('touchend', handleThumbMouseUp)
   }
 
+  const handleKeyDown = (e) => {
+    if (disabled) return
+    let newValue = value
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'ArrowRight':
+        newValue = Math.min(value + step, max)
+        break
+      case 'ArrowDown':
+      case 'ArrowLeft':
+        newValue = Math.max(value - step, min)
+        break
+      default:
+        return
+    }
+    handleValueChange(newValue)
+  }
+
   const calculatePercentage = () => {
     return ((value - min) / (max - min)) * 100
   }
@@ -251,6 +269,14 @@ const Slider = ({
             onMouseLeave={() => setThumbHovering(false)}
             onFocus={() => setThumbFocused(true)}
             onBlur={() => setThumbFocused(false)}
+            onKeyDown={handleKeyDown}
+            tabIndex={disabled ? -1 : 0}
+            role='slider'
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={value}
+            aria-orientation={orientation}
+            aria-disabled={disabled}
             data-dragging={isDragging}
             data-hover={thumbHovering}
             data-pressed={thumbPressed}
