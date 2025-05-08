@@ -42,6 +42,27 @@ El código para `Alert` es el siguiente:
   ]}
 />
 
+El código para la animación al cerrar el componente es el siguiente:
+
+<CodeBlock client:load>
+
+```css
+@theme {
+  --animate-fade-out: fade-out 0.3s ease-out;
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+```
+
+</CodeBlock>
+
 ## Tipos de alertas
 
 Para cambiar el estilo del componente, se puede utilizar el atributo `type` en el componente `Alert`. Este atributo acepta seis valores: `default`, `primary`, `secondary`, `success`, `warning` y `danger`.

@@ -9,6 +9,12 @@ const Alert = ({
   dismissible = false
 }) => {
   const [visible, setVisible] = useState(true)
+  const [exiting, setExiting] = useState(false)
+
+  const handleDismiss = () => {
+    setExiting(true)
+    setTimeout(() => setVisible(false), 300)
+  }
 
   if (!visible) return null
 
@@ -123,12 +129,13 @@ const Alert = ({
   const variantClass = variants[styleVariant]
   const iconClass = iconVar[type]
   const colorClass = colorType[type]
+  const exitAnimationClass = exiting ? 'animate-fade-out' : ''
 
   return (
     <div
       role='alert'
       aria-live='polite'
-      className={`flex items-center justify-center gap-4 py-2 px-4 my-2 ${typeClass} ${variantClass} ${
+      className={`flex items-center justify-center gap-4 py-2 px-4 my-2 ${typeClass} ${variantClass} ${exitAnimationClass} ${
         styleVariant === 'default' || styleVariant === 'complete'
           ? colorClass
           : ''
@@ -151,7 +158,7 @@ const Alert = ({
 
       {dismissible && (
         <button
-          onClick={() => setVisible(false)}
+          onClick={handleDismiss}
           className='p-1 transition duration-200 ease-in hover:bg-inherit'
           aria-label='Cerrar alerta'
         >

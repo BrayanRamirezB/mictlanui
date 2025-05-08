@@ -1,12 +1,16 @@
 @import 'tailwindcss';
 
 @theme {
+  /* Global animations */
   --animate-tada: tada 1s ease-in-out;
   --animate-fade-in-up: fade-in-up 0.6s ease-in-out;
   --animate-rotate-180: rotate-180 1s ease-in-out;
   --animate-squeeze: squeeze 0.6s ease-in-out;
   --animate-flip-in-x: flip-in-x 0.6s ease-out;
   --animate-horizontal-vibration: horizontal-vibration 0.6s linear;
+
+  /* Components animations */
+  --animate-fade-out: fade-out 0.3s ease-out;
 
   @keyframes tada {
     0% {
@@ -88,6 +92,15 @@
     }
     100% {
       transform: translateX(0);
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
     }
   }
 }
