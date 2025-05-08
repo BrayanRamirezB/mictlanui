@@ -107,6 +107,7 @@ const Textarea: FC<TextareaProps> = ({
       <div className='headerWrapper'>
         {label && (
           <label
+            htmlFor={props.id || 'textarea'}
             className={`label text-sm font-medium ${textColors['default']}`}
           >
             {label}
@@ -117,6 +118,8 @@ const Textarea: FC<TextareaProps> = ({
 
       <div className='inputWrapper'>
         <textarea
+          id={props.id || 'textarea'}
+          role='textbox'
           className={inputClasses}
           aria-invalid={isInvalid}
           aria-required={isRequired}
@@ -137,7 +140,7 @@ const Textarea: FC<TextareaProps> = ({
 
       {description && (
         <div
-          id='description'
+          id={`${props.id || 'textarea'}-description`}
           className={`description text-sm ${textColors['default']}`}
         >
           {description}
@@ -146,8 +149,9 @@ const Textarea: FC<TextareaProps> = ({
 
       {isInvalid && errorMessage && (
         <div
-          id='errorMessage'
+          id={`${props.id || 'textarea'}-errorMessage`}
           className={`errorMessage text-sm ${textColors['danger']}`}
+          aria-live='assertive'
         >
           {errorMessage}
         </div>

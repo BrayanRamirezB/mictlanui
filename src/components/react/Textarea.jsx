@@ -22,6 +22,8 @@ const Textarea = ({
 
     if (newValue === '' && isRequired) {
       setIsInvalid(true)
+    } else {
+      setIsInvalid(false)
     }
 
     if (externalOnChange) {
@@ -91,6 +93,7 @@ const Textarea = ({
       <div className='headerWrapper'>
         {label && (
           <label
+            htmlFor={props.id || 'textarea'}
             className={`label text-sm font-medium ${textColors['default']}`}
           >
             {label}
@@ -101,13 +104,21 @@ const Textarea = ({
 
       <div className='inputWrapper'>
         <textarea
+          id={props.id || 'textarea'}
           className={inputClasses}
+          role='textbox'
           aria-invalid={isInvalid}
           aria-required={isRequired}
           aria-readonly={isReadOnly}
           aria-disabled={isDisabled}
-          aria-describedby={description ? 'description' : undefined}
-          aria-errormessage={errorMessage ? 'errorMessage' : undefined}
+          aria-describedby={
+            description ? `${props.id || 'textarea'}-description` : undefined
+          }
+          aria-errormessage={
+            isInvalid && errorMessage
+              ? `${props.id || 'textarea'}-errorMessage`
+              : undefined
+          }
           disabled={isDisabled}
           readOnly={isReadOnly}
           value={value}
@@ -121,7 +132,7 @@ const Textarea = ({
 
       {description && (
         <div
-          id='description'
+          id={`${props.id || 'textarea'}-description`}
           className={`description text-sm ${textColors['default']}`}
         >
           {description}
@@ -130,8 +141,9 @@ const Textarea = ({
 
       {isInvalid && errorMessage && (
         <div
-          id='errorMessage'
+          id={`${props.id || 'textarea'}-errorMessage`}
           className={`errorMessage text-sm ${textColors['danger']}`}
+          aria-live='assertive'
         >
           {errorMessage}
         </div>
