@@ -39,6 +39,13 @@ const Radio = ({
     setIsHovered(false)
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleChange()
+    }
+  }
+
   const colors = {
     default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
     primary: 'bg-blue-500/50 ',
@@ -50,6 +57,10 @@ const Radio = ({
 
   return (
     <div
+      role='radio'
+      aria-checked={isSelected}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : 0}
       data-selected={isSelected}
       data-pressed={isPressed}
       data-readonly={isReadOnly}
@@ -61,6 +72,7 @@ const Radio = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleChange}
+      onKeyDown={handleKeyDown}
       className={`flex items-center gap-2 ${
         isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }`}

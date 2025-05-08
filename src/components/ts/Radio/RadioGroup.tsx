@@ -20,6 +20,7 @@ interface RadioGroupProps {
   variant?: 'default' | 'bordered' | 'light'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
 }
 
 const RadioGroup = ({
@@ -34,7 +35,8 @@ const RadioGroup = ({
   onChange,
   variant = 'default',
   color = 'default',
-  rounded = 'md'
+  rounded = 'md',
+  id
 }: RadioGroupProps) => {
   const variants = {
     default: 'border-0 backdrop-blur-sm shadow-md',
@@ -84,9 +86,16 @@ const RadioGroup = ({
       } ${roundeds[rounded]} ${variant === 'bordered' && borderColors[color]}`}
       data-orientation={orientation}
       role='radiogroup'
+      aria-labelledby={label ? `${id}-label` : undefined}
+      aria-describedby={description ? `${id}-description` : undefined}
+      aria-invalid={isInvalid || undefined}
+      aria-disabled={isDisabled || undefined}
     >
       {label && (
-        <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+        <span
+          id={`${id}-label`}
+          className='text-sm font-medium text-gray-600 dark:text-gray-400'
+        >
           {label}
         </span>
       )}
@@ -110,7 +119,11 @@ const RadioGroup = ({
         })}
       </div>
 
-      {description && <p className='text-sm text-gray-500'>{description}</p>}
+      {description && (
+        <p id={`${id}-description`} className='text-sm text-gray-500'>
+          {description}
+        </p>
+      )}
 
       {isInvalid && errorMessage && (
         <p className='text-sm text-red-600'>{errorMessage}</p>
