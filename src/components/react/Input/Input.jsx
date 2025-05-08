@@ -17,7 +17,8 @@ const Input = ({
   variant = 'default',
   color = 'default',
   rounded = 'md',
-  size = 'md'
+  size = 'md',
+  id
 }) => {
   const handleClear = () => {
     onValueChange('')
@@ -73,7 +74,7 @@ const Input = ({
   return (
     <div className={`flex flex-col space-y-2 ${textColors[color]}`}>
       {label && (
-        <label className='text-sm font-medium'>
+        <label htmlFor={id} className='text-sm font-medium'>
           {label}
           {isRequired && <span className='text-red-500'> *</span>}
         </label>
@@ -87,6 +88,7 @@ const Input = ({
         >
           <div className='flex-1 relative'>
             <input
+              id={id}
               type={type}
               value={value}
               onChange={(e) => onValueChange(e.target.value)}
@@ -97,6 +99,8 @@ const Input = ({
               readOnly={isReadOnly}
               disabled={isDisabled}
               placeholder={placeholder}
+              aria-invalid={isInvalid}
+              aria-describedby={description ? `${id}-description` : undefined}
               className={`w-full focus:outline-none ${
                 variant === 'light' && 'border-b-2'
               }  ${isInvalid && 'border-2 border-red-500'} ${
@@ -109,6 +113,7 @@ const Input = ({
                 type='button'
                 onClick={handleClear}
                 className='absolute inset-y-0 right-0 pr-3 flex items-center'
+                aria-label='Clear input'
               >
                 <span className='text-gray-500 hover:text-gray-700'>
                   <svg
@@ -134,7 +139,11 @@ const Input = ({
       </div>
 
       <div className='text-sm'>
-        {description && <p className='font-normal'>{description}</p>}
+        {description && (
+          <p id={`${id}-description`} className='font-normal'>
+            {description}
+          </p>
+        )}
         {isInvalid && errorMessage && (
           <p className='text-red-500'>{errorMessage}</p>
         )}
