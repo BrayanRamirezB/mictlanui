@@ -17,6 +17,7 @@ interface BadgeProps {
   dotPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
   dotText?: string
   icon?: React.ReactNode
+  ariaLabel?: string
 }
 
 const Badge: FC<BadgeProps> = ({
@@ -29,7 +30,8 @@ const Badge: FC<BadgeProps> = ({
   dotColor = 'default',
   dotPosition = 'top-right',
   dotText,
-  icon
+  icon,
+  ariaLabel = 'badge'
 }) => {
   const types = {
     default: 'border-0 shadow-lg backdrop-blur-sm',
@@ -96,7 +98,9 @@ const Badge: FC<BadgeProps> = ({
   const content = () => {
     if (type === 'icon') {
       return icon ? (
-        <span className='inline-block'>{icon}</span>
+        <span className='inline-block' aria-hidden='true'>
+          {icon}
+        </span>
       ) : (
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -104,6 +108,7 @@ const Badge: FC<BadgeProps> = ({
           height='24'
           viewBox='0 0 24 24'
           fill='currentColor'
+          aria-hidden='true'
         >
           <path stroke='none' d='M0 0h24v24H0z' fill='none' />
           <path d='M14.235 19c.865 0 1.322 1.024 .745 1.668a3.992 3.992 0 0 1 -2.98 1.332a3.992 3.992 0 0 1 -2.98 -1.332c-.552 -.616 -.158 -1.579 .634 -1.661l.11 -.006h4.471z' />
@@ -120,6 +125,8 @@ const Badge: FC<BadgeProps> = ({
       className={`relative inline-flex items-center justify-center font-medium ${sizeClass} ${roundedClass} ${
         type === 'bordered' ? `bg-transparent` : colorClass
       } ${textColorClass} ${typeClass}`}
+      role='status'
+      aria-label={ariaLabel || text}
     >
       {content()}
       {dot && (
@@ -127,6 +134,7 @@ const Badge: FC<BadgeProps> = ({
           className={`absolute ${
             dotText ? 'px-1 rounded-md' : 'w-2.5 h-2.5 rounded-full'
           } ${dotColorClass} ${dotPositionClass}`}
+          aria-hidden={!dotText}
         >
           {dotText}
         </span>
