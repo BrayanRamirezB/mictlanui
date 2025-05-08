@@ -1,12 +1,15 @@
 const ModalHeader = ({ children, onClose }) => {
   return (
     <div className='flex justify-between items-center pb-4 mb-4'>
-      <h3 className='text-lg font-semibold'>{children}</h3>
+      <h3 className='text-lg font-semibold' id='modal-header-title'>
+        {children}
+      </h3>
       {onClose && (
         <button
           onClick={onClose}
           className='p-2 transition duration-300 ease-in-out hover:text-red-700'
           aria-label='Close'
+          aria-labelledby='modal-header-title'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -15,6 +18,8 @@ const ModalHeader = ({ children, onClose }) => {
             viewBox='0 0 24 24'
             fill='currentColor'
             className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+            role='img'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path

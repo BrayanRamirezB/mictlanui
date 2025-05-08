@@ -5,7 +5,15 @@ interface ModalFooterProps {
 }
 
 const ModalFooter = ({ children }: ModalFooterProps) => {
-  return <div className='flex justify-end space-x-2'>{children}</div>
+  return (
+    <div
+      className='flex justify-end space-x-2'
+      role='contentinfo'
+      aria-label='Modal Footer'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default ModalFooter

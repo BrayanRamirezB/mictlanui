@@ -5,7 +5,11 @@ interface ModalBodyProps {
 }
 
 const ModalBody = ({ children }: ModalBodyProps) => {
-  return <div className='mb-4'>{children}</div>
+  return (
+    <div className='mb-4' role='region' aria-label='Modal Content'>
+      {children}
+    </div>
+  )
 }
 
 export default ModalBody

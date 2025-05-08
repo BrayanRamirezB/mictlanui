@@ -40,15 +40,47 @@ const Modal = ({
       }
     }
 
+    const trapFocus = (event: KeyboardEvent) => {
+      if (isOpen && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0] as HTMLElement
+        const lastElement = focusableElements[
+          focusableElements.length - 1
+        ] as HTMLElement
+
+        if (event.key === 'Tab') {
+          if (event.shiftKey) {
+            if (document.activeElement === firstElement) {
+              event.preventDefault()
+              lastElement.focus()
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              event.preventDefault()
+              firstElement.focus()
+            }
+          }
+        }
+      }
+    }
+
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', trapFocus)
       document.body.style.overflow = 'hidden'
+
+      if (modalRef.current) {
+        modalRef.current.focus()
+      }
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', trapFocus)
       document.body.style.overflow = 'auto'
     }
   }, [isOpen, isDismissable, onClose])
@@ -89,9 +121,14 @@ const Modal = ({
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center ${backdropEffects[effect]}`}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby='modal-title'
+      aria-describedby='modal-description'
     >
       <div
         ref={modalRef}
+        tabIndex={-1}
         className={`${colors[color]} ${roundeds[rounded]} shadow-lg w-full ${
           sizes[size]
         } border-0 backdrop-blur-sm ${

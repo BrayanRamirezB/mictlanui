@@ -8,12 +8,15 @@ interface ModalHeaderProps {
 const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
   return (
     <div className='flex justify-between items-center pb-4 mb-4'>
-      <h3 className='text-lg font-semibold'>{children}</h3>
+      <h3 className='text-lg font-semibold' id='modal-header-title'>
+        {children}
+      </h3>
       {onClose && (
         <button
           onClick={onClose}
           className='p-2 transition duration-300 ease-in-out hover:text-red-700'
           aria-label='Close'
+          aria-labelledby='modal-header-title'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -21,6 +24,8 @@ const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
             height='24'
             viewBox='0 0 24 24'
             fill='currentColor'
+            role='img'
+            aria-hidden='true'
             className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
