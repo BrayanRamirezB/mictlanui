@@ -74,11 +74,14 @@ const User = ({
         ${variant === 'default' && colors[color]}
         ${textSizes[size]}
       `}
+      role='group'
+      aria-labelledby='user-name'
+      aria-describedby='user-description'
     >
       <Avatar
         src={avatarSrc}
         name={name}
-        alt={avatarAlt}
+        alt={avatarAlt || `Avatar of ${name}`}
         size={avatarSize}
         rounded={avatarRounded}
         bordered={avatarBordered}
@@ -88,8 +91,16 @@ const User = ({
         dotPosition={avatarDotPosition}
       />
       <div className='wrapper'>
-        <div className={`font-semibold`}>{name}</div>
-        <div className={`font-normal`}>{description}</div>
+        <div id='user-name' className={`font-semibold`} aria-label='User name'>
+          {name}
+        </div>
+        <div
+          id='user-description'
+          className={`font-normal`}
+          aria-label='User description'
+        >
+          {description}
+        </div>
       </div>
     </div>
   )
