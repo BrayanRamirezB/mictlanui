@@ -42,6 +42,9 @@ const TableRow = ({
   return (
     <tr
       key={id}
+      role='row'
+      aria-selected={isSelected}
+      tabIndex={isDisabled ? -1 : 0}
       className={`
           ${isSelected ? selectedColors[selectedColor] : ''}
           ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}

@@ -24,7 +24,10 @@ const TableHeader: FC<TableHeaderProps> = ({ children, color = 'default' }) => {
   }
 
   return (
-    <thead className={`border-0 backdrop-blur-md shadow-md ${colors[color]}`}>
+    <thead
+      className={`border-0 backdrop-blur-md shadow-md ${colors[color]}`}
+      role='rowgroup'
+    >
       <tr>{children}</tr>
     </thead>
   )

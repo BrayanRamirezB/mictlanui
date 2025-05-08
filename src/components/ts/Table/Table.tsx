@@ -69,8 +69,13 @@ const Table: FC<TableProps> = ({
       className={`w-full overflow-auto ${variants[variant]} ${
         roundeds[rounded]
       } ${textColors[color]} ${variant === 'bordered' && borderColors[color]}`}
+      role='region'
+      aria-label='Data Table'
     >
-      <table className={`w-full ${variant === 'default' && colors[color]}`}>
+      <table
+        className={`w-full ${variant === 'default' && colors[color]}`}
+        role='table'
+      >
         {children}
       </table>
     </div>

@@ -13,13 +13,19 @@ interface TableCellProps {
   isFocusVisible?: boolean
   selectColor?: SelectColor
   children: ReactNode
+  role?: string
+  tabIndex?: number
+  ariaSelected?: boolean
 }
 
 const TableCell: FC<TableCellProps> = ({
   isSelected = false,
   isFocusVisible = false,
   selectColor = 'default',
-  children
+  children,
+  role = 'cell',
+  tabIndex = 0,
+  ariaSelected
 }) => {
   const selectedColors: Record<SelectColor, string> = {
     default: 'bg-neutral-100/70 dark:bg-zinc-700/80',
@@ -37,6 +43,9 @@ const TableCell: FC<TableCellProps> = ({
         ${isSelected ? selectedColors[selectColor] : ''}
         ${isFocusVisible ? 'ring-2 ring-blue-500' : ''}
       `}
+      role={role}
+      tabIndex={tabIndex}
+      aria-selected={ariaSelected}
     >
       {children}
     </td>

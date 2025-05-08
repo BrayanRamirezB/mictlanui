@@ -38,7 +38,7 @@ const TableBody: FC<TableBodyProps> = ({
 
   if (isLoading) {
     return (
-      <tbody>
+      <tbody aria-busy='true'>
         <tr>
           <td colSpan={100} className='py-6 text-center'>
             {loadingContent}
@@ -52,7 +52,12 @@ const TableBody: FC<TableBodyProps> = ({
     return (
       <tbody>
         <tr>
-          <td colSpan={100} className='py-6 text-center'>
+          <td
+            colSpan={100}
+            className='py-6 text-center'
+            role='alert'
+            aria-live='polite'
+          >
             {emptyMessage}
           </td>
         </tr>
@@ -61,7 +66,10 @@ const TableBody: FC<TableBodyProps> = ({
   }
 
   return (
-    <tbody className={`${divide && `divide-y ${divideColors[color]}`}`}>
+    <tbody
+      className={`${divide && `divide-y ${divideColors[color]}`}`}
+      role='rowgroup'
+    >
       {children}
     </tbody>
   )

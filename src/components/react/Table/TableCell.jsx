@@ -2,7 +2,10 @@ const TableCell = ({
   isSelected,
   isFocusVisible,
   selectColor = 'default',
-  children
+  children,
+  role = 'cell',
+  tabIndex = 0,
+  ariaSelected
 }) => {
   const selectedColors = {
     default: 'bg-neutral-100/70 dark:bg-zinc-700/80 ',
@@ -14,6 +17,9 @@ const TableCell = ({
   }
   return (
     <td
+      role={role}
+      tabIndex={tabIndex}
+      aria-selected={ariaSelected}
       className={`
           px-6 py-4 whitespace-nowrap text-sm
           ${isSelected ? selectedColors[selectColor] : ''}
