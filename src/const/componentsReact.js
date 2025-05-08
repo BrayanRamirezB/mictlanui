@@ -1,7 +1,12 @@
 export const AccordionReact = `import { useState } from 'react'
-import AccordionItem from './AccordionItem.jsx'
+import AccordionItem from '@/components/react/Accordion/AccordionItem'
 
-const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
+const Accordion = ({
+  items,
+  multiple = false,
+  styleVariant = 'default',
+  color
+}) => {
   const [activeIndexes, setActiveIndexes] = useState([])
 
   const toggleAccordion = (index) => {
@@ -19,7 +24,12 @@ const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
   }
 
   return (
-    <div id='accordion' className='w-full'>
+    <div
+      id='accordion'
+      className='w-full'
+      role='tablist'
+      aria-multiselectable={multiple}
+    >
       {items.map((item, index) => (
         <AccordionItem
           key={index}
@@ -30,6 +40,9 @@ const Accordion = ({ items, multiple = false, styleVariant = 'default' }) => {
           isActive={activeIndexes.includes(index)}
           toggle={toggleAccordion}
           styleVariant={styleVariant}
+          color={color}
+          aria-expanded={activeIndexes.includes(index)}
+          aria-controls={\`accordion-content-\${index}\`}
         />
       ))}
     </div>
@@ -107,7 +120,7 @@ const AccordionItem = ({
   const bodyVariantClass = bodyVariants[styleVariant]
 
   return (
-    <div>
+    <div role='region' aria-labelledby={\`accordion-heading-\${index}\`}>
       <h2 id={\`accordion-heading-\${index}\`}>
         <button
           type='button'
@@ -121,6 +134,7 @@ const AccordionItem = ({
           onClick={() => toggle(index)}
           aria-expanded={isActive}
           aria-controls={\`accordion-body-\${index}\`}
+          aria-label={\`Toggle \${title}\`}
         >
           <div className='w-full max-w-full'>
             <span className='flex justify-start items-center max-w-full'>
@@ -162,6 +176,8 @@ const AccordionItem = ({
           styleVariant !== 'bordered' &&
           colors[color]
         } \${styleVariant !== 'default' && borderColors[color]}\`}
+        role='region'
+        aria-labelledby={\`accordion-heading-\${index}\`}
       >
         <div className='p-5'>
           <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
