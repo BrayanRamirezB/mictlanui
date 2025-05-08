@@ -8,7 +8,8 @@ const Link = ({
   isExternal = false,
   defaultIcon = false,
   children,
-  href = '#'
+  href = '#',
+  ariaLabel = ''
 }) => {
   const variants = {
     default: 'border-0 shadow-md backdrop-blur-sm px-3 py-1',
@@ -88,6 +89,7 @@ const Link = ({
       target={`${isExternal ? '_blank' : ''}`}
       rel={`${isExternal ? 'noopener noreferrer' : ''}`}
       href={href}
+      aria-label={ariaLabel}
     >
       {children}
       {defaultIcon && (
@@ -102,6 +104,7 @@ const Link = ({
           strokeLinecap='round'
           strokeLinejoin='round'
           className={iconSizeStyles[size]}
+          aria-hidden='true'
         >
           <path stroke='none' d='M0 0h24v24H0z' fill='none' />
           <path d='M9 15l6 -6' />

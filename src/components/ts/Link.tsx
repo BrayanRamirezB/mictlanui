@@ -11,6 +11,7 @@ interface LinkProps {
   defaultIcon?: boolean
   children: ReactNode
   href?: string
+  ariaLabel?: string
 }
 
 const Link: FC<LinkProps> = ({
@@ -23,7 +24,8 @@ const Link: FC<LinkProps> = ({
   isExternal = false,
   defaultIcon = false,
   children,
-  href = '#'
+  href = '#',
+  ariaLabel = ''
 }) => {
   const variants = {
     default: 'border-0 shadow-md backdrop-blur-sm px-3 py-1',
@@ -103,6 +105,7 @@ const Link: FC<LinkProps> = ({
       target={`${isExternal ? '_blank' : ''}`}
       rel={`${isExternal ? 'noopener noreferrer' : ''}`}
       href={href}
+      aria-label={ariaLabel}
     >
       {children}
       {defaultIcon && (
@@ -117,6 +120,7 @@ const Link: FC<LinkProps> = ({
           strokeLinecap='round'
           strokeLinejoin='round'
           className={iconSizeStyles[size]}
+          aria-hidden='true'
         >
           <path stroke='none' d='M0 0h24v24H0z' fill='none' />
           <path d='M9 15l6 -6' />
