@@ -6,6 +6,7 @@ interface DropdownMenuProps {
   variant?: 'default' | 'bordered' | 'light'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg'
+  id?: string
   [key: string]: any
 }
 
@@ -14,6 +15,7 @@ const DropdownMenu = ({
   variant = 'default',
   color = 'default',
   rounded = 'md',
+  id = 'dropdown-menu',
   ...props
 }: DropdownMenuProps) => {
   const variants = {
@@ -51,6 +53,9 @@ const DropdownMenu = ({
 
   return (
     <div
+      id={id}
+      role='menu'
+      aria-hidden={!isOpen}
       className={`origin-top-right flex flex-col right-0 mt-2 w-full ${
         isOpen ? 'block' : 'hidden'
       }

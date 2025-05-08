@@ -78,6 +78,10 @@ const DropdownItem = ({
         !disabled && hoverColors[color]
       } ${selected && selectedColors[color]}`}
       onClick={onClick}
+      disabled={disabled}
+      aria-pressed={selected}
+      aria-disabled={disabled}
+      aria-label={title}
       {...props}
     >
       <div className='flex flex-col text-left'>

@@ -74,7 +74,7 @@ const DropdownTrigger = ({
     full: 'rounded-full'
   }
 
-  const { toggleDropdown } = useDropdown()
+  const { toggleDropdown, isOpen } = useDropdown()
 
   return (
     <button
@@ -87,6 +87,9 @@ const DropdownTrigger = ({
         ${roundeds[rounded]} 
         ${hoverColors[color]}
       `}
+      aria-haspopup='menu'
+      aria-expanded={isOpen}
+      role='button'
       onClick={toggleDropdown}
       {...props}
     >

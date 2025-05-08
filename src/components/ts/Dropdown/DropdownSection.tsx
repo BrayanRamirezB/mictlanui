@@ -78,7 +78,12 @@ const DropdownSection = ({
   }
 
   return (
-    <div className='flex flex-col' {...props}>
+    <div
+      className='flex flex-col'
+      role='region'
+      aria-label={heading || 'Dropdown Section'}
+      {...props}
+    >
       {heading && (
         <h3
           className={`px-4 ${variants[variant]} ${
@@ -92,7 +97,10 @@ const DropdownSection = ({
       )}
       {children}
       {showDivider && (
-        <div className={`my-2 h-px ${dividerColors[color]}`}></div>
+        <div
+          className={`my-2 h-px ${dividerColors[color]}`}
+          role='separator'
+        ></div>
       )}
     </div>
   )

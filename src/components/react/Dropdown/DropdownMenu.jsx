@@ -5,6 +5,7 @@ const DropdownMenu = ({
   variant = 'default',
   color = 'default',
   rounded = 'md',
+  id = 'dropdown-menu',
   ...props
 }) => {
   const variants = {
@@ -42,6 +43,9 @@ const DropdownMenu = ({
 
   return (
     <div
+      id={id}
+      role='menu'
+      aria-hidden={!isOpen}
       className={`origin-top-right flex flex-col right-0 mt-2 w-full ${
         isOpen ? 'block' : 'hidden'
       }

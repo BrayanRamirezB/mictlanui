@@ -11,7 +11,13 @@ const Dropdown = ({ children, ...props }) => {
 
   return (
     <DropdownContext.Provider value={{ isOpen, toggleDropdown }}>
-      <div className='relative inline-block' {...props}>
+      <div
+        className='relative inline-block'
+        {...props}
+        role='menu'
+        aria-expanded={isOpen}
+        aria-haspopup='true'
+      >
         {children}
       </div>
     </DropdownContext.Provider>
