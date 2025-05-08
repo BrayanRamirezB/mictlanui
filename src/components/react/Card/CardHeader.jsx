@@ -8,7 +8,9 @@ const CardHeader = ({
   padding = 'md',
   isLink = false,
   href = '#',
-  className = ''
+  className = '',
+  ariaLabel = '',
+  role = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700 dark:text-neutral-100/80',
@@ -66,6 +68,8 @@ const CardHeader = ({
   return (
     <Component
       href={isLink ? href : undefined}
+      aria-label={ariaLabel}
+      role={role}
       className={`
         ${textColors[textColor]} 
         ${textHoverColor && textHoverColors[textHoverColor]} 

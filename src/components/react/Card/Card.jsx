@@ -10,7 +10,8 @@ const Card = ({
   maxWidth = 'sm',
   padding = 'none',
   height = 'auto',
-  className = ''
+  className = '',
+  ariaLabel = '' // Nueva propiedad para accesibilidad
 }) => {
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
@@ -99,6 +100,9 @@ const Card = ({
   return (
     <Component
       href={isLink ? href : undefined}
+      role={isLink ? 'link' : 'region'}
+      aria-label={ariaLabel || (isLink ? 'Link card' : 'Card')}
+      tabIndex={isLink ? 0 : undefined}
       className={` 
           w-full overflow-hidden backdrop-blur-sm
           ${heights[height]}

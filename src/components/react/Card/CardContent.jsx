@@ -5,7 +5,9 @@ const CardContent = ({
   textSize = 'sm',
   textAlign = 'left',
   padding = 'md',
-  className = ''
+  className = '',
+  role = 'region',
+  ariaLabel = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700/80 dark:text-neutral-100/70',
@@ -51,6 +53,8 @@ const CardContent = ({
 
   return (
     <div
+      role={role}
+      aria-label={ariaLabel}
       className={`
         ${textColors[textColor]} 
         ${fonts[font]} 

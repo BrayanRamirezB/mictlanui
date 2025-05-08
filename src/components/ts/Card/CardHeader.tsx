@@ -23,6 +23,8 @@ interface CardHeaderProps {
   isLink?: boolean
   href?: string
   className?: string
+  ariaLabel?: string
+  role?: string
 }
 
 const CardHeader: FC<CardHeaderProps> = ({
@@ -35,7 +37,9 @@ const CardHeader: FC<CardHeaderProps> = ({
   padding = 'md',
   isLink = false,
   href = '#',
-  className = ''
+  className = '',
+  ariaLabel = '',
+  role = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700 dark:text-neutral-100/80',
@@ -101,6 +105,8 @@ const CardHeader: FC<CardHeaderProps> = ({
         ${textAligns[textAlign]} 
         ${paddings[padding]}
         ${className}`}
+      aria-label={ariaLabel}
+      role={role}
     >
       {children}
     </Component>

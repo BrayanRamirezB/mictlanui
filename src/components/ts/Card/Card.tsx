@@ -34,6 +34,7 @@ interface CardProps {
     | 'vixl'
   height?: 'auto' | 'screen' | 'fit' | 'full' | 'sm' | 'md' | 'lg' | 'xl'
   className?: string
+  ariaLabel?: string
 }
 
 const Card: FC<CardProps> = ({
@@ -48,7 +49,8 @@ const Card: FC<CardProps> = ({
   maxWidth = 'sm',
   padding = 'none',
   height = 'auto',
-  className = ''
+  className = '',
+  ariaLabel = ''
 }) => {
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
@@ -145,6 +147,9 @@ const Card: FC<CardProps> = ({
   return (
     <Component
       href={isLink ? href : undefined}
+      role={isLink ? 'link' : 'region'}
+      aria-label={ariaLabel || (isLink ? 'Link card' : 'Card')}
+      tabIndex={isLink ? 0 : undefined}
       className={` 
           w-full overflow-hidden backdrop-blur-sm
           ${heights[height]}

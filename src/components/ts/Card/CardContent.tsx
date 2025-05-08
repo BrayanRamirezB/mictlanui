@@ -14,6 +14,8 @@ interface CardContentProps {
   textAlign?: 'left' | 'center' | 'right'
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   className?: string
+  role?: string
+  ariaLabel?: string
 }
 
 const CardContent: FC<CardContentProps> = ({
@@ -23,7 +25,9 @@ const CardContent: FC<CardContentProps> = ({
   textSize = 'sm',
   textAlign = 'left',
   padding = 'md',
-  className = ''
+  className = '',
+  role = 'region',
+  ariaLabel = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700/80 dark:text-neutral-100/70',
@@ -76,6 +80,8 @@ const CardContent: FC<CardContentProps> = ({
         ${textAligns[textAlign]} 
         ${paddings[padding]}
         ${className}`}
+      role={role}
+      aria-label={ariaLabel}
     >
       {children}
     </div>
