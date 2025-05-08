@@ -1,4 +1,4 @@
-import { useState, Children } from 'react'
+import { useState, Children, useRef } from 'react'
 
 const Tabs = ({
   children,
@@ -11,6 +11,7 @@ const Tabs = ({
   disabled = false
 }) => {
   const [activeTab, setActiveTab] = useState(0)
+  const tabsRef = useRef([])
 
   const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row'
 
@@ -93,6 +94,20 @@ const Tabs = ({
     full: 'rounded-full'
   }
 
+  const handleKeyDown = (event, index) => {
+    if (disabled) return
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      const nextIndex = (index + 1) % children.length
+      setActiveTab(nextIndex)
+      tabsRef.current[nextIndex]?.focus()
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      const prevIndex = (index - 1 + children.length) % children.length
+      setActiveTab(prevIndex)
+      tabsRef.current[prevIndex]?.focus()
+    }
+  }
+
   return (
     <div className={`flex ${placementClass}`}>
       {/* Botones de las pestañas */}
@@ -103,6 +118,8 @@ const Tabs = ({
         ${sizes[size]}
         ${variant !== 'light' && roundeds[radius]}
         `}
+        role='tablist'
+        aria-orientation={orientation}
       >
         {Children.map(children, (child, index) => {
           const isDisabled = child.props.disabled
@@ -111,7 +128,9 @@ const Tabs = ({
           return (
             <button
               key={index}
+              ref={(el) => (tabsRef.current[index] = el)}
               onClick={() => !isDisabled && !disabled && setActiveTab(index)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
               className={`px-4 py-2 transition-colors duration-300 ease-in-out ${
                 activeTab === index
                   ? `${activeVariants[variant]} ${borderColors[color]} ${
@@ -124,6 +143,9 @@ const Tabs = ({
                   : hoverColors[color]
               }`}
               disabled={isDisabled}
+              role='tab'
+              aria-selected={activeTab === index}
+              aria-controls={`tabpanel-${index}`}
             >
               {isLink ? (
                 <a
@@ -144,9 +166,16 @@ const Tabs = ({
 
       {/* Contenido de las pestañas */}
       <div className={`p-4 ${textColors[color]}`}>
-        {Children.map(children, (child, index) =>
-          activeTab === index ? child.props.children : null
-        )}
+        {Children.map(children, (child, index) => (
+          <div
+            id={`tabpanel-${index}`}
+            role='tabpanel'
+            hidden={activeTab !== index}
+            aria-labelledby={`tab-${index}`}
+          >
+            {activeTab === index ? child.props.children : null}
+          </div>
+        ))}
       </div>
     </div>
   )

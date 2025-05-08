@@ -1,6 +1,7 @@
 import {
   useState,
   Children,
+  useRef,
   type ReactNode,
   type FC,
   type ReactElement
@@ -35,6 +36,7 @@ const Tabs: FC<TabsProps> = ({
   disabled = false
 }) => {
   const [activeTab, setActiveTab] = useState(0)
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([])
 
   const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row'
 
@@ -117,6 +119,21 @@ const Tabs: FC<TabsProps> = ({
     full: 'rounded-full'
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent, index: number) => {
+    if (disabled) return
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      const nextIndex = (index + 1) % Children.count(children)
+      setActiveTab(nextIndex)
+      tabsRef.current[nextIndex]?.focus()
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      const prevIndex =
+        (index - 1 + Children.count(children)) % Children.count(children)
+      setActiveTab(prevIndex)
+      tabsRef.current[prevIndex]?.focus()
+    }
+  }
+
   return (
     <div className={`flex ${placementClass}`}>
       <div
@@ -126,6 +143,8 @@ const Tabs: FC<TabsProps> = ({
         ${sizes[size]}
         ${variant !== 'light' && roundeds[radius]}
         `}
+        role='tablist'
+        aria-orientation={orientation}
       >
         {Children.map(children, (child, index) => {
           const tabChild = child as ReactElement<TabProps>
@@ -135,7 +154,11 @@ const Tabs: FC<TabsProps> = ({
           return (
             <button
               key={index}
+              ref={(el) => {
+                tabsRef.current[index] = el
+              }}
               onClick={() => !isDisabled && !disabled && setActiveTab(index)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
               className={`px-4 py-2 transition-colors duration-300 ease-in-out ${
                 activeTab === index
                   ? `${activeVariants[variant]} ${borderColors[color]} ${
@@ -148,6 +171,9 @@ const Tabs: FC<TabsProps> = ({
                   : hoverColors[color]
               }`}
               disabled={isDisabled}
+              role='tab'
+              aria-selected={activeTab === index}
+              aria-controls={`tabpanel-${index}`}
             >
               {isLink ? (
                 <a
@@ -167,11 +193,18 @@ const Tabs: FC<TabsProps> = ({
       </div>
 
       <div className={`p-4 ${textColors[color]}`}>
-        {Children.map(children, (child, index) =>
-          activeTab === index
-            ? (child as ReactElement<TabProps>).props.children
-            : null
-        )}
+        {Children.map(children, (child, index) => (
+          <div
+            id={`tabpanel-${index}`}
+            role='tabpanel'
+            hidden={activeTab !== index}
+            aria-labelledby={`tab-${index}`}
+          >
+            {activeTab === index
+              ? (child as ReactElement<TabProps>).props.children
+              : null}
+          </div>
+        ))}
       </div>
     </div>
   )
