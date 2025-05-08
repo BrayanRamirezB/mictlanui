@@ -126,6 +126,8 @@ const Alert = ({
 
   return (
     <div
+      role='alert'
+      aria-live='polite'
       className={`flex items-center justify-center gap-4 py-2 px-4 my-2 ${typeClass} ${variantClass} ${
         styleVariant === 'default' || styleVariant === 'complete'
           ? colorClass
@@ -137,6 +139,7 @@ const Alert = ({
           className={`flex items-center justify-center self-center size-9 rounded-full ${
             styleVariant === 'bordered' ? `bg-transparent` : colorClass
           }`}
+          aria-hidden='true'
         >
           {iconClass}
         </div>
@@ -150,6 +153,7 @@ const Alert = ({
         <button
           onClick={() => setVisible(false)}
           className='p-1 transition duration-200 ease-in hover:bg-inherit'
+          aria-label='Cerrar alerta'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
