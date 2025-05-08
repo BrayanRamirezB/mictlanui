@@ -1,5 +1,11 @@
-const BreadcrumbSeparator = ({ separator, colorClass }) => (
-  <span className={`mx-1 ${colorClass}`}>{separator}</span>
+const BreadcrumbSeparator = ({ separator, colorClass, ariaLabel }) => (
+  <span
+    className={`mx-1 ${colorClass}`}
+    role='separator'
+    aria-label={ariaLabel || 'breadcrumb separator'}
+  >
+    {separator}
+  </span>
 )
 
 export default BreadcrumbSeparator

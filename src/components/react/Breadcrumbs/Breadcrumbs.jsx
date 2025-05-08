@@ -82,11 +82,13 @@ const Breadcrumbs = ({
         roundedClass={roundedClass}
         colorClass={textcolorClass}
         onClick={() => handleClick(item.label)}
+        aria-current={item.label === selected ? 'page' : undefined}
       />
       {!isLast && (
         <BreadcrumbSeparator
           separator={separator}
           colorClass={textcolorClass}
+          aria-hidden='true'
         />
       )}
     </div>
@@ -98,7 +100,9 @@ const Breadcrumbs = ({
     return (
       <>
         {renderItem(firstItem, false)}
-        <span className={`mx-2 ${textcolorClass}`}>...</span>
+        <span className={`mx-2 ${textcolorClass}`} aria-hidden='true'>
+          ...
+        </span>
         {renderItem(lastItem, true)}
       </>
     )
@@ -109,11 +113,12 @@ const Breadcrumbs = ({
       <ul
         className={`flex mx-auto items-center gap-2 px-2 ${variantClass}  ${roundedClass}
         ${variant === 'bordered' ? `${borderClass}` : `${colorClass}`}`}
+        role='list'
       >
         {collapsible && items.length > 2
           ? renderCollapsed()
           : items.map((item, index) => (
-              <li key={item.label}>
+              <li key={item.label} role='listitem'>
                 {renderItem(item, index === items.length - 1)}
               </li>
             ))}

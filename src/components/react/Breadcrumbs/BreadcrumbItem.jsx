@@ -18,8 +18,13 @@ const BreadcrumbItem = ({
           selected ? 'font-bold' : 'font-normal'
         } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50`}
         aria-current={selected ? 'page' : undefined}
+        aria-label={label}
       >
-        {icon && <span className='inline-block'>{icon}</span>}
+        {icon && (
+          <span className='inline-block' aria-hidden='true'>
+            {icon}
+          </span>
+        )}
         {label}
       </a>
     )
@@ -34,8 +39,13 @@ const BreadcrumbItem = ({
           selected ? 'font-bold' : 'font-normal'
         } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50`}
       aria-current={selected ? 'page' : undefined}
+      aria-label={label}
     >
-      {icon && <span className='inline-block'>{icon}</span>}
+      {icon && (
+        <span className='inline-block' aria-hidden='true'>
+          {icon}
+        </span>
+      )}
       {label}
     </button>
   )
