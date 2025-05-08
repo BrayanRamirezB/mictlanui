@@ -78,6 +78,7 @@ const Avatar = ({
           src ? '' : `backdrop-blur-xl shadow-lg ${backgroundClass}`
         }`}
         aria-label={alt || `Avatar of ${name}`}
+        role='img'
       >
         {src ? (
           <img
@@ -97,6 +98,7 @@ const Avatar = ({
             viewBox='0 0 24 24'
             fill='currentColor'
             className='icon icon-tabler icons-tabler-filled icon-tabler-user'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z' />
@@ -107,6 +109,7 @@ const Avatar = ({
       {dot && (
         <span
           className={`absolute w-3 h-3 ${dotColorClass} ${dotPositionClass} rounded-full`}
+          aria-hidden='true'
         ></span>
       )}
     </div>
