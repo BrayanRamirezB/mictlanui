@@ -62,7 +62,12 @@ const Spinner: FC<SpinnerProps> = ({
   }
 
   return (
-    <div className='flex flex-col items-center justify-center space-y-2'>
+    <div
+      className='flex flex-col items-center justify-center space-y-2'
+      role='status'
+      aria-live='polite'
+      aria-label={label || 'Loading'}
+    >
       <div className='relative'>
         <div
           className={`relative rounded-full ${variants[variant]} ${sizes[size]}`}
