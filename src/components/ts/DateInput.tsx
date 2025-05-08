@@ -98,18 +98,25 @@ const DateInput: FC<DateInputProps> = ({
       ${hoverColors[color]}
       `}
     >
-      {label && <label className={`${textColors[color]}`}>{label}</label>}
+      {label && (
+        <label className={`${textColors[color]}`} htmlFor='date-input'>
+          {label}
+        </label>
+      )}
       <div
         className={`w-full flex items-center cursor-pointer ${textColors[color]} `}
         onClick={() => !disabled && datePickerRef.current?.showPicker()}
       >
         <input
+          id='date-input'
           type='date'
           ref={datePickerRef}
           value={selectedDate}
           onChange={handleDateChange}
           disabled={disabled}
           className={`w-full bg-transparent focus:outline-none custom-date-input cursor-pointer`}
+          aria-label={label || 'Select a date'}
+          aria-disabled={disabled}
         />
         {icon && (
           <svg
@@ -119,6 +126,8 @@ const DateInput: FC<DateInputProps> = ({
             viewBox='0 0 24 24'
             stroke='currentColor'
             strokeWidth='2'
+            role='img'
+            aria-hidden='true'
           >
             <path
               strokeLinecap='round'
