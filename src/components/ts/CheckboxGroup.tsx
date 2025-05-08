@@ -90,8 +90,19 @@ const CheckboxGroup: FC<CheckboxGroupProps> = ({
       } ${variant === 'bordered' && borderColors[color]} ${textColors[color]} ${
         variant !== 'light' && roundeds[rounded]
       }`}
+      role='group'
+      aria-labelledby={
+        title ? `${title.replace(/\s+/g, '-').toLowerCase()}-label` : undefined
+      }
     >
-      {title && <h3 className='text-lg font-semibold'>{title}</h3>}
+      {title && (
+        <h3
+          id={`${title.replace(/\s+/g, '-').toLowerCase()}-label`}
+          className='text-lg font-semibold'
+        >
+          {title}
+        </h3>
+      )}
       <div
         className={`flex gap-2 ${
           orientation === 'vertical' ? 'flex-col' : 'flex-row'
@@ -108,6 +119,8 @@ const CheckboxGroup: FC<CheckboxGroupProps> = ({
             color={color}
             size={size}
             onChange={() => handleCheckboxChange(id)}
+            aria-checked={checked}
+            aria-disabled={disabled}
           />
         ))}
       </div>
