@@ -35,7 +35,7 @@ const Image = ({
     : ''
 
   return (
-    <div className={`relative`}>
+    <div className={`relative`} role='img' aria-label={alt}>
       <div
         className={`overflow-hidden group ${roundeds[rounded]} ${shadows[shadow]} dark:shadow-neutral-100/20`}
       >
