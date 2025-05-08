@@ -1,7 +1,10 @@
 import { forwardRef } from 'react'
 
 const PopoverContent = forwardRef(
-  ({ children, isOpen, backdrop, placement, color, rounded }, ref) => {
+  (
+    { children, isOpen, backdrop, placement, color, rounded, ariaLabel },
+    ref
+  ) => {
     if (!isOpen) return null
 
     const backdropClass = {
@@ -27,19 +30,23 @@ const PopoverContent = forwardRef(
 
     const colors = {
       default: 'bg-neutral-100/80 dark:bg-zinc-800/80 dark:shadow-zinc-700/10',
-      primary: 'bg-blue-500/80 ',
-      secondary: 'bg-indigo-500/80 ',
-      success: 'bg-green-500/80 dark:bg-green-600/80 ',
-      warning: 'bg-yellow-500/80 ',
-      danger: 'bg-red-500/80 '
+      primary: 'bg-blue-500/80',
+      secondary: 'bg-indigo-500/80',
+      success: 'bg-green-500/80 dark:bg-green-600/80',
+      warning: 'bg-yellow-500/80',
+      danger: 'bg-red-500/80'
     }
 
     return (
       <>
-        <div className={`fixed inset-0 ${backdropClass[backdrop]}`}></div>
+        <div
+          className={`fixed inset-0 ${backdropClass[backdrop]}`}
+          aria-hidden='true'
+        ></div>
         <div
           className={`absolute z-10 ${placementStyles[placement]}`}
           ref={ref}
+          role='dialog'
         >
           <div
             className={`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 ${colors[color]} ${roundeds[rounded]}`}

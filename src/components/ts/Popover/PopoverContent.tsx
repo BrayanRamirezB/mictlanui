@@ -57,13 +57,15 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
 
     return (
       <>
-        {/* Fondo del popover */}
-        <div className={`fixed inset-0 ${backdropClass[backdrop]}`}></div>
+        <div
+          className={`fixed inset-0 ${backdropClass[backdrop]}`}
+          aria-hidden='true'
+        ></div>
 
-        {/* Contenido del popover */}
         <div
           className={`absolute z-10 ${placementStyles[placement]}`}
           ref={ref}
+          role='dialog'
         >
           <div
             className={`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 ${colors[color]} ${roundeds[rounded]}`}

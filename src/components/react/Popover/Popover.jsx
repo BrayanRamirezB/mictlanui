@@ -36,7 +36,7 @@ const Popover = ({
   }, [])
 
   return (
-    <div className='relative' ref={popoverRef}>
+    <div className='relative' ref={popoverRef} role='dialog'>
       {Children.map(children, (child) => {
         if (child.type === PopoverTrigger) {
           return cloneElement(child, {
