@@ -6,7 +6,6 @@ import {
   type FC
 } from 'react'
 
-// Definimos las interfaces para las props
 interface SwitchProps {
   label?: string
   startContent?: ReactNode
@@ -25,6 +24,7 @@ interface SwitchProps {
     | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
 }
 
 const Switch: FC<SwitchProps> = ({
@@ -38,7 +38,8 @@ const Switch: FC<SwitchProps> = ({
   color = 'default',
   textColor = 'default',
   rounded = 'full',
-  size = 'md'
+  size = 'md',
+  id = 'switch'
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(initialSelected)
   const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -66,6 +67,13 @@ const Switch: FC<SwitchProps> = ({
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!isReadOnly && !isDisabled) {
       setIsSelected(e.target.checked)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!isReadOnly && !isDisabled && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      setIsSelected(!isSelected)
     }
   }
 
@@ -138,11 +146,19 @@ const Switch: FC<SwitchProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleToggle}
+      onKeyDown={handleKeyDown}
+      role='switch'
+      aria-checked={isSelected}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : 0}
     >
       {label && (
-        <span className={`${textSizes[size]} ${textColors[textColor]}`}>
+        <label
+          htmlFor={id}
+          className={`${textSizes[size]} ${textColors[textColor]}`}
+        >
           {label}
-        </span>
+        </label>
       )}
       <div
         className={`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors ${
@@ -153,6 +169,7 @@ const Switch: FC<SwitchProps> = ({
       >
         <input
           type='checkbox'
+          id={id}
           className='hidden'
           checked={isSelected}
           onChange={handleInputChange}
