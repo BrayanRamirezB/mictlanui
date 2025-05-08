@@ -24,7 +24,12 @@ const Accordion = ({
   }
 
   return (
-    <div id='accordion' className='w-full'>
+    <div
+      id='accordion'
+      className='w-full'
+      role='tablist'
+      aria-multiselectable={multiple}
+    >
       {items.map((item, index) => (
         <AccordionItem
           key={index}
@@ -36,6 +41,8 @@ const Accordion = ({
           toggle={toggleAccordion}
           styleVariant={styleVariant}
           color={color}
+          aria-expanded={activeIndexes.includes(index)}
+          aria-controls={`accordion-content-${index}`}
         />
       ))}
     </div>

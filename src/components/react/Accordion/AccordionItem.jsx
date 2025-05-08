@@ -66,7 +66,7 @@ const AccordionItem = ({
   const bodyVariantClass = bodyVariants[styleVariant]
 
   return (
-    <div>
+    <div role='region' aria-labelledby={`accordion-heading-${index}`}>
       <h2 id={`accordion-heading-${index}`}>
         <button
           type='button'
@@ -80,6 +80,7 @@ const AccordionItem = ({
           onClick={() => toggle(index)}
           aria-expanded={isActive}
           aria-controls={`accordion-body-${index}`}
+          aria-label={`Toggle ${title}`}
         >
           <div className='w-full max-w-full'>
             <span className='flex justify-start items-center max-w-full'>
@@ -121,6 +122,8 @@ const AccordionItem = ({
           styleVariant !== 'bordered' &&
           colors[color]
         } ${styleVariant !== 'default' && borderColors[color]}`}
+        role='region'
+        aria-labelledby={`accordion-heading-${index}`}
       >
         <div className='p-5'>
           <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
