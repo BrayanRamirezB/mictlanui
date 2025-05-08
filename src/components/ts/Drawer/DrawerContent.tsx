@@ -5,7 +5,15 @@ interface DrawerContentProps {
 }
 
 const DrawerContent: React.FC<DrawerContentProps> = ({ children }) => {
-  return <div className='flex-1 flex flex-col overflow-hidden'>{children}</div>
+  return (
+    <div
+      className='flex-1 flex flex-col overflow-hidden'
+      role='region'
+      aria-label='Drawer Content'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default DrawerContent

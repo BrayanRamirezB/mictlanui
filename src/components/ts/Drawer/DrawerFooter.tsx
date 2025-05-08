@@ -5,7 +5,15 @@ interface DrawerFooterProps {
 }
 
 const DrawerFooter: FC<DrawerFooterProps> = ({ children }) => {
-  return <div className='flex-shrink-0 p-2'>{children}</div>
+  return (
+    <div
+      className='flex-shrink-0 p-2'
+      role='contentinfo'
+      aria-label='Drawer Footer'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default DrawerFooter

@@ -9,6 +9,8 @@ interface DrawerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   children: ReactNode
+  labelledBy?: string
+  describedBy?: string
 }
 
 const Drawer: FC<DrawerProps> = ({
@@ -19,9 +21,12 @@ const Drawer: FC<DrawerProps> = ({
   effect = 'opaque',
   size = 'md',
   color = 'default',
-  children
+  children,
+  labelledBy,
+  describedBy
 }) => {
   const drawerRef = useRef<HTMLDivElement>(null)
+  const lastFocusedElement = useRef<HTMLElement | null>(null)
 
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
@@ -107,9 +112,15 @@ const Drawer: FC<DrawerProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      lastFocusedElement.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null
+      drawerRef.current?.focus()
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
+      lastFocusedElement.current?.focus()
     }
   }, [isOpen])
 
@@ -120,6 +131,10 @@ const Drawer: FC<DrawerProps> = ({
       <div
         className={`fixed inset-0 ${backdropEffects[effect]}`}
         aria-hidden='true'
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby={labelledBy}
+        aria-describedby={describedBy}
       />
 
       <div

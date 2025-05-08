@@ -12,13 +12,17 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
   onClose
 }) => {
   return (
-    <div className='flex-shrink-0 flex items-center justify-between p-2'>
+    <div
+      className='flex-shrink-0 flex items-center justify-between p-2'
+      role='banner'
+    >
       <div>{children}</div>
       {(closeDrawer || onClose) && (
         <button
           onClick={closeDrawer || onClose}
           className='p-2 transition duration-300 ease-in-out hover:text-red-700'
-          aria-label='Close'
+          aria-label='Close Drawer'
+          title='Close Drawer'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -27,6 +31,8 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
             viewBox='0 0 24 24'
             fill='currentColor'
             className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+            role='img'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path

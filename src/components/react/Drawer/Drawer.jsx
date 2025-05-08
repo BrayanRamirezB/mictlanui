@@ -8,9 +8,12 @@ const Drawer = ({
   effect = 'opaque',
   size = 'md',
   color = 'default',
-  children
+  children,
+  labelledBy,
+  describedBy
 }) => {
   const drawerRef = useRef(null)
+  const lastFocusedElement = useRef(null)
 
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
@@ -96,16 +99,25 @@ const Drawer = ({
 
   useEffect(() => {
     if (isOpen) {
+      lastFocusedElement.current = document.activeElement
+      drawerRef.current?.focus()
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
+      lastFocusedElement.current?.focus()
     }
   }, [isOpen])
 
   if (!isOpen) return null
 
   return (
-    <div className={`fixed inset-0 z-50 ${textColors[color]}`}>
+    <div
+      className={`fixed inset-0 z-50 ${textColors[color]}`}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
+    >
       <div
         className={`fixed inset-0 ${backdropEffects[effect]}`}
         aria-hidden='true'
