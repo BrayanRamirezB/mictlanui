@@ -14,6 +14,7 @@ const Theme = () => {
 
     return 'light'
   })
+  const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
     // Aplicar el tema al cargar o cambiar
@@ -28,7 +29,12 @@ const Theme = () => {
   }, [theme])
 
   const handleChangeTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'))
+    setIsAnimating(true)
+
+    setTimeout(() => {
+      setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'))
+      setIsAnimating(false)
+    }, 800)
   }
 
   const Icon =
@@ -72,7 +78,9 @@ const Theme = () => {
   return (
     <button
       onClick={handleChangeTheme}
-      className='flex items-center justify-center size-6 transition duration-300 text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:scale-110 active:animate-rotate-180'
+      className={`flex items-center justify-center size-6 transition duration-300 text-black dark:text-white/90 hover:text-[#0052D4] dark:hover:text-[#4364F7] hover:scale-110 ${
+        isAnimating ? 'animate-rotate-180' : ''
+      }`}
     >
       {Icon}
     </button>
