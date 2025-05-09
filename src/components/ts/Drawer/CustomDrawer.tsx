@@ -7,12 +7,12 @@ import DrawerContent from '@/components/ts/Drawer/DrawerContent'
 import Button from '@/components/ts/Button'
 
 interface CustomDrawerProps {
-  isDismissable?: boolean // Indica si el drawer se puede cerrar haciendo clic fuera o presionando Escape
-  position?: 'top' | 'bottom' | 'left' | 'right' // Posición del drawer
-  effect?: 'opaque' | 'blur' | 'transparent' // Efecto del fondo
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full' // Tamaño del drawer
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' // Color del drawer
-  text?: string // Texto del botón para abrir el drawer
+  isDismissable?: boolean
+  position?: 'top' | 'bottom' | 'left' | 'right'
+  effect?: 'opaque' | 'blur' | 'transparent'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  text?: string
 }
 
 const CustomDrawer: FC<CustomDrawerProps> = ({

@@ -37,7 +37,12 @@ const Accordion: FC<AccordionProps> = ({
   }
 
   return (
-    <div id='accordion' className='w-full'>
+    <div
+      id='accordion'
+      className='w-full'
+      role='tablist'
+      aria-multiselectable={multiple}
+    >
       {items.map((item, index) => (
         <AccordionItem
           key={index}
@@ -49,6 +54,8 @@ const Accordion: FC<AccordionProps> = ({
           toggle={toggleAccordion}
           styleVariant={styleVariant}
           color={color}
+          aria-expanded={activeIndexes.includes(index)}
+          aria-controls={\`accordion-content-\${index}\`}
         />
       ))}
     </div>
@@ -56,6 +63,7 @@ const Accordion: FC<AccordionProps> = ({
 }
 
 export default Accordion
+
 `
 
 export const AccordionItemTs = `import { type FC, useRef, useState, useEffect } from 'react'
@@ -137,11 +145,11 @@ const AccordionItem: FC<AccordionItemProps> = ({
   const bodyVariantClass = bodyVariants[styleVariant]
 
   return (
-    <div>
+    <div role='region' aria-labelledby={\`accordion-heading-\${index}\`}>
       <h2 id={\`accordion-heading-\${index}\`}>
         <button
           type='button'
-          className={\`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 \${variantClass} \${
+          className={\`flex items-center justify-between w-full py-2 px-3 font-medium gap-3 transition duration-300 text-zinc-800 dark:text-neutral-100 \${variantClass}   \${
             styleVariant !== 'light' &&
             styleVariant !== 'bordered' &&
             colors[color]
@@ -151,6 +159,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
           onClick={() => toggle(index)}
           aria-expanded={isActive}
           aria-controls={\`accordion-body-\${index}\`}
+          aria-label={\`Toggle \${title}\`}
         >
           <div className='w-full max-w-full'>
             <span className='flex justify-start items-center max-w-full'>
@@ -192,6 +201,8 @@ const AccordionItem: FC<AccordionItemProps> = ({
           styleVariant !== 'bordered' &&
           colors[color]
         } \${styleVariant !== 'default' && borderColors[color]}\`}
+        role='region'
+        aria-labelledby={\`accordion-heading-\${index}\`}
       >
         <div className='p-5'>
           <p className='mb-2 text-zinc-700/70 dark:text-neutral-100/70'>
@@ -205,9 +216,10 @@ const AccordionItem: FC<AccordionItemProps> = ({
 
 export default AccordionItem
 
+
 `
 
-export const AlertTs = `import React, { useState } from 'react'
+export const AlertTs = `import { type FC, useState } from 'react'
 
 interface AlertProps {
   type?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
@@ -218,7 +230,7 @@ interface AlertProps {
   dismissible?: boolean
 }
 
-const Alert: React.FC<AlertProps> = ({
+const Alert: FC<AlertProps> = ({
   type = 'default',
   styleVariant = 'default',
   title,
@@ -227,6 +239,12 @@ const Alert: React.FC<AlertProps> = ({
   dismissible = false
 }) => {
   const [visible, setVisible] = useState<boolean>(true)
+  const [exiting, setExiting] = useState<boolean>(false)
+
+  const handleDismiss = () => {
+    setExiting(true)
+    setTimeout(() => setVisible(false), 300)
+  }
 
   if (!visible) return null
 
@@ -342,10 +360,13 @@ const Alert: React.FC<AlertProps> = ({
   const variantClass = variants[styleVariant]
   const iconClass = iconVar[type]
   const colorClass = colorType[type]
+  const exitAnimationClass = exiting ? 'animate-fade-out' : ''
 
   return (
     <div
-      className={\`flex items-center justify-center gap-4 py-2 px-4 my-2 \${typeClass} \${variantClass} \${
+      role='alert'
+      aria-live='polite'
+      className={\`flex items-center justify-center gap-4 py-2 px-4 my-2 \${typeClass} \${variantClass} \${exitAnimationClass} \${
         styleVariant === 'default' || styleVariant === 'complete'
           ? colorClass
           : ''
@@ -356,6 +377,7 @@ const Alert: React.FC<AlertProps> = ({
           className={\`flex items-center justify-center self-center size-9 rounded-full \${
             styleVariant === 'bordered' ? \`bg-transparent\` : colorClass
           }\`}
+          aria-hidden='true'
         >
           {iconClass}
         </div>
@@ -367,8 +389,9 @@ const Alert: React.FC<AlertProps> = ({
 
       {dismissible && (
         <button
-          onClick={() => setVisible(false)}
+          onClick={handleDismiss}
           className='p-1 transition duration-200 ease-in hover:bg-inherit'
+          aria-label='Cerrar alerta'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -393,11 +416,12 @@ const Alert: React.FC<AlertProps> = ({
 }
 
 export default Alert
+
 `
 
 export const AvatarTs = `import { type FC } from 'react'
 
-interface AvatarProps {
+export interface AvatarProps {
   src?: string
   name?: string
   alt?: string
@@ -496,6 +520,7 @@ const Avatar: FC<AvatarProps> = ({
           src ? '' : \`backdrop-blur-xl shadow-lg \${backgroundClass}\`
         }\`}
         aria-label={alt || \`Avatar of \${name}\`}
+        role='img'
       >
         {src ? (
           <img
@@ -515,6 +540,7 @@ const Avatar: FC<AvatarProps> = ({
             viewBox='0 0 24 24'
             fill='currentColor'
             className='icon icon-tabler icons-tabler-filled icon-tabler-user'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z' />
@@ -525,6 +551,7 @@ const Avatar: FC<AvatarProps> = ({
       {dot && (
         <span
           className={\`absolute w-3 h-3 \${dotColorClass} \${dotPositionClass} rounded-full\`}
+          aria-hidden='true'
         ></span>
       )}
     </div>
@@ -532,6 +559,7 @@ const Avatar: FC<AvatarProps> = ({
 }
 
 export default Avatar
+
 `
 
 export const BadgeTs = `import { type FC } from 'react'
@@ -553,6 +581,7 @@ interface BadgeProps {
   dotPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
   dotText?: string
   icon?: React.ReactNode
+  ariaLabel?: string
 }
 
 const Badge: FC<BadgeProps> = ({
@@ -565,7 +594,8 @@ const Badge: FC<BadgeProps> = ({
   dotColor = 'default',
   dotPosition = 'top-right',
   dotText,
-  icon
+  icon,
+  ariaLabel = 'badge'
 }) => {
   const types = {
     default: 'border-0 shadow-lg backdrop-blur-sm',
@@ -632,7 +662,9 @@ const Badge: FC<BadgeProps> = ({
   const content = () => {
     if (type === 'icon') {
       return icon ? (
-        <span className='inline-block'>{icon}</span>
+        <span className='inline-block' aria-hidden='true'>
+          {icon}
+        </span>
       ) : (
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -640,6 +672,7 @@ const Badge: FC<BadgeProps> = ({
           height='24'
           viewBox='0 0 24 24'
           fill='currentColor'
+          aria-hidden='true'
         >
           <path stroke='none' d='M0 0h24v24H0z' fill='none' />
           <path d='M14.235 19c.865 0 1.322 1.024 .745 1.668a3.992 3.992 0 0 1 -2.98 1.332a3.992 3.992 0 0 1 -2.98 -1.332c-.552 -.616 -.158 -1.579 .634 -1.661l.11 -.006h4.471z' />
@@ -656,6 +689,8 @@ const Badge: FC<BadgeProps> = ({
       className={\`relative inline-flex items-center justify-center font-medium \${sizeClass} \${roundedClass} \${
         type === 'bordered' ? \`bg-transparent\` : colorClass
       } \${textColorClass} \${typeClass}\`}
+      role='status'
+      aria-label={ariaLabel || text}
     >
       {content()}
       {dot && (
@@ -663,6 +698,7 @@ const Badge: FC<BadgeProps> = ({
           className={\`absolute \${
             dotText ? 'px-1 rounded-md' : 'w-2.5 h-2.5 rounded-full'
           } \${dotColorClass} \${dotPositionClass}\`}
+          aria-hidden={!dotText}
         >
           {dotText}
         </span>
@@ -672,6 +708,7 @@ const Badge: FC<BadgeProps> = ({
 }
 
 export default Badge
+
 `
 
 export const BreadcrumbItemTs = `import { type FC, type MouseEvent } from 'react'
@@ -707,8 +744,13 @@ const BreadcrumbItem: FC<BreadcrumbItemProps> = ({
           selected ? 'font-bold' : 'font-normal'
         } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50\`}
         aria-current={selected ? 'page' : undefined}
+        aria-label={label}
       >
-        {icon && <span className='inline-block'>{icon}</span>}
+        {icon && (
+          <span className='inline-block' aria-hidden='true'>
+            {icon}
+          </span>
+        )}
         {label}
       </a>
     )
@@ -723,14 +765,20 @@ const BreadcrumbItem: FC<BreadcrumbItemProps> = ({
           selected ? 'font-bold' : 'font-normal'
         } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50\`}
       aria-current={selected ? 'page' : undefined}
+      aria-label={label}
     >
-      {icon && <span className='inline-block'>{icon}</span>}
+      {icon && (
+        <span className='inline-block' aria-hidden='true'>
+          {icon}
+        </span>
+      )}
       {label}
     </button>
   )
 }
 
 export default BreadcrumbItem
+
 `
 
 export const BreadcrumbSeparatorTs = `import { type FC } from 'react'
@@ -738,14 +786,25 @@ export const BreadcrumbSeparatorTs = `import { type FC } from 'react'
 interface BreadcrumbSeparatorProps {
   separator: React.ReactNode
   colorClass?: string
+  ariaLabel?: string
 }
 
 const BreadcrumbSeparator: FC<BreadcrumbSeparatorProps> = ({
   separator,
-  colorClass
-}) => <span className={\`mx-1 \${colorClass}\`}>{separator}</span>
+  colorClass,
+  ariaLabel
+}) => (
+  <span
+    className={\`mx-1 \${colorClass}\`}
+    role='separator'
+    aria-label={ariaLabel || 'breadcrumb separator'}
+  >
+    {separator}
+  </span>
+)
 
 export default BreadcrumbSeparator
+
 `
 
 export const BreadcrumbsTs = `import { type FC, type ReactNode, useState } from 'react'
@@ -848,11 +907,13 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({
         roundedClass={roundedClass}
         colorClass={textcolorClass}
         onClick={() => handleClick(item.label)}
+        aria-current={item.label === selected ? 'page' : undefined}
       />
       {!isLast && (
         <BreadcrumbSeparator
           separator={separator}
           colorClass={textcolorClass}
+          aria-hidden='true'
         />
       )}
     </div>
@@ -864,7 +925,9 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({
     return (
       <>
         {renderItem(firstItem, false)}
-        <span className={\`mx-2 \${textcolorClass}\`}>...</span>
+        <span className={\`mx-2 \${textcolorClass}\`} aria-hidden='true'>
+          ...
+        </span>
         {renderItem(lastItem, true)}
       </>
     )
@@ -875,11 +938,12 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({
       <ul
         className={\`flex mx-auto items-center gap-2 px-2 \${variantClass}  \${roundedClass}
         \${variant === 'bordered' ? \`\${borderClass}\` : \`\${colorClass}\`}\`}
+        role='list'
       >
         {collapsible && items.length > 2
           ? renderCollapsed()
           : items.map((item, index) => (
-              <li key={item.label}>
+              <li key={item.label} role='listitem'>
                 {renderItem(item, index === items.length - 1)}
               </li>
             ))}
@@ -889,6 +953,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({
 }
 
 export default Breadcrumbs
+
 `
 
 export const ButtonTs = `import { type FC } from 'react'
@@ -1007,13 +1072,18 @@ const Button: FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled || isLoading}
       className={buttonClasses.trim()}
+      aria-disabled={disabled || isLoading}
+      role='button'
+      aria-busy={isLoading}
+      aria-label={isLoading ? 'Loading' : 'button'}
     >
       {isLoading && (
         <svg
-          className={\`\animate-spin mr-2 h-5 w-5 \${iconColors[color]}\`}
+          className={\`animate-spin mr-2 h-5 w-5 \${iconColors[color]}\`}
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
+          aria-hidden='true'
         >
           <circle
             className='opacity-25'
@@ -1037,6 +1107,7 @@ const Button: FC<ButtonProps> = ({
 }
 
 export default Button
+
 `
 
 export const ButtonGroupTs = `import { type FC } from 'react'
@@ -1167,6 +1238,7 @@ const ButtonGroup: FC<ButtonGroupProps> = ({
         variant === 'default' && shadowColors[color]
       } \${roundeds[rounded]}\`}
       role='group'
+      aria-label='Button group'
     >
       {buttons.map((button, index) => {
         return (
@@ -1183,6 +1255,8 @@ const ButtonGroup: FC<ButtonGroupProps> = ({
                 }
                 \`}
             onClick={button.onClick}
+            aria-label={button.label}
+            disabled={disabled}
           >
             {button.icon && (
               <svg
@@ -1192,6 +1266,7 @@ const ButtonGroup: FC<ButtonGroupProps> = ({
                 viewBox='0 0 24 24'
                 fill='currentColor'
                 className={\`\${iconColors[color]}\`}
+                aria-hidden='true'
               >
                 <path stroke='none' d='M0 0h24v24H0z' fill='none' />
                 <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
@@ -1206,11 +1281,12 @@ const ButtonGroup: FC<ButtonGroupProps> = ({
 }
 
 export default ButtonGroup
+
 `
 
 export const CheckboxTs = `import { type FC, useState } from 'react'
 
-interface CheckboxProps {
+export interface CheckboxProps {
   id: string
   label: string
   variant?: 'default' | 'bordered' | 'light'
@@ -1329,6 +1405,14 @@ const Checkbox: FC<CheckboxProps> = ({
         role='checkbox'
         aria-checked={isChecked}
         onClick={handleCheckboxChange}
+        aria-labelledby={\`\${id}-label\`}
+        tabIndex={disabled ? -1 : 0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleCheckboxChange()
+          }
+        }}
       >
         {isChecked && (
           <svg
@@ -1341,6 +1425,7 @@ const Checkbox: FC<CheckboxProps> = ({
             strokeWidth='2'
             strokeLinecap='round'
             strokeLinejoin='round'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M5 12l5 5l10 -10' />
@@ -1348,6 +1433,7 @@ const Checkbox: FC<CheckboxProps> = ({
         )}
       </div>
       <label
+        id={\`\${id}-label\`}
         htmlFor={id}
         onClick={handleCheckboxChange}
         className={\`ms-2 cursor-pointer \${textColors[color]}\`}
@@ -1359,6 +1445,7 @@ const Checkbox: FC<CheckboxProps> = ({
 }
 
 export default Checkbox
+
 `
 
 export const CheckboxGroupTs = `import { type FC, useState } from 'react'
@@ -1453,8 +1540,19 @@ const CheckboxGroup: FC<CheckboxGroupProps> = ({
       } \${variant === 'bordered' && borderColors[color]} \${textColors[color]} \${
         variant !== 'light' && roundeds[rounded]
       }\`}
+      role='group'
+      aria-labelledby={
+        title ? \`\${title.replace(/\s+/g, '-').toLowerCase()}-label\` : undefined
+      }
     >
-      {title && <h3 className='text-lg font-semibold'>{title}</h3>}
+      {title && (
+        <h3
+          id={\`\${title.replace(/\s+/g, '-').toLowerCase()}-label\`}
+          className='text-lg font-semibold'
+        >
+          {title}
+        </h3>
+      )}
       <div
         className={\`flex gap-2 \${
           orientation === 'vertical' ? 'flex-col' : 'flex-row'
@@ -1471,6 +1569,8 @@ const CheckboxGroup: FC<CheckboxGroupProps> = ({
             color={color}
             size={size}
             onChange={() => handleCheckboxChange(id)}
+            aria-checked={checked}
+            aria-disabled={disabled}
           />
         ))}
       </div>
@@ -1479,6 +1579,7 @@ const CheckboxGroup: FC<CheckboxGroupProps> = ({
 }
 
 export default CheckboxGroup
+
 `
 
 export const CodeTs = `import { type FC, useState } from 'react'
@@ -1574,15 +1675,20 @@ const Code: FC<CodeProps> = ({
         \${variant === 'bordered' && borderColors[color]}
         \${variant === 'default' && colors[color]}
         \${textColors[color]}
-        \`}
+        \}
+      role='region'
+      aria-label='Code block with copy button'
     >
-      <pre className=''>
+      <pre className='' aria-live='polite'>
         <code className={\`language-\${language}\`}>{codeString}</code>
       </pre>
 
       <button
         onClick={handleCopy}
         className={\`flex text-white px-1.5 py-1 rounded-lg transition duration-300 ease-out \${hoverColors[color]}\`}
+        aria-label={
+          copied ? 'Code copied to clipboard' : 'Copy code to clipboard'
+        }
       >
         {copied ? (
           <span className='inline-flex items-center'>
@@ -1597,6 +1703,8 @@ const Code: FC<CodeProps> = ({
               strokeLinecap='round'
               strokeLinejoin='round'
               className={\`size-4 \${textColors[color]}\`}
+              role='img'
+              aria-label='Copied icon'
             >
               <path stroke='none' d='M0 0h24v24H0z' fill='none' />
               <path stroke='none' d='M0 0h24v24H0z' />
@@ -1618,6 +1726,8 @@ const Code: FC<CodeProps> = ({
               strokeLinecap='round'
               strokeLinejoin='round'
               className={\`size-4 \${textColors[color]}\`}
+              role='img'
+              aria-label='Copy icon'
             >
               <path stroke='none' d='M0 0h24v24H0z' fill='none' />
               <path d='M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z' />
@@ -1631,6 +1741,7 @@ const Code: FC<CodeProps> = ({
 }
 
 export default Code
+
 `
 
 export const DateInputTs = `import { type FC, useState, useRef } from 'react'
@@ -1733,18 +1844,25 @@ const DateInput: FC<DateInputProps> = ({
       \${hoverColors[color]}
       \`}
     >
-      {label && <label className={\`\${textColors[color]}\`}>{label}</label>}
+      {label && (
+        <label className={\`\${textColors[color]}\`} htmlFor='date-input'>
+          {label}
+        </label>
+      )}
       <div
         className={\`w-full flex items-center cursor-pointer \${textColors[color]} \`}
         onClick={() => !disabled && datePickerRef.current?.showPicker()}
       >
         <input
+          id='date-input'
           type='date'
           ref={datePickerRef}
           value={selectedDate}
           onChange={handleDateChange}
           disabled={disabled}
           className={\`w-full bg-transparent focus:outline-none custom-date-input cursor-pointer\`}
+          aria-label={label || 'Select a date'}
+          aria-disabled={disabled}
         />
         {icon && (
           <svg
@@ -1754,6 +1872,8 @@ const DateInput: FC<DateInputProps> = ({
             viewBox='0 0 24 24'
             stroke='currentColor'
             strokeWidth='2'
+            role='img'
+            aria-hidden='true'
           >
             <path
               strokeLinecap='round'
@@ -1768,6 +1888,7 @@ const DateInput: FC<DateInputProps> = ({
 }
 
 export default DateInput
+
 `
 
 export const ImageTs = `import { type FC } from 'react'
@@ -1819,7 +1940,7 @@ const Image: FC<ImageProps> = ({
     : ''
 
   return (
-    <div className={\`relative\`}>
+    <div className={\`relative\`} role='img' aria-label={alt}>
       <div
         className={\`overflow-hidden group \${roundeds[rounded]} \${shadows[shadow]} dark:shadow-neutral-100/20\`}
       >
@@ -1850,6 +1971,7 @@ const Image: FC<ImageProps> = ({
 }
 
 export default Image
+
 `
 
 export const LinkTs = `import { type FC, type ReactNode } from 'react'
@@ -1865,6 +1987,7 @@ interface LinkProps {
   defaultIcon?: boolean
   children: ReactNode
   href?: string
+  ariaLabel?: string
 }
 
 const Link: FC<LinkProps> = ({
@@ -1877,7 +2000,8 @@ const Link: FC<LinkProps> = ({
   isExternal = false,
   defaultIcon = false,
   children,
-  href = '#'
+  href = '#',
+  ariaLabel = ''
 }) => {
   const variants = {
     default: 'border-0 shadow-md backdrop-blur-sm px-3 py-1',
@@ -1957,6 +2081,7 @@ const Link: FC<LinkProps> = ({
       target={\`\${isExternal ? '_blank' : ''}\`}
       rel={\`\${isExternal ? 'noopener noreferrer' : ''}\`}
       href={href}
+      aria-label={ariaLabel}
     >
       {children}
       {defaultIcon && (
@@ -1971,6 +2096,7 @@ const Link: FC<LinkProps> = ({
           strokeLinecap='round'
           strokeLinejoin='round'
           className={iconSizeStyles[size]}
+          aria-hidden='true'
         >
           <path stroke='none' d='M0 0h24v24H0z' fill='none' />
           <path d='M9 15l6 -6' />
@@ -1983,10 +2109,10 @@ const Link: FC<LinkProps> = ({
 }
 
 export default Link
+
 `
 
-export const SliderTs = `
-import React, {
+export const SliderTs = `import React, {
   useState,
   useRef,
   useEffect,
@@ -2131,6 +2257,24 @@ const Slider: React.FC<SliderProps> = ({
     document.removeEventListener('mouseup', handleThumbMouseUp)
     document.removeEventListener('touchmove', handleThumbDrag as EventListener)
     document.removeEventListener('touchend', handleThumbMouseUp)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (disabled) return
+    let newValue = value
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'ArrowRight':
+        newValue = Math.min(value + step, max)
+        break
+      case 'ArrowDown':
+      case 'ArrowLeft':
+        newValue = Math.max(value - step, min)
+        break
+      default:
+        return
+    }
+    handleValueChange(newValue)
   }
 
   const calculatePercentage = () => {
@@ -2297,6 +2441,14 @@ const Slider: React.FC<SliderProps> = ({
             onMouseLeave={() => setThumbHovering(false)}
             onFocus={() => setThumbFocused(true)}
             onBlur={() => setThumbFocused(false)}
+            onKeyDown={handleKeyDown}
+            tabIndex={disabled ? -1 : 0}
+            role='slider'
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={value}
+            aria-orientation={orientation}
+            aria-disabled={disabled}
             data-dragging={isDragging}
             data-hover={thumbHovering}
             data-pressed={thumbPressed}
@@ -2312,11 +2464,11 @@ const Slider: React.FC<SliderProps> = ({
 }
 
 export default Slider
+
 `
 
 export const SpinnerTs = `import { type FC } from 'react'
 
-// Definimos las interfaces para las props
 interface SpinnerProps {
   label?: string
   variant?: 'default' | 'light'
@@ -2379,7 +2531,12 @@ const Spinner: FC<SpinnerProps> = ({
   }
 
   return (
-    <div className='flex flex-col items-center justify-center space-y-2'>
+    <div
+      className='flex flex-col items-center justify-center space-y-2'
+      role='status'
+      aria-live='polite'
+      aria-label={label || 'Loading'}
+    >
       <div className='relative'>
         <div
           className={\`relative rounded-full \${variants[variant]} \${sizes[size]}\`}
@@ -2400,6 +2557,7 @@ const Spinner: FC<SpinnerProps> = ({
 }
 
 export default Spinner
+
 `
 
 export const SwitchTs = `import {
@@ -2410,7 +2568,6 @@ export const SwitchTs = `import {
   type FC
 } from 'react'
 
-// Definimos las interfaces para las props
 interface SwitchProps {
   label?: string
   startContent?: ReactNode
@@ -2429,6 +2586,7 @@ interface SwitchProps {
     | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
 }
 
 const Switch: FC<SwitchProps> = ({
@@ -2442,7 +2600,8 @@ const Switch: FC<SwitchProps> = ({
   color = 'default',
   textColor = 'default',
   rounded = 'full',
-  size = 'md'
+  size = 'md',
+  id = 'switch'
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(initialSelected)
   const [isHovered, setIsHovered] = useState<boolean>(false)
@@ -2470,6 +2629,13 @@ const Switch: FC<SwitchProps> = ({
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!isReadOnly && !isDisabled) {
       setIsSelected(e.target.checked)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!isReadOnly && !isDisabled && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      setIsSelected(!isSelected)
     }
   }
 
@@ -2542,11 +2708,19 @@ const Switch: FC<SwitchProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleToggle}
+      onKeyDown={handleKeyDown}
+      role='switch'
+      aria-checked={isSelected}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : 0}
     >
       {label && (
-        <span className={\`\${textSizes[size]} \${textColors[textColor]}\`}>
+        <label
+          htmlFor={id}
+          className={\`\${textSizes[size]} \${textColors[textColor]}\`}
+        >
           {label}
-        </span>
+        </label>
       )}
       <div
         className={\`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors \${
@@ -2557,6 +2731,7 @@ const Switch: FC<SwitchProps> = ({
       >
         <input
           type='checkbox'
+          id={id}
           className='hidden'
           checked={isSelected}
           onChange={handleInputChange}
@@ -2598,6 +2773,7 @@ const Switch: FC<SwitchProps> = ({
 }
 
 export default Switch
+
 `
 
 export const TextareaTs = `import { useState, type ChangeEvent, type FocusEvent, type FC } from 'react'
@@ -2709,6 +2885,7 @@ const Textarea: FC<TextareaProps> = ({
       <div className='headerWrapper'>
         {label && (
           <label
+            htmlFor={props.id || 'textarea'}
             className={\`label text-sm font-medium \${textColors['default']}\`}
           >
             {label}
@@ -2719,6 +2896,8 @@ const Textarea: FC<TextareaProps> = ({
 
       <div className='inputWrapper'>
         <textarea
+          id={props.id || 'textarea'}
+          role='textbox'
           className={inputClasses}
           aria-invalid={isInvalid}
           aria-required={isRequired}
@@ -2739,7 +2918,7 @@ const Textarea: FC<TextareaProps> = ({
 
       {description && (
         <div
-          id='description'
+          id={\`\${props.id || 'textarea'}-description\`}
           className={\`description text-sm \${textColors['default']}\`}
         >
           {description}
@@ -2748,8 +2927,9 @@ const Textarea: FC<TextareaProps> = ({
 
       {isInvalid && errorMessage && (
         <div
-          id='errorMessage'
+          id={\`\${props.id || 'textarea'}-errorMessage\`}
           className={\`errorMessage text-sm \${textColors['danger']}\`}
+          aria-live='assertive'
         >
           {errorMessage}
         </div>
@@ -2759,6 +2939,7 @@ const Textarea: FC<TextareaProps> = ({
 }
 
 export default Textarea
+
 `
 
 export const TooltipTs = `import { useState, useEffect, type ReactNode, type FC } from 'react'
@@ -2786,10 +2967,10 @@ const Tooltip: FC<TooltipProps> = ({
   const [isHovered, setIsHovered] = useState<boolean>(false)
 
   useEffect(() => {
-    let timeoutId: number 
+    let timeoutId: number
 
     if (isHovered && !isDisabled) {
-      timeoutId = window.setTimeout(() => setIsOpen(true), delay) 
+      timeoutId = window.setTimeout(() => setIsOpen(true), delay)
     } else {
       setIsOpen(false)
     }
@@ -2844,6 +3025,7 @@ const Tooltip: FC<TooltipProps> = ({
           data-open={isOpen}
           data-placement={placement}
           data-disabled={isDisabled}
+          aria-hidden={!isOpen}
           className={\`absolute z-50 border-0 shadow-md backdrop-blur-sm \${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
           \${roundeds[rounded]}
           \${textColors[color]}
@@ -2859,6 +3041,7 @@ const Tooltip: FC<TooltipProps> = ({
 }
 
 export default Tooltip
+
 `
 
 export const UserTs = `import { type FC } from 'react'
@@ -2956,11 +3139,14 @@ const User: FC<UserProps> = ({
         \${variant === 'default' && colors[color]}
         \${textSizes[size]}
       \`}
+      role='group'
+      aria-labelledby='user-name'
+      aria-describedby='user-description'
     >
       <Avatar
         src={avatarSrc}
         name={name}
-        alt={avatarAlt}
+        alt={avatarAlt || \`Avatar of \${name}\`}
         size={avatarSize}
         rounded={avatarRounded}
         bordered={avatarBordered}
@@ -2970,14 +3156,23 @@ const User: FC<UserProps> = ({
         dotPosition={avatarDotPosition}
       />
       <div className='wrapper'>
-        <div className={\`font-semibold\`}>{name}</div>
-        <div className={\`font-normal\`}>{description}</div>
+        <div id='user-name' className={\`font-semibold\`} aria-label='User name'>
+          {name}
+        </div>
+        <div
+          id='user-description'
+          className={\`font-normal\`}
+          aria-label='User description'
+        >
+          {description}
+        </div>
       </div>
     </div>
   )
 }
 
 export default User
+
 `
 
 export const CardTs = `import { type FC, type ReactNode, type CSSProperties } from 'react'
@@ -3016,6 +3211,7 @@ interface CardProps {
     | 'vixl'
   height?: 'auto' | 'screen' | 'fit' | 'full' | 'sm' | 'md' | 'lg' | 'xl'
   className?: string
+  ariaLabel?: string
 }
 
 const Card: FC<CardProps> = ({
@@ -3030,7 +3226,8 @@ const Card: FC<CardProps> = ({
   maxWidth = 'sm',
   padding = 'none',
   height = 'auto',
-  className = ''
+  className = '',
+  ariaLabel = ''
 }) => {
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
@@ -3127,6 +3324,9 @@ const Card: FC<CardProps> = ({
   return (
     <Component
       href={isLink ? href : undefined}
+      role={isLink ? 'link' : 'region'}
+      aria-label={ariaLabel || (isLink ? 'Link card' : 'Card')}
+      tabIndex={isLink ? 0 : undefined}
       className={\` 
           w-full overflow-hidden backdrop-blur-sm
           \${heights[height]}
@@ -3147,6 +3347,7 @@ const Card: FC<CardProps> = ({
 }
 
 export default Card
+
 `
 
 export const CardContentTs = `import { type FC, type ReactNode } from 'react'
@@ -3165,6 +3366,8 @@ interface CardContentProps {
   textAlign?: 'left' | 'center' | 'right'
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   className?: string
+  role?: string
+  ariaLabel?: string
 }
 
 const CardContent: FC<CardContentProps> = ({
@@ -3174,7 +3377,9 @@ const CardContent: FC<CardContentProps> = ({
   textSize = 'sm',
   textAlign = 'left',
   padding = 'md',
-  className = ''
+  className = '',
+  role = 'region',
+  ariaLabel = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700/80 dark:text-neutral-100/70',
@@ -3227,6 +3432,8 @@ const CardContent: FC<CardContentProps> = ({
         \${textAligns[textAlign]} 
         \${paddings[padding]}
         \${className}\`}
+      role={role}
+      aria-label={ariaLabel}
     >
       {children}
     </div>
@@ -3234,6 +3441,7 @@ const CardContent: FC<CardContentProps> = ({
 }
 
 export default CardContent
+
 `
 
 export const CardHeaderTs = `import { type ReactNode, type FC } from 'react'
@@ -3261,6 +3469,8 @@ interface CardHeaderProps {
   isLink?: boolean
   href?: string
   className?: string
+  ariaLabel?: string
+  role?: string
 }
 
 const CardHeader: FC<CardHeaderProps> = ({
@@ -3273,7 +3483,9 @@ const CardHeader: FC<CardHeaderProps> = ({
   padding = 'md',
   isLink = false,
   href = '#',
-  className = ''
+  className = '',
+  ariaLabel = '',
+  role = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700 dark:text-neutral-100/80',
@@ -3339,6 +3551,8 @@ const CardHeader: FC<CardHeaderProps> = ({
         \${textAligns[textAlign]} 
         \${paddings[padding]}
         \${className}\`}
+      aria-label={ariaLabel}
+      role={role}
     >
       {children}
     </Component>
@@ -3346,6 +3560,7 @@ const CardHeader: FC<CardHeaderProps> = ({
 }
 
 export default CardHeader
+
 `
 
 export const CustomCardTs = `import { type ReactNode, type FC } from 'react'
@@ -3387,6 +3602,7 @@ const CustomCard: FC<CustomCardProps> = ({
 }
 
 export default CustomCard
+
 `
 
 export const DrawerTs = `import { useEffect, useRef, type ReactNode, type FC } from 'react'
@@ -3400,6 +3616,8 @@ interface DrawerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   children: ReactNode
+  labelledBy?: string
+  describedBy?: string
 }
 
 const Drawer: FC<DrawerProps> = ({
@@ -3410,9 +3628,12 @@ const Drawer: FC<DrawerProps> = ({
   effect = 'opaque',
   size = 'md',
   color = 'default',
-  children
+  children,
+  labelledBy,
+  describedBy
 }) => {
   const drawerRef = useRef<HTMLDivElement>(null)
+  const lastFocusedElement = useRef<HTMLElement | null>(null)
 
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
@@ -3498,9 +3719,15 @@ const Drawer: FC<DrawerProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      lastFocusedElement.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null
+      drawerRef.current?.focus()
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
+      lastFocusedElement.current?.focus()
     }
   }, [isOpen])
 
@@ -3511,6 +3738,10 @@ const Drawer: FC<DrawerProps> = ({
       <div
         className={\`fixed inset-0 \${backdropEffects[effect]}\`}
         aria-hidden='true'
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby={labelledBy}
+        aria-describedby={describedBy}
       />
 
       <div
@@ -3526,6 +3757,7 @@ const Drawer: FC<DrawerProps> = ({
 }
 
 export default Drawer
+
 `
 
 export const DrawerHeaderTs = `import { type ReactNode, type FC } from 'react'
@@ -3542,13 +3774,17 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
   onClose
 }) => {
   return (
-    <div className='flex-shrink-0 flex items-center justify-between p-2'>
+    <div
+      className='flex-shrink-0 flex items-center justify-between p-2'
+      role='banner'
+    >
       <div>{children}</div>
       {(closeDrawer || onClose) && (
         <button
           onClick={closeDrawer || onClose}
           className='p-2 transition duration-300 ease-in-out hover:text-red-700'
-          aria-label='Close'
+          aria-label='Close Drawer'
+          title='Close Drawer'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -3557,6 +3793,8 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
             viewBox='0 0 24 24'
             fill='currentColor'
             className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+            role='img'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path
@@ -3572,6 +3810,7 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
 }
 
 export default DrawerHeader
+
 `
 
 export const DrawerBodyTs = `import { type ReactNode, type FC } from 'react'
@@ -3581,10 +3820,19 @@ interface DrawerBodyProps {
 }
 
 const DrawerBody: FC<DrawerBodyProps> = ({ children }) => {
-  return <div className='flex-1 overflow-y-auto p-2'>{children}</div>
+  return (
+    <div
+      className='flex-1 overflow-y-auto p-2'
+      role='region'
+      aria-label='Drawer Content'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default DrawerBody
+
 `
 
 export const DrawerContentTs = `import { type ReactNode } from 'react'
@@ -3594,10 +3842,19 @@ interface DrawerContentProps {
 }
 
 const DrawerContent: React.FC<DrawerContentProps> = ({ children }) => {
-  return <div className='flex-1 flex flex-col overflow-hidden'>{children}</div>
+  return (
+    <div
+      className='flex-1 flex flex-col overflow-hidden'
+      role='region'
+      aria-label='Drawer Content'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default DrawerContent
+
 `
 
 export const CustomDrawerTs = `import { useState, type FC } from 'react'
@@ -3609,12 +3866,12 @@ import DrawerContent from '@/components/ts/Drawer/DrawerContent'
 import Button from '@/components/ts/Button'
 
 interface CustomDrawerProps {
-  isDismissable?: boolean // Indica si el drawer se puede cerrar haciendo clic fuera o presionando Escape
-  position?: 'top' | 'bottom' | 'left' | 'right' // Posición del drawer
-  effect?: 'opaque' | 'blur' | 'transparent' // Efecto del fondo
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full' // Tamaño del drawer
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' // Color del drawer
-  text?: string // Texto del botón para abrir el drawer
+  isDismissable?: boolean 
+  position?: 'top' | 'bottom' | 'left' | 'right' 
+  effect?: 'opaque' | 'blur' | 'transparent' 
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full' 
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' 
+  text?: string
 }
 
 const CustomDrawer: FC<CustomDrawerProps> = ({
@@ -3667,6 +3924,7 @@ const CustomDrawer: FC<CustomDrawerProps> = ({
 }
 
 export default CustomDrawer
+
 `
 
 export const DrawerFooterTs = `import { type ReactNode, type FC } from 'react'
@@ -3676,10 +3934,19 @@ interface DrawerFooterProps {
 }
 
 const DrawerFooter: FC<DrawerFooterProps> = ({ children }) => {
-  return <div className='flex-shrink-0 p-2'>{children}</div>
+  return (
+    <div
+      className='flex-shrink-0 p-2'
+      role='contentinfo'
+      aria-label='Drawer Footer'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default DrawerFooter
+
 `
 
 export const DropdownTs = `import { createContext, useContext, useState, type ReactNode } from 'react'
@@ -3705,7 +3972,13 @@ const Dropdown = ({ children, ...props }: DropdownProps) => {
 
   return (
     <DropdownContext.Provider value={{ isOpen, toggleDropdown }}>
-      <div className='relative inline-block' {...props}>
+      <div
+        className='relative inline-block'
+        role='menu'
+        aria-expanded={isOpen}
+        aria-haspopup='true'
+        {...props}
+      >
         {children}
       </div>
     </DropdownContext.Provider>
@@ -3721,6 +3994,7 @@ export const useDropdown = () => {
 }
 
 export default Dropdown
+
 `
 
 export const DropdownItemTs = `import { type ReactNode, type MouseEvent } from 'react'
@@ -3819,6 +4093,9 @@ const DropdownItem = ({
       } \${selected && selectedColors[color]}\`}
       onClick={onClick}
       disabled={disabled}
+      aria-pressed={selected}
+      aria-disabled={disabled}
+      aria-label={title}
       {...props}
     >
       <div className='flex flex-col text-left'>
@@ -3831,6 +4108,7 @@ const DropdownItem = ({
 }
 
 export default DropdownItem
+
 `
 
 export const DropdownMenuTs = `import { type ReactNode } from 'react'
@@ -3841,6 +4119,7 @@ interface DropdownMenuProps {
   variant?: 'default' | 'bordered' | 'light'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg'
+  id?: string
   [key: string]: any
 }
 
@@ -3849,6 +4128,7 @@ const DropdownMenu = ({
   variant = 'default',
   color = 'default',
   rounded = 'md',
+  id = 'dropdown-menu',
   ...props
 }: DropdownMenuProps) => {
   const variants = {
@@ -3886,6 +4166,9 @@ const DropdownMenu = ({
 
   return (
     <div
+      id={id}
+      role='menu'
+      aria-hidden={!isOpen}
       className={\`origin-top-right flex flex-col right-0 mt-2 w-full \${
         isOpen ? 'block' : 'hidden'
       }
@@ -3902,6 +4185,7 @@ const DropdownMenu = ({
 }
 
 export default DropdownMenu
+
 `
 
 export const DropdownSectionTs = `import { type ReactNode } from 'react'
@@ -3984,7 +4268,12 @@ const DropdownSection = ({
   }
 
   return (
-    <div className='flex flex-col' {...props}>
+    <div
+      className='flex flex-col'
+      role='region'
+      aria-label={heading || 'Dropdown Section'}
+      {...props}
+    >
       {heading && (
         <h3
           className={\`px-4 \${variants[variant]} \${
@@ -3998,13 +4287,17 @@ const DropdownSection = ({
       )}
       {children}
       {showDivider && (
-        <div className={\`my-2 h-px \${dividerColors[color]}\`}></div>
+        <div
+          className={\`my-2 h-px \${dividerColors[color]}\`}
+          role='separator'
+        ></div>
       )}
     </div>
   )
 }
 
 export default DropdownSection
+
 `
 
 export const DropdownTriggerTs = `import { type ReactNode } from 'react'
@@ -4083,7 +4376,7 @@ const DropdownTrigger = ({
     full: 'rounded-full'
   }
 
-  const { toggleDropdown } = useDropdown()
+  const { toggleDropdown, isOpen } = useDropdown()
 
   return (
     <button
@@ -4096,6 +4389,9 @@ const DropdownTrigger = ({
         \${roundeds[rounded]} 
         \${hoverColors[color]}
       \`}
+      aria-haspopup='menu'
+      aria-expanded={isOpen}
+      role='button'
       onClick={toggleDropdown}
       {...props}
     >
@@ -4105,6 +4401,7 @@ const DropdownTrigger = ({
 }
 
 export default DropdownTrigger
+
 `
 
 export const InputTs = `import { type ChangeEvent } from 'react'
@@ -4129,6 +4426,7 @@ interface InputProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
   size?: 'sm' | 'md' | 'lg'
+  id?: string
 }
 
 const Input = ({
@@ -4150,7 +4448,8 @@ const Input = ({
   variant = 'default',
   color = 'default',
   rounded = 'md',
-  size = 'md'
+  size = 'md',
+  id = ''
 }: InputProps) => {
   const handleClear = () => {
     onValueChange('')
@@ -4206,7 +4505,7 @@ const Input = ({
   return (
     <div className={\`flex flex-col space-y-2 \${textColors[color]}\`}>
       {label && (
-        <label className='text-sm font-medium'>
+        <label htmlFor={id} className='text-sm font-medium'>
           {label}
           {isRequired && <span className='text-red-500'> *</span>}
         </label>
@@ -4220,6 +4519,7 @@ const Input = ({
         >
           <div className='flex-1 relative'>
             <input
+              id={id}
               type={type}
               value={value}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -4232,6 +4532,8 @@ const Input = ({
               readOnly={isReadOnly}
               disabled={isDisabled}
               placeholder={placeholder}
+              aria-invalid={isInvalid}
+              aria-describedby={description ? \`\${id}-description\` : undefined}
               className={\`w-full focus:outline-none \${
                 variant === 'light' && 'border-b-2'
               }  \${isInvalid && 'border-2 border-red-500'} \${
@@ -4243,6 +4545,7 @@ const Input = ({
               <button
                 type='button'
                 onClick={handleClear}
+                aria-label='Clear input'
                 className='absolute inset-y-0 right-0 pr-3 flex items-center'
               >
                 <span className='text-gray-500 hover:text-gray-700'>
@@ -4269,7 +4572,11 @@ const Input = ({
       </div>
 
       <div className='text-sm'>
-        {description && <p className='font-normal'>{description}</p>}
+        {description && (
+          <p className='font-normal' id={\`\${id}-description\`}>
+            {description}
+          </p>
+        )}
         {isInvalid && errorMessage && (
           <p className='text-red-500'>{errorMessage}</p>
         )}
@@ -4279,6 +4586,7 @@ const Input = ({
 }
 
 export default Input
+
 `
 
 export const CustomInputTs = `import { useState } from 'react'
@@ -4361,6 +4669,7 @@ const CustomInput = ({
 }
 
 export default CustomInput
+
 `
 
 export const ModalTs = `import { useEffect, useRef, type ReactNode } from 'react'
@@ -4405,15 +4714,47 @@ const Modal = ({
       }
     }
 
+    const trapFocus = (event: KeyboardEvent) => {
+      if (isOpen && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0] as HTMLElement
+        const lastElement = focusableElements[
+          focusableElements.length - 1
+        ] as HTMLElement
+
+        if (event.key === 'Tab') {
+          if (event.shiftKey) {
+            if (document.activeElement === firstElement) {
+              event.preventDefault()
+              lastElement.focus()
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              event.preventDefault()
+              firstElement.focus()
+            }
+          }
+        }
+      }
+    }
+
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', trapFocus)
       document.body.style.overflow = 'hidden'
+
+      if (modalRef.current) {
+        modalRef.current.focus()
+      }
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', trapFocus)
       document.body.style.overflow = 'auto'
     }
   }, [isOpen, isDismissable, onClose])
@@ -4454,9 +4795,14 @@ const Modal = ({
   return (
     <div
       className={\`fixed inset-0 z-50 flex items-center justify-center \${backdropEffects[effect]}\`}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby='modal-title'
+      aria-describedby='modal-description'
     >
       <div
         ref={modalRef}
+        tabIndex={-1}
         className={\`\${colors[color]} \${roundeds[rounded]} shadow-lg w-full \${
           sizes[size]
         } border-0 backdrop-blur-sm \${
@@ -4470,6 +4816,7 @@ const Modal = ({
 }
 
 export default Modal
+
 `
 
 export const ModalHeaderTs = `import { type ReactNode } from 'react'
@@ -4482,12 +4829,15 @@ interface ModalHeaderProps {
 const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
   return (
     <div className='flex justify-between items-center pb-4 mb-4'>
-      <h3 className='text-lg font-semibold'>{children}</h3>
+      <h3 className='text-lg font-semibold' id='modal-header-title'>
+        {children}
+      </h3>
       {onClose && (
         <button
           onClick={onClose}
           className='p-2 transition duration-300 ease-in-out hover:text-red-700'
           aria-label='Close'
+          aria-labelledby='modal-header-title'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -4495,6 +4845,8 @@ const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
             height='24'
             viewBox='0 0 24 24'
             fill='currentColor'
+            role='img'
+            aria-hidden='true'
             className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
@@ -4511,6 +4863,7 @@ const ModalHeader = ({ children, onClose }: ModalHeaderProps) => {
 }
 
 export default ModalHeader
+
 `
 
 export const ModalBodyTs = `import { type ReactNode } from 'react'
@@ -4520,10 +4873,15 @@ interface ModalBodyProps {
 }
 
 const ModalBody = ({ children }: ModalBodyProps) => {
-  return <div className='mb-4'>{children}</div>
+  return (
+    <div className='mb-4' role='region' aria-label='Modal Content'>
+      {children}
+    </div>
+  )
 }
 
 export default ModalBody
+
 `
 
 export const ModalContentTs = `import { type ReactNode } from 'react'
@@ -4533,10 +4891,15 @@ interface ModalContentProps {
 }
 
 const ModalContent = ({ children }: ModalContentProps) => {
-  return <div className='p-6'>{children}</div>
+  return (
+    <div className='p-6' role='dialog' aria-modal='true'>
+      {children}
+    </div>
+  )
 }
 
 export default ModalContent
+
 `
 
 export const ModalFooterTs = `import { type ReactNode } from 'react'
@@ -4546,10 +4909,19 @@ interface ModalFooterProps {
 }
 
 const ModalFooter = ({ children }: ModalFooterProps) => {
-  return <div className='flex justify-end space-x-2'>{children}</div>
+  return (
+    <div
+      className='flex justify-end space-x-2'
+      role='contentinfo'
+      aria-label='Modal Footer'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default ModalFooter
+
 `
 
 export const PopoverTs = `import {
@@ -4608,7 +4980,7 @@ const Popover = ({
   }, [])
 
   return (
-    <div className='relative' ref={popoverRef}>
+    <div className='relative' role='dialog' ref={popoverRef}>
       {Children.map(children, (child) => {
         if (child.type === PopoverTrigger) {
           return cloneElement(child, {
@@ -4632,6 +5004,7 @@ const Popover = ({
 }
 
 export default Popover
+
 `
 
 export const PopoverContentTs = `import { forwardRef, type ReactNode, type Ref } from 'react'
@@ -4693,13 +5066,15 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
 
     return (
       <>
-        {/* Fondo del popover */}
-        <div className={\`fixed inset-0 \${backdropClass[backdrop]}\`}></div>
+        <div
+          className={\`fixed inset-0 \${backdropClass[backdrop]}\`}
+          aria-hidden='true'
+        ></div>
 
-        {/* Contenido del popover */}
         <div
           className={\`absolute z-10 \${placementStyles[placement]}\`}
           ref={ref}
+          role='dialog'
         >
           <div
             className={\`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 \${colors[color]} \${roundeds[rounded]}\`}
@@ -4713,6 +5088,7 @@ const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
 )
 
 export default PopoverContent
+
 `
 
 export const PopoverTriggerTs = `import { type ReactNode, type MouseEvent } from 'react'
@@ -4720,17 +5096,34 @@ export const PopoverTriggerTs = `import { type ReactNode, type MouseEvent } from
 interface PopoverTriggerProps {
   children: ReactNode
   onClick: (event: MouseEvent<HTMLDivElement>) => void
+  ariaLabel: string
 }
 
-const PopoverTrigger = ({ children, onClick }: PopoverTriggerProps) => {
+const PopoverTrigger = ({
+  children,
+  onClick,
+  ariaLabel
+}: PopoverTriggerProps) => {
   return (
-    <div className='cursor-pointer' onClick={onClick}>
+    <div
+      className='cursor-pointer'
+      onClick={onClick}
+      role='button'
+      tabIndex={0}
+      aria-label={ariaLabel}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onClick?.(e as unknown as MouseEvent<HTMLDivElement>)
+        }
+      }}
+    >
       {children}
     </div>
   )
 }
 
 export default PopoverTrigger
+
 `
 
 export const RadioTs = `import { useState, type ReactNode } from 'react'
@@ -4785,6 +5178,13 @@ const Radio = ({
     setIsHovered(false)
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleChange()
+    }
+  }
+
   const colors = {
     default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
     primary: 'bg-blue-500/50 ',
@@ -4796,6 +5196,10 @@ const Radio = ({
 
   return (
     <div
+      role='radio'
+      aria-checked={isSelected}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : 0}
       data-selected={isSelected}
       data-pressed={isPressed}
       data-readonly={isReadOnly}
@@ -4807,6 +5211,7 @@ const Radio = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleChange}
+      onKeyDown={handleKeyDown}
       className={\`flex items-center gap-2 \${
         isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }\`}
@@ -4843,6 +5248,7 @@ const Radio = ({
 }
 
 export default Radio
+
 `
 
 export const RadioGroupTs = `import {
@@ -4867,6 +5273,7 @@ interface RadioGroupProps {
   variant?: 'default' | 'bordered' | 'light'
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
   rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
 }
 
 const RadioGroup = ({
@@ -4881,7 +5288,8 @@ const RadioGroup = ({
   onChange,
   variant = 'default',
   color = 'default',
-  rounded = 'md'
+  rounded = 'md',
+  id
 }: RadioGroupProps) => {
   const variants = {
     default: 'border-0 backdrop-blur-sm shadow-md',
@@ -4931,9 +5339,16 @@ const RadioGroup = ({
       } \${roundeds[rounded]} \${variant === 'bordered' && borderColors[color]}\`}
       data-orientation={orientation}
       role='radiogroup'
+      aria-labelledby={label ? \`\${id}-label\` : undefined}
+      aria-describedby={description ? \`\${id}-description\` : undefined}
+      aria-invalid={isInvalid || undefined}
+      aria-disabled={isDisabled || undefined}
     >
       {label && (
-        <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+        <span
+          id={\`\${id}-label\`}
+          className='text-sm font-medium text-gray-600 dark:text-gray-400'
+        >
           {label}
         </span>
       )}
@@ -4957,7 +5372,11 @@ const RadioGroup = ({
         })}
       </div>
 
-      {description && <p className='text-sm text-gray-500'>{description}</p>}
+      {description && (
+        <p id={\`\${id}-description\`} className='text-sm text-gray-500'>
+          {description}
+        </p>
+      )}
 
       {isInvalid && errorMessage && (
         <p className='text-sm text-red-600'>{errorMessage}</p>
@@ -4967,6 +5386,7 @@ const RadioGroup = ({
 }
 
 export default RadioGroup
+
 `
 
 export const SelectTs = `import {
@@ -5075,10 +5495,20 @@ const Select = ({
       data-invalid={isInvalid}
     >
       {label && (
-        <label className='block text-sm font-medium mb-1'>{label}</label>
+        <label
+          htmlFor='select-trigger'
+          className='block text-sm font-medium mb-1'
+        >
+          {label}
+        </label>
       )}
 
       <div
+        id='select-trigger'
+        role='button'
+        aria-haspopup='listbox'
+        aria-expanded={isOpen}
+        aria-disabled={isDisabled}
         className={\`trigger flex items-center justify-between p-2 \${
           variants[variant]
         } \${variant === 'default' && colors[color]} \${textColors[color]} \${
@@ -5091,7 +5521,7 @@ const Select = ({
           {selectedValue ? selectedLabel : placeholder}
         </div>
 
-        <div className='selector-icon' data-open={isOpen}>
+        <div className='selector-icon' data-open={isOpen} aria-hidden='true'>
           <svg
             className={\`w-4 h-4 transition-transform \${
               isOpen ? 'rotate-180' : ''
@@ -5114,7 +5544,11 @@ const Select = ({
         <div
           className={\`listbox-wrapper absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 \${colors[color]}\`}
         >
-          <ul className='listbox'>
+          <ul
+            className='listbox'
+            role='listbox'
+            aria-labelledby='select-trigger'
+          >
             {Children.map(children, (child) =>
               cloneElement(child as ReactElement<SelectItemProps>, {
                 onSelect: handleSelect,
@@ -5129,13 +5563,16 @@ const Select = ({
       {description && <p className='text-sm mt-1'>{description}</p>}
 
       {isInvalid && errorMessage && (
-        <p className='text-sm text-red-500 mt-1'>{errorMessage}</p>
+        <p className='text-sm text-red-500 mt-1' role='alert'>
+          {errorMessage}
+        </p>
       )}
     </div>
   )
 }
 
 export default Select
+
 `
 
 export const SelectItemTs = `import { useState, type ReactNode } from 'react'
@@ -5192,6 +5629,9 @@ const SelectItem = ({
       data-selected={isSelected}
       data-hover={isHovered}
       data-pressed={isPressed}
+      role='option'
+      aria-selected={isSelected}
+      aria-disabled={isDisabled}
     >
       {children}
     </li>
@@ -5199,6 +5639,7 @@ const SelectItem = ({
 }
 
 export default SelectItem
+
 `
 
 export const SkeletonTs = `import { type ReactNode, type FC } from 'react'
@@ -5216,9 +5657,15 @@ const Skeleton: FC<SkeletonProps> = ({ isLoaded, children, className }) => {
         isLoaded ? '' : \`backdrop-blur-sm shadow-lg animate-pulse \${className}\`
       }\`}
       data-loaded={isLoaded}
+      role='status'
+      aria-busy={!isLoaded}
+      aria-live='polite'
     >
       {!isLoaded && (
-        <div className='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse' />
+        <div
+          className='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse'
+          aria-hidden='true'
+        />
       )}
       <div className={isLoaded ? '' : 'opacity-0'}>{children}</div>
     </div>
@@ -5226,6 +5673,7 @@ const Skeleton: FC<SkeletonProps> = ({ isLoaded, children, className }) => {
 }
 
 export default Skeleton
+
 `
 
 export const TabTs = `import { type ReactNode, type FC } from 'react'
@@ -5250,15 +5698,26 @@ const Tab: FC<TabProps> = ({ label, children, disabled = false, href }) => {
     )
   }
 
-  return <div>{children}</div>
+  return (
+    <div
+      role='tab'
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
+      aria-label={label}
+    >
+      {children}
+    </div>
+  )
 }
 
 export default Tab
+
 `
 
 export const TabsTs = `import {
   useState,
   Children,
+  useRef,
   type ReactNode,
   type FC,
   type ReactElement
@@ -5293,6 +5752,7 @@ const Tabs: FC<TabsProps> = ({
   disabled = false
 }) => {
   const [activeTab, setActiveTab] = useState(0)
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([])
 
   const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row'
 
@@ -5375,6 +5835,21 @@ const Tabs: FC<TabsProps> = ({
     full: 'rounded-full'
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent, index: number) => {
+    if (disabled) return
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      const nextIndex = (index + 1) % Children.count(children)
+      setActiveTab(nextIndex)
+      tabsRef.current[nextIndex]?.focus()
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      const prevIndex =
+        (index - 1 + Children.count(children)) % Children.count(children)
+      setActiveTab(prevIndex)
+      tabsRef.current[prevIndex]?.focus()
+    }
+  }
+
   return (
     <div className={\`flex \${placementClass}\`}>
       <div
@@ -5384,6 +5859,8 @@ const Tabs: FC<TabsProps> = ({
         \${sizes[size]}
         \${variant !== 'light' && roundeds[radius]}
         \`}
+        role='tablist'
+        aria-orientation={orientation}
       >
         {Children.map(children, (child, index) => {
           const tabChild = child as ReactElement<TabProps>
@@ -5393,7 +5870,11 @@ const Tabs: FC<TabsProps> = ({
           return (
             <button
               key={index}
+              ref={(el) => {
+                tabsRef.current[index] = el
+              }}
               onClick={() => !isDisabled && !disabled && setActiveTab(index)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
               className={\`px-4 py-2 transition-colors duration-300 ease-in-out \${
                 activeTab === index
                   ? \`\${activeVariants[variant]} \${borderColors[color]} \${
@@ -5406,6 +5887,9 @@ const Tabs: FC<TabsProps> = ({
                   : hoverColors[color]
               }\`}
               disabled={isDisabled}
+              role='tab'
+              aria-selected={activeTab === index}
+              aria-controls={\`tabpanel-\${index}\`}
             >
               {isLink ? (
                 <a
@@ -5425,17 +5909,25 @@ const Tabs: FC<TabsProps> = ({
       </div>
 
       <div className={\`p-4 \${textColors[color]}\`}>
-        {Children.map(children, (child, index) =>
-          activeTab === index
-            ? (child as ReactElement<TabProps>).props.children
-            : null
-        )}
+        {Children.map(children, (child, index) => (
+          <div
+            id={\`tabpanel-\${index}\`}
+            role='tabpanel'
+            hidden={activeTab !== index}
+            aria-labelledby={\`tab-\${index}\`}
+          >
+            {activeTab === index
+              ? (child as ReactElement<TabProps>).props.children
+              : null}
+          </div>
+        ))}
       </div>
     </div>
   )
 }
 
 export default Tabs
+
 `
 
 export const TableTs = `import { type ReactNode, type FC } from 'react'
@@ -5509,8 +6001,13 @@ const Table: FC<TableProps> = ({
       className={\`w-full overflow-auto \${variants[variant]} \${
         roundeds[rounded]
       } \${textColors[color]} \${variant === 'bordered' && borderColors[color]}\`}
+      role='region'
+      aria-label='Data Table'
     >
-      <table className={\`w-full \${variant === 'default' && colors[color]}\`}>
+      <table
+        className={\`w-full \${variant === 'default' && colors[color]}\`}
+        role='table'
+      >
         {children}
       </table>
     </div>
@@ -5518,6 +6015,7 @@ const Table: FC<TableProps> = ({
 }
 
 export default Table
+
 `
 
 export const TableBodyTs = `import { type ReactNode, type FC } from 'react'
@@ -5560,7 +6058,7 @@ const TableBody: FC<TableBodyProps> = ({
 
   if (isLoading) {
     return (
-      <tbody>
+      <tbody aria-busy='true'>
         <tr>
           <td colSpan={100} className='py-6 text-center'>
             {loadingContent}
@@ -5574,7 +6072,12 @@ const TableBody: FC<TableBodyProps> = ({
     return (
       <tbody>
         <tr>
-          <td colSpan={100} className='py-6 text-center'>
+          <td
+            colSpan={100}
+            className='py-6 text-center'
+            role='alert'
+            aria-live='polite'
+          >
             {emptyMessage}
           </td>
         </tr>
@@ -5583,13 +6086,17 @@ const TableBody: FC<TableBodyProps> = ({
   }
 
   return (
-    <tbody className={\`\${divide && \`divide-y \${divideColors[color]}\`}\`}>
+    <tbody
+      className={\`\${divide && \`divide-y \${divideColors[color]}\`}\`}
+      role='rowgroup'
+    >
       {children}
     </tbody>
   )
 }
 
 export default TableBody
+
 `
 
 export const TableCellTs = `import { type ReactNode, type FC } from 'react'
@@ -5607,13 +6114,19 @@ interface TableCellProps {
   isFocusVisible?: boolean
   selectColor?: SelectColor
   children: ReactNode
+  role?: string
+  tabIndex?: number
+  ariaSelected?: boolean
 }
 
 const TableCell: FC<TableCellProps> = ({
   isSelected = false,
   isFocusVisible = false,
   selectColor = 'default',
-  children
+  children,
+  role = 'cell',
+  tabIndex = 0,
+  ariaSelected
 }) => {
   const selectedColors: Record<SelectColor, string> = {
     default: 'bg-neutral-100/70 dark:bg-zinc-700/80',
@@ -5631,6 +6144,9 @@ const TableCell: FC<TableCellProps> = ({
         \${isSelected ? selectedColors[selectColor] : ''}
         \${isFocusVisible ? 'ring-2 ring-blue-500' : ''}
       \`}
+      role={role}
+      tabIndex={tabIndex}
+      aria-selected={ariaSelected}
     >
       {children}
     </td>
@@ -5638,6 +6154,7 @@ const TableCell: FC<TableCellProps> = ({
 }
 
 export default TableCell
+
 `
 
 export const TableHeaderTs = `import { type ReactNode, type FC } from 'react'
@@ -5666,13 +6183,17 @@ const TableHeader: FC<TableHeaderProps> = ({ children, color = 'default' }) => {
   }
 
   return (
-    <thead className={\`border-0 backdrop-blur-md shadow-md \${colors[color]}\`}>
+    <thead
+      className={\`border-0 backdrop-blur-md shadow-md \${colors[color]}\`}
+      role='rowgroup'
+    >
       <tr>{children}</tr>
     </thead>
   )
 }
 
 export default TableHeader
+
 `
 
 export const TableRowTs = `import { type FC, type ReactNode } from 'react'
@@ -5744,6 +6265,9 @@ const TableRow: FC<TableRowProps> = ({
   return (
     <tr
       key={id}
+      role='row'
+      aria-selected={isSelected}
+      tabIndex={isDisabled ? -1 : 0}
       className={\`
         \${isSelected ? selectedColors[selectedColor] : ''}
         \${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}
@@ -5761,6 +6285,7 @@ const TableRow: FC<TableRowProps> = ({
 }
 
 export default TableRow
+
 `
 
 export const TableColumnTs = `import { type ReactNode, type FC } from 'react'
@@ -5771,11 +6296,16 @@ interface TableColumnProps {
 
 const TableColumn: FC<TableColumnProps> = ({ children }) => {
   return (
-    <th className='px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider'>
+    <th
+      className='px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider'
+      scope='col'
+      role='columnheader'
+    >
       {children}
     </th>
   )
 }
 
 export default TableColumn
+
 `
