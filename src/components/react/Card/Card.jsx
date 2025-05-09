@@ -11,7 +11,7 @@ const Card = ({
   padding = 'none',
   height = 'auto',
   className = '',
-  ariaLabel = '' // Nueva propiedad para accesibilidad
+  ariaLabel = ''
 }) => {
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',

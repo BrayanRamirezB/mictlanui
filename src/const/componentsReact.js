@@ -204,6 +204,12 @@ const Alert = ({
   dismissible = false
 }) => {
   const [visible, setVisible] = useState(true)
+  const [exiting, setExiting] = useState(false)
+
+  const handleDismiss = () => {
+    setExiting(true)
+    setTimeout(() => setVisible(false), 300)
+  }
 
   if (!visible) return null
 
@@ -318,10 +324,13 @@ const Alert = ({
   const variantClass = variants[styleVariant]
   const iconClass = iconVar[type]
   const colorClass = colorType[type]
+  const exitAnimationClass = exiting ? 'animate-fade-out' : ''
 
   return (
     <div
-      className={\`flex items-center justify-center gap-4 py-2 px-4 my-2 \${typeClass} \${variantClass} \${
+      role='alert'
+      aria-live='polite'
+      className={\`flex items-center justify-center gap-4 py-2 px-4 my-2 \${typeClass} \${variantClass} \${exitAnimationClass} \${
         styleVariant === 'default' || styleVariant === 'complete'
           ? colorClass
           : ''
@@ -332,6 +341,7 @@ const Alert = ({
           className={\`flex items-center justify-center self-center size-9 rounded-full \${
             styleVariant === 'bordered' ? \`bg-transparent\` : colorClass
           }\`}
+          aria-hidden='true'
         >
           {iconClass}
         </div>
@@ -343,8 +353,9 @@ const Alert = ({
 
       {dismissible && (
         <button
-          onClick={() => setVisible(false)}
+          onClick={handleDismiss}
           className='p-1 transition duration-200 ease-in hover:bg-inherit'
+          aria-label='Cerrar alerta'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -369,204 +380,101 @@ const Alert = ({
 }
 
 export default Alert
+
 `
 
 export const AvatarReact = `const Avatar = ({
-    src,
-    name = '',
-    alt = '',
-    size = 'lg',
-    rounded = 'full',
-    bordered = false,
-    color = 'default',
-    dot = false,
-    dotColor = 'default',
-    dotPosition = 'top-right'
-  }) => {
-    const sizes = {
-      xs: 'size-6',
-      sm: 'size-8',
-      md: 'size-10',
-      lg: 'size-12',
-      xl: 'size-14',
-      xxl: 'size-16',
-      xxxl: 'size-20'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-lg',
-      lg: 'rounded-2xl',
-      full: 'rounded-full'
-    }
-  
-    const borderColors = {
-      default: 'border-neutral-100 dark:border-zinc-700',
-      primary: 'border-blue-500',
-      secondary: 'border-indigo-500',
-      success: 'border-green-500',
-      warning: 'border-yellow-500',
-      danger: 'border-red-500'
-    }
-  
-    const backgroundColors = {
-      default: 'bg-neutral-500/20 dark:bg-zinc-700/60 dark:shadow-zinc-700/20',
-      primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
-      secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
-      success: 'bg-green-500/40 dark:shadow-green-500/20',
-      warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 dark:shadow-yellow-500/20',
-      danger: 'bg-red-500/20 dark:shadow-red-500/20'
-    }
-  
-    const dotColors = {
-      default: 'bg-neutral-500',
-      primary: 'bg-blue-500',
-      secondary: 'bg-indigo-500',
-      success: 'bg-green-500',
-      warning: 'bg-yellow-500',
-      danger: 'bg-red-500'
-    }
-  
-    const dotPositions = {
-      'top-left': 'top-0 left-0 transform -translate-x-1/4 -translate-y-1/4',
-      'top-right': 'top-0 right-0 transform translate-x-1/4 -translate-y-1/4',
-      'bottom-left': 'bottom-0 left-0 transform -translate-x-1/4 translate-y-1/4',
-      'bottom-right': 'bottom-0 right-0 transform translate-x-1/4 translate-y-1/4'
-    }
-  
-    const backgroundClass = backgroundColors[color]
-    const borderClass = borderColors[color]
-    const sizeClass = sizes[size]
-    const roundedClass = roundeds[rounded]
-    const dotPositionClass = dotPositions[dotPosition]
-    const dotColorClass = dotColors[dotColor]
-  
-    return (
-      <div className='relative inline-flex'>
-        <div
-          className={\`inline-flex items-center justify-center overflow-hidden \${
-            bordered ? \`border-2 \${borderClass}\` : ''
-          } \${sizeClass} \${roundedClass} \${
-            src ? '' : \`backdrop-blur-xl shadow-lg \${backgroundClass}\`
-          }\`}
-          aria-label={alt || \`Avatar of \${name}\`}
-        >
-          {src ? (
-            <img
-              src={src}
-              alt={alt || \`Avatar of \${name}\`}
-              className='w-full h-full object-cover'
-            />
-          ) : name ? (
-            <span className='font-medium text-gray-800 dark:text-gray-300 text-center'>
-              {name}
-            </span>
-          ) : (
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='currentColor'
-              className='icon icon-tabler icons-tabler-filled icon-tabler-user'
-            >
-              <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-              <path d='M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z' />
-              <path d='M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z' />
-            </svg>
-          )}
-        </div>
-        {dot && (
-          <span
-            className={\`absolute w-3 h-3 \${dotColorClass} \${dotPositionClass} rounded-full\`}
-          ></span>
-        )}
-      </div>
-    )
+  src,
+  name = '',
+  alt = '',
+  size = 'lg',
+  rounded = 'full',
+  bordered = false,
+  color = 'default',
+  dot = false,
+  dotColor = 'default',
+  dotPosition = 'top-right'
+}) => {
+  const sizes = {
+    xs: 'size-6',
+    sm: 'size-8',
+    md: 'size-10',
+    lg: 'size-12',
+    xl: 'size-14',
+    xxl: 'size-16',
+    xxxl: 'size-20'
   }
-  
-  export default Avatar
-  `
 
-export const BadgeReact = `const Badge = ({
-    type = 'default',
-    text = 'text',
-    color = 'default',
-    size = 'md',
-    rounded = 'full',
-    dot = false,
-    dotColor = 'default',
-    dotPosition = 'top-right',
-    dotText,
-    icon
-  }) => {
-    const types = {
-      default: 'border-0 shadow-lg backdrop-blur-sm',
-      bordered: 'border border-current shadow-lg ',
-      icon: 'p-1 shadow-lg backdrop-blur-sm'
-    }
-  
-    const sizes = {
-      sm: 'text-xs px-2 py-0.5',
-      md: 'text-sm px-3 py-1',
-      lg: 'text-base px-4 py-1.5'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-lg',
-      lg: 'rounded-2xl',
-      full: 'rounded-full'
-    }
-  
-    const colors = {
-      default: 'bg-neutral-100/20 dark:shadow-zinc-700/30',
-      primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
-      secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
-      success: 'bg-green-500/40 dark:shadow-green-500/20',
-      warning: 'bg-yellow-500/40 dark:shadow-yellow-500/20',
-      danger: 'bg-red-500/20 dark:shadow-red-500/20'
-    }
-  
-    const textColors = {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-800 dark:text-blue-500',
-      secondary: 'text-indigo-800 dark:text-indigo-500',
-      success: 'text-green-800 dark:text-green-500',
-      warning: 'text-yellow-800 dark:text-yellow-500',
-      danger: 'text-red-800 dark:text-red-500'
-    }
-  
-    const dotColors = {
-      default: 'bg-neutral-500',
-      primary: 'bg-blue-500',
-      secondary: 'bg-indigo-500',
-      success: 'bg-green-500',
-      warning: 'bg-yellow-500',
-      danger: 'bg-red-500'
-    }
-  
-    const dotPositions = {
-      'top-left': 'top-0 left-0 transform -translate-x-1/3 -translate-y-1/3',
-      'top-right': 'top-0 right-0 transform translate-x-1/3 -translate-y-1/3',
-      'bottom-left': 'bottom-0 left-0 transform -translate-x-1/3 translate-y-1/3',
-      'bottom-right': 'bottom-0 right-0 transform translate-x-1/3 translate-y-1/3'
-    }
-  
-    const typeClass = types[type]
-    const sizeClass = sizes[size]
-    const roundedClass = roundeds[rounded]
-    const colorClass = colors[color]
-    const textColorClass = textColors[color]
-    const dotPositionClass = dotPositions[dotPosition]
-    const dotColorClass = dotColors[dotColor]
-  
-    const content = () => {
-      if (type === 'icon') {
-        return icon ? (
-          <span className='inline-block'>{icon}</span>
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-lg',
+    lg: 'rounded-2xl',
+    full: 'rounded-full'
+  }
+
+  const borderColors = {
+    default: 'border-neutral-100 dark:border-zinc-700',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const backgroundColors = {
+    default: 'bg-neutral-500/20 dark:bg-zinc-700/60 dark:shadow-zinc-700/20',
+    primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
+    secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
+    success: 'bg-green-500/40 dark:shadow-green-500/20',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 dark:shadow-yellow-500/20',
+    danger: 'bg-red-500/20 dark:shadow-red-500/20'
+  }
+
+  const dotColors = {
+    default: 'bg-neutral-500',
+    primary: 'bg-blue-500',
+    secondary: 'bg-indigo-500',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    danger: 'bg-red-500'
+  }
+
+  const dotPositions = {
+    'top-left': 'top-0 left-0 transform -translate-x-1/4 -translate-y-1/4',
+    'top-right': 'top-0 right-0 transform translate-x-1/4 -translate-y-1/4',
+    'bottom-left': 'bottom-0 left-0 transform -translate-x-1/4 translate-y-1/4',
+    'bottom-right': 'bottom-0 right-0 transform translate-x-1/4 translate-y-1/4'
+  }
+
+  const backgroundClass = backgroundColors[color]
+  const borderClass = borderColors[color]
+  const sizeClass = sizes[size]
+  const roundedClass = roundeds[rounded]
+  const dotPositionClass = dotPositions[dotPosition]
+  const dotColorClass = dotColors[dotColor]
+
+  return (
+    <div className='relative inline-flex'>
+      <div
+        className={\`inline-flex items-center justify-center overflow-hidden \${
+          bordered ? \`border-2 \${borderClass}\` : ''
+        } \${sizeClass} \${roundedClass} \${
+          src ? '' : \`backdrop-blur-xl shadow-lg \${backgroundClass}\`
+        }\`}
+        aria-label={alt || \`Avatar of \${name}\`}
+        role='img'
+      >
+        {src ? (
+          <img
+            src={src}
+            alt={alt || \`Avatar of \${name}\`}
+            className='w-full h-full object-cover'
+          />
+        ) : name ? (
+          <span className='font-medium text-gray-800 dark:text-gray-300 text-center'>
+            {name}
+          </span>
         ) : (
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -574,217 +482,357 @@ export const BadgeReact = `const Badge = ({
             height='24'
             viewBox='0 0 24 24'
             fill='currentColor'
+            className='icon icon-tabler icons-tabler-filled icon-tabler-user'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-            <path d='M14.235 19c.865 0 1.322 1.024 .745 1.668a3.992 3.992 0 0 1 -2.98 1.332a3.992 3.992 0 0 1 -2.98 -1.332c-.552 -.616 -.158 -1.579 .634 -1.661l.11 -.006h4.471z' />
-            <path d='M12 2c1.358 0 2.506 .903 2.875 2.141l.046 .171l.008 .043a8.013 8.013 0 0 1 4.024 6.069l.028 .287l.019 .289v2.931l.021 .136a3 3 0 0 0 1.143 1.847l.167 .117l.162 .099c.86 .487 .56 1.766 -.377 1.864l-.116 .006h-16c-1.028 0 -1.387 -1.364 -.493 -1.87a3 3 0 0 0 1.472 -2.063l.021 -.143l.001 -2.97a8 8 0 0 1 3.821 -6.454l.248 -.146l.01 -.043a3.003 3.003 0 0 1 2.562 -2.29l.182 -.017l.176 -.004z' />
+            <path d='M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z' />
+            <path d='M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z' />
           </svg>
-        )
-      }
-  
-      return text
-    }
-  
-    return (
-      <span
-        className={\`relative inline-flex items-center justify-center font-medium \${sizeClass} \${roundedClass} \${
-          type === 'bordered' ? \`bg-transparent\` : colorClass
-        } \${textColorClass} \${typeClass}\`}
-      >
-        {content()}
-        {dot && (
-          <span
-            className={\`absolute \${
-              dotText ? 'px-1 rounded-md' : 'w-2.5 h-2.5 rounded-full'
-            } \${dotColorClass} \${dotPositionClass} \`}
-          >
-            {dotText}
-          </span>
         )}
-      </span>
-    )
+      </div>
+      {dot && (
+        <span
+          className={\`absolute w-3 h-3 \${dotColorClass} \${dotPositionClass} rounded-full\`}
+          aria-hidden='true'
+        ></span>
+      )}
+    </div>
+  )
+}
+
+export default Avatar
+
+  `
+
+export const BadgeReact = `const Badge = ({
+  type = 'default',
+  text = 'text',
+  color = 'default',
+  size = 'md',
+  rounded = 'full',
+  dot = false,
+  dotColor = 'default',
+  dotPosition = 'top-right',
+  dotText,
+  icon,
+  ariaLabel
+}) => {
+  const types = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border border-current shadow-lg ',
+    icon: 'p-1 shadow-lg backdrop-blur-sm'
   }
-  
-  export default Badge
+
+  const sizes = {
+    sm: 'text-xs px-2 py-0.5',
+    md: 'text-sm px-3 py-1',
+    lg: 'text-base px-4 py-1.5'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-lg',
+    lg: 'rounded-2xl',
+    full: 'rounded-full'
+  }
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:shadow-zinc-700/30',
+    primary: 'bg-blue-500/40 dark:shadow-blue-500/20',
+    secondary: 'bg-indigo-500/40 dark:shadow-indigo-500/20',
+    success: 'bg-green-500/40 dark:shadow-green-500/20',
+    warning: 'bg-yellow-500/40 dark:shadow-yellow-500/20',
+    danger: 'bg-red-500/20 dark:shadow-red-500/20'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const dotColors = {
+    default: 'bg-neutral-500',
+    primary: 'bg-blue-500',
+    secondary: 'bg-indigo-500',
+    success: 'bg-green-500',
+    warning: 'bg-yellow-500',
+    danger: 'bg-red-500'
+  }
+
+  const dotPositions = {
+    'top-left': 'top-0 left-0 transform -translate-x-1/3 -translate-y-1/3',
+    'top-right': 'top-0 right-0 transform translate-x-1/3 -translate-y-1/3',
+    'bottom-left': 'bottom-0 left-0 transform -translate-x-1/3 translate-y-1/3',
+    'bottom-right': 'bottom-0 right-0 transform translate-x-1/3 translate-y-1/3'
+  }
+
+  const typeClass = types[type]
+  const sizeClass = sizes[size]
+  const roundedClass = roundeds[rounded]
+  const colorClass = colors[color]
+  const textColorClass = textColors[color]
+  const dotPositionClass = dotPositions[dotPosition]
+  const dotColorClass = dotColors[dotColor]
+
+  const content = () => {
+    if (type === 'icon') {
+      return icon ? (
+        <span className='inline-block' aria-hidden='true'>
+          {icon}
+        </span>
+      ) : (
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='currentColor'
+          aria-hidden='true'
+        >
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path d='M14.235 19c.865 0 1.322 1.024 .745 1.668a3.992 3.992 0 0 1 -2.98 1.332a3.992 3.992 0 0 1 -2.98 -1.332c-.552 -.616 -.158 -1.579 .634 -1.661l.11 -.006h4.471z' />
+          <path d='M12 2c1.358 0 2.506 .903 2.875 2.141l.046 .171l.008 .043a8.013 8.013 0 0 1 4.024 6.069l.028 .287l.019 .289v2.931l.021 .136a3 3 0 0 0 1.143 1.847l.167 .117l.162 .099c.86 .487 .56 1.766 -.377 1.864l-.116 .006h-16c-1.028 0 -1.387 -1.364 -.493 -1.87a3 3 0 0 0 1.472 -2.063l.021 -.143l.001 -2.97a8 8 0 0 1 3.821 -6.454l.248 -.146l.01 -.043a3.003 3.003 0 0 1 2.562 -2.29l.182 -.017l.176 -.004z' />
+        </svg>
+      )
+    }
+
+    return text
+  }
+
+  return (
+    <span
+      className={\`relative inline-flex items-center justify-center font-medium \${sizeClass} \${roundedClass} \${
+        type === 'bordered' ? \`bg-transparent\` : colorClass
+      } \${textColorClass} \${typeClass}\`}
+      role='status'
+      aria-label={ariaLabel || text}
+    >
+      {content()}
+      {dot && (
+        <span
+          className={\`absolute \${
+            dotText ? 'px-1 rounded-md' : 'w-2.5 h-2.5 rounded-full'
+          } \${dotColorClass} \${dotPositionClass} \`}
+          aria-hidden={!dotText}
+        >
+          {dotText}
+        </span>
+      )}
+    </span>
+  )
+}
+
+export default Badge
+
   `
 
 export const BreadcrumbItemReact = `const BreadcrumbItem = ({
-    label,
-    href,
-    icon,
-    selected = false,
-    sizeClass = '',
-    roundedClass = '',
-    colorClass = '',
-    onClick
-  }) => {
-    if (href) {
-      return (
-        <a
-          href={href}
-          onClick={(e) => onClick?.(e)}
-          className={\`inline-flex items-center gap-1 cursor-pointer \${sizeClass} \${roundedClass} \${colorClass}
-          \${
-            selected ? 'font-bold' : 'font-normal'
-          } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50\`}
-          aria-current={selected ? 'page' : undefined}
-        >
-          {icon && <span className='inline-block'>{icon}</span>}
-          {label}
-        </a>
-      )
-    }
-  
+  label,
+  href,
+  icon,
+  selected = false,
+  sizeClass = '',
+  roundedClass = '',
+  colorClass = '',
+  onClick
+}) => {
+  if (href) {
     return (
-      <button
-        type='button'
-        onClick={onClick}
+      <a
+        href={href}
+        onClick={(e) => onClick?.(e)}
         className={\`inline-flex items-center gap-1 cursor-pointer \${sizeClass} \${roundedClass} \${colorClass}
-          \${
-            selected ? 'font-bold' : 'font-normal'
-          } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50\`}
+        \${
+          selected ? 'font-bold' : 'font-normal'
+        } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50\`}
         aria-current={selected ? 'page' : undefined}
+        aria-label={label}
       >
-        {icon && <span className='inline-block'>{icon}</span>}
+        {icon && (
+          <span className='inline-block' aria-hidden='true'>
+            {icon}
+          </span>
+        )}
         {label}
-      </button>
+      </a>
     )
   }
-  
-  export default BreadcrumbItem
+
+  return (
+    <button
+      type='button'
+      onClick={onClick}
+      className={\`inline-flex items-center gap-1 cursor-pointer \${sizeClass} \${roundedClass} \${colorClass}
+        \${
+          selected ? 'font-bold' : 'font-normal'
+        } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50\`}
+      aria-current={selected ? 'page' : undefined}
+      aria-label={label}
+    >
+      {icon && (
+        <span className='inline-block' aria-hidden='true'>
+          {icon}
+        </span>
+      )}
+      {label}
+    </button>
+  )
+}
+
+export default BreadcrumbItem
+
   `
 
-export const BreadcrumbSeparatorReact = `const BreadcrumbSeparator = ({ separator, colorClass }) => (
-    <span className={\`mx-1 \${colorClass}\`}>{separator}</span>
-  )
-  
-  export default BreadcrumbSeparator`
+export const BreadcrumbSeparatorReact = `const BreadcrumbSeparator = ({ separator, colorClass, ariaLabel }) => (
+  <span
+    className={\`mx-1 \${colorClass}\`}
+    role='separator'
+    aria-label={ariaLabel || 'breadcrumb separator'}
+  >
+    {separator}
+  </span>
+)
+
+export default BreadcrumbSeparator
+`
 
 export const BreadcrumbsReact = `import { useState } from 'react'
-  import BreadcrumbItem from '@/components/react/Breadcrumbs/BreadcrumbItem'
-  import BreadcrumbSeparator from '@/components/react/Breadcrumbs/BreadcrumbSeparator'
-  
-  const Breadcrumbs = ({
-    items = [],
-    variant = 'default',
-    size = 'md',
-    color = 'default',
-    rounded = 'md',
-    separator = '/',
-    collapsible = false
-  }) => {
-    const [selected, setSelected] = useState(items[0]?.label)
-  
-    const variants = {
-      default: 'border-0 shadow-lg backdrop-blur-sm',
-      bordered: 'border shadow-lg bg-transparent',
-      light: 'border-0 bg-transparent'
-    }
-  
-    const sizes = {
-      sm: 'text-xs px-2 py-1',
-      md: 'text-sm px-3 py-1.5',
-      lg: 'text-base px-4 py-2'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-md',
-      lg: 'rounded-lg',
-      full: 'rounded-full'
-    }
-  
-    const colors = {
-      default: 'bg-neutral-200/30 dark:bg-zinc-700/30 dark:shadow-zinc-700/20',
-      primary: 'bg-blue-500/20 dark:shadow-blue-500/20',
-      secondary: 'bg-indigo-500/20 dark:shadow-indigo-500/20',
-      success: 'bg-green-500/20 dark:shadow-green-500/20',
-      warning: 'bg-yellow-500/10 dark:bg-yellow-500/20 dark:shadow-yellow-500/20',
-      danger: 'bg-red-500/20 dark:shadow-red-500/20'
-    }
-  
-    const textColors = {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-800 dark:text-blue-500',
-      secondary: 'text-indigo-800 dark:text-indigo-500',
-      success: 'text-green-800 dark:text-green-500',
-      warning: 'text-yellow-800 dark:text-yellow-500',
-      danger: 'text-red-800 dark:text-red-500'
-    }
-  
-    const borderColors = {
-      default: 'border-neutral-100/40 dark:border-zinc-700/60',
-      primary: 'border-blue-500',
-      secondary: 'border-indigo-500',
-      success: 'border-green-500',
-      warning: 'border-yellow-500',
-      danger: 'border-red-500'
-    }
-  
-    const sizeClass = sizes[size]
-    const roundedClass = roundeds[rounded]
-    const colorClass = colors[color]
-    const variantClass = variants[variant]
-    const textcolorClass = textColors[color]
-    const borderClass = borderColors[color]
-  
-    const handleClick = (label) => {
-      setSelected(label) // Actualiza el elemento seleccionado
-    }
-  
-    const renderItem = (item, isLast) => (
-      <div className='flex items-center' key={item.label}>
-        <BreadcrumbItem
-          label={item.label}
-          href={item.href}
-          icon={item.icon}
-          selected={item.label === selected}
-          sizeClass={sizeClass}
-          roundedClass={roundedClass}
+import BreadcrumbItem from '@/components/react/Breadcrumbs/BreadcrumbItem'
+import BreadcrumbSeparator from '@/components/react/Breadcrumbs/BreadcrumbSeparator'
+
+const Breadcrumbs = ({
+  items = [],
+  variant = 'default',
+  size = 'md',
+  color = 'default',
+  rounded = 'md',
+  separator = '/',
+  collapsible = false
+}) => {
+  const [selected, setSelected] = useState(items[0]?.label)
+
+  const variants = {
+    default: 'border-0 shadow-lg backdrop-blur-sm',
+    bordered: 'border shadow-lg bg-transparent',
+    light: 'border-0 bg-transparent'
+  }
+
+  const sizes = {
+    sm: 'text-xs px-2 py-1',
+    md: 'text-sm px-3 py-1.5',
+    lg: 'text-base px-4 py-2'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const colors = {
+    default: 'bg-neutral-200/30 dark:bg-zinc-700/30 dark:shadow-zinc-700/20',
+    primary: 'bg-blue-500/20 dark:shadow-blue-500/20',
+    secondary: 'bg-indigo-500/20 dark:shadow-indigo-500/20',
+    success: 'bg-green-500/20 dark:shadow-green-500/20',
+    warning: 'bg-yellow-500/10 dark:bg-yellow-500/20 dark:shadow-yellow-500/20',
+    danger: 'bg-red-500/20 dark:shadow-red-500/20'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-neutral-100/40 dark:border-zinc-700/60',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const sizeClass = sizes[size]
+  const roundedClass = roundeds[rounded]
+  const colorClass = colors[color]
+  const variantClass = variants[variant]
+  const textcolorClass = textColors[color]
+  const borderClass = borderColors[color]
+
+  const handleClick = (label) => {
+    setSelected(label) // Actualiza el elemento seleccionado
+  }
+
+  const renderItem = (item, isLast) => (
+    <div className='flex items-center' key={item.label}>
+      <BreadcrumbItem
+        label={item.label}
+        href={item.href}
+        icon={item.icon}
+        selected={item.label === selected}
+        sizeClass={sizeClass}
+        roundedClass={roundedClass}
+        colorClass={textcolorClass}
+        onClick={() => handleClick(item.label)}
+        aria-current={item.label === selected ? 'page' : undefined}
+      />
+      {!isLast && (
+        <BreadcrumbSeparator
+          separator={separator}
           colorClass={textcolorClass}
-          onClick={() => handleClick(item.label)}
+          aria-hidden='true'
         />
-        {!isLast && (
-          <BreadcrumbSeparator
-            separator={separator}
-            colorClass={textcolorClass}
-          />
-        )}
-      </div>
-    )
-  
-    const renderCollapsed = () => {
-      const firstItem = items[0]
-      const lastItem = items[items.length - 1]
-      return (
-        <>
-          {renderItem(firstItem, false)}
-          <span className={\`mx-2 \${textcolorClass}\`}>...</span>
-          {renderItem(lastItem, true)}
-        </>
-      )
-    }
-  
+      )}
+    </div>
+  )
+
+  const renderCollapsed = () => {
+    const firstItem = items[0]
+    const lastItem = items[items.length - 1]
     return (
-      <nav className='flex flex-row mx-auto p-2' aria-label='Breadcrumb'>
-        <ul
-          className={\`flex mx-auto items-center gap-2 px-2 \${variantClass}  \${roundedClass}
-          \${variant === 'bordered' ? \`\${borderClass}\` : \`\${colorClass}\`}\`}
-        >
-          {collapsible && items.length > 2
-            ? renderCollapsed()
-            : items.map((item, index) => (
-                <li key={item.label}>
-                  {renderItem(item, index === items.length - 1)}
-                </li>
-              ))}
-        </ul>
-      </nav>
+      <>
+        {renderItem(firstItem, false)}
+        <span className={\`mx-2 \${textcolorClass}\`} aria-hidden='true'>
+          ...
+        </span>
+        {renderItem(lastItem, true)}
+      </>
     )
   }
-  
-  export default Breadcrumbs
+
+  return (
+    <nav className='flex flex-row mx-auto p-2' aria-label='Breadcrumb'>
+      <ul
+        className={\`flex mx-auto items-center gap-2 px-2 \${variantClass}  \${roundedClass}
+        \${variant === 'bordered' ? \`\${borderClass}\` : \`\${colorClass}\`}\`}
+        role='list'
+      >
+        {collapsible && items.length > 2
+          ? renderCollapsed()
+          : items.map((item, index) => (
+              <li key={item.label} role='listitem'>
+                {renderItem(item, index === items.length - 1)}
+              </li>
+            ))}
+      </ul>
+    </nav>
+  )
+}
+
+export default Breadcrumbs
+
   `
 
 export const ButtonReact = `const Button = ({
@@ -890,13 +938,18 @@ export const ButtonReact = `const Button = ({
       onClick={onClick}
       disabled={disabled || isLoading}
       className={buttonClasses.trim()}
+      aria-disabled={disabled || isLoading}
+      role='button'
+      aria-busy={isLoading}
+      aria-label={isLoading ? 'Loading' : 'button'}
     >
       {isLoading && (
         <svg
-          className={\`animate-spin mr-2 h-5 w-5 \${iconColors[color]}\`}
+          className={\`animate-spin h-5 w-5 \${iconColors[color]}\`}
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
+          aria-hidden='true'
         >
           <circle
             className='opacity-25'
@@ -924,155 +977,160 @@ export default Button
   `
 
 export const ButtonGroupReact = `const ButtonGroup = ({
-    buttons,
-    variant = 'default',
-    color = 'default',
-    size = 'md',
-    rounded = 'md',
-    disabled = false
-  }) => {
-    const variants = {
-      default: 'border-0 shadow-md backdrop-blur-sm',
-      bordered: 'border border-current',
-      light: ''
-    }
-  
-    const colors = {
-      default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
-      primary: 'bg-blue-500/20 ',
-      secondary: 'bg-indigo-500/20 ',
-      success: 'bg-green-500/30 ',
-      warning: 'bg-yellow-500/20 ',
-      danger: 'bg-red-500/20 '
-    }
-  
-    const textColors = {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-800 dark:text-blue-500',
-      secondary: 'text-indigo-800 dark:text-indigo-500',
-      success: 'text-green-800 dark:text-green-500',
-      warning: 'text-yellow-800 dark:text-yellow-500',
-      danger: 'text-red-800 dark:text-red-500'
-    }
-  
-    const iconColors = {
-      default: 'fill-gray-800 dark:fill-gray-300',
-      primary: 'fill-blue-800 dark:fill-blue-500',
-      secondary: 'fill-indigo-800 dark:fill-indigo-500',
-      success: 'fill-green-800 dark:fill-green-500',
-      warning: 'fill-yellow-800 dark:fill-yellow-500',
-      danger: 'fill-red-800 dark:fill-red-500'
-    }
-  
-    const hoverColors = {
-      default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
-      primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
-      secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
-      success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
-      warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
-      danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
-    }
-  
-    const shadowColors = {
-      default:
-        'shadow-md shadow-zinc-700/30 shadow-current dark:shadow-neutral-100/20',
-      primary: 'shadow-md shadow-blue-500/20 ',
-      secondary: 'shadow-md shadow-indigo-500/20 ',
-      success: 'shadow-md shadow-green-500/30  ',
-      warning: 'shadow-md shadow-yellow-500/30 ',
-      danger: 'shadow-md shadow-red-500/20 '
-    }
-  
-    const sizes = {
-      sm: 'px-3 py-2 text-xs',
-      md: 'px-4 py-2.5 text-sm',
-      lg: 'px-5 py-3 text-base',
-      xl: 'px-6 py-3.5 text-lg'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-md',
-      lg: 'rounded-lg',
-      full: 'rounded-full'
-    }
-  
-    const roundedS = {
-      none: 'rounded-s-none',
-      sm: 'rounded-s-sm',
-      md: 'rounded-s-md',
-      lg: 'rounded-s-lg',
-      full: 'rounded-s-full'
-    }
-  
-    const roundedE = {
-      none: 'rounded-e-none',
-      sm: 'rounded-e-sm',
-      md: 'rounded-e-md',
-      lg: 'rounded-e-lg',
-      full: 'rounded-e-full'
-    }
-  
-    const groupClass = \`
-      \${variants[variant]} 
-      \${sizes[size]}
-      \${
-        variant === 'bordered' || variant === 'light'
-          ? \`bg-transparent\`
-          : colors[color]
-      }
-        \${variant === 'default' && shadowColors[color]}
-        \${textColors[color]}
-        \${hoverColors[color]}
-        \${disabled ? 'opacity-50 cursor-not-allowed' : ''}
-      \`
-  
-    return (
-      <div
-        className={\`inline-flex overflow-hidden \${
-          variant === 'default' && shadowColors[color]
-        } \${roundeds[rounded]}\`}
-        role='group'
-      >
-        {buttons.map((button, index) => {
-          return (
-            <button
-              key={index}
-              type='button'
-              className={\`inline-flex gap-x-1 items-center font-medium transition duration-300 \${groupClass}
-                  \${
-                    index === 0
-                      ? roundedS[rounded]
-                      : index === buttons.length - 1
-                      ? roundedE[rounded]
-                      : 'border-l-0'
-                  }
-                  \`}
-              onClick={button.onClick}
-            >
-              {button.icon && (
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='24'
-                  height='24'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className={\`\${iconColors[color]}\`}
-                >
-                  <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-                  <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
-                </svg>
-              )}
-              {button.label}
-            </button>
-          )
-        })}
-      </div>
-    )
+  buttons,
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  rounded = 'md',
+  disabled = false
+}) => {
+  const variants = {
+    default: 'border-0 shadow-md backdrop-blur-sm',
+    bordered: 'border border-current',
+    light: ''
   }
-  
-  export default ButtonGroup
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-500',
+    secondary: 'text-indigo-800 dark:text-indigo-500',
+    success: 'text-green-800 dark:text-green-500',
+    warning: 'text-yellow-800 dark:text-yellow-500',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const iconColors = {
+    default: 'fill-gray-800 dark:fill-gray-300',
+    primary: 'fill-blue-800 dark:fill-blue-500',
+    secondary: 'fill-indigo-800 dark:fill-indigo-500',
+    success: 'fill-green-800 dark:fill-green-500',
+    warning: 'fill-yellow-800 dark:fill-yellow-500',
+    danger: 'fill-red-800 dark:fill-red-500'
+  }
+
+  const hoverColors = {
+    default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
+    primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
+    secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
+    success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
+    warning: 'hover:bg-yellow-500/60 dark:hover:bg-yellow-500/30',
+    danger: 'hover:bg-red-500/30 dark:hover:bg-red-500/10'
+  }
+
+  const shadowColors = {
+    default:
+      'shadow-md shadow-zinc-700/30 shadow-current dark:shadow-neutral-100/20',
+    primary: 'shadow-md shadow-blue-500/20 ',
+    secondary: 'shadow-md shadow-indigo-500/20 ',
+    success: 'shadow-md shadow-green-500/30  ',
+    warning: 'shadow-md shadow-yellow-500/30 ',
+    danger: 'shadow-md shadow-red-500/20 '
+  }
+
+  const sizes = {
+    sm: 'px-3 py-2 text-xs',
+    md: 'px-4 py-2.5 text-sm',
+    lg: 'px-5 py-3 text-base',
+    xl: 'px-6 py-3.5 text-lg'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const roundedS = {
+    none: 'rounded-s-none',
+    sm: 'rounded-s-sm',
+    md: 'rounded-s-md',
+    lg: 'rounded-s-lg',
+    full: 'rounded-s-full'
+  }
+
+  const roundedE = {
+    none: 'rounded-e-none',
+    sm: 'rounded-e-sm',
+    md: 'rounded-e-md',
+    lg: 'rounded-e-lg',
+    full: 'rounded-e-full'
+  }
+
+  const groupClass = \`
+    \${variants[variant]} 
+    \${sizes[size]}
+    \${
+      variant === 'bordered' || variant === 'light'
+        ? \`bg-transparent\`
+        : colors[color]
+    }
+      \${variant === 'default' && shadowColors[color]}
+      \${textColors[color]}
+      \${hoverColors[color]}
+      \${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+    \`
+
+  return (
+    <div
+      className={\`inline-flex overflow-hidden \${
+        variant === 'default' && shadowColors[color]
+      } \${roundeds[rounded]}\`}
+      role='group'
+      aria-label='Button group'
+    >
+      {buttons.map((button, index) => {
+        return (
+          <button
+            key={index}
+            type='button'
+            className={\`inline-flex gap-x-1 items-center font-medium transition duration-300 \${groupClass}
+                \${
+                  index === 0
+                    ? roundedS[rounded]
+                    : index === buttons.length - 1
+                    ? roundedE[rounded]
+                    : 'border-l-0'
+                }
+                \`}
+            onClick={button.onClick}
+            aria-label={button.label}
+            disabled={disabled}
+          >
+            {button.icon && (
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='24'
+                height='24'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className={\`\${iconColors[color]}\`}
+                aria-hidden='true'
+              >
+                <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+                <path d='M15 2a1 1 0 0 1 .117 1.993l-.117 .007c-.693 0 -1.33 .694 -1.691 1.552a5.1 5.1 0 0 1 1.982 -.544l.265 -.008c2.982 0 5.444 3.053 5.444 6.32c0 3.547 -.606 5.862 -2.423 8.578c-1.692 2.251 -4.092 2.753 -6.41 1.234a.31 .31 0 0 0 -.317 -.01c-2.335 1.528 -4.735 1.027 -6.46 -1.27c-1.783 -2.668 -2.39 -4.984 -2.39 -8.532l.004 -.222c.108 -3.181 2.526 -6.098 5.44 -6.098c.94 0 1.852 .291 2.688 .792c.419 -1.95 1.818 -3.792 3.868 -3.792m-7.034 6.154c-1.36 .858 -1.966 2.06 -1.966 3.846a1 1 0 0 0 2 0c0 -1.125 .28 -1.678 1.034 -2.154a1 1 0 1 0 -1.068 -1.692' />
+              </svg>
+            )}
+            {button.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+export default ButtonGroup
+
   `
 
 export const CheckboxReact = `import { useState } from 'react'
@@ -1179,7 +1237,15 @@ const Checkbox = ({
         }\`}
         role='checkbox'
         aria-checked={isChecked}
+        aria-labelledby={\`\${id}-label\`}
+        tabIndex={disabled ? -1 : 0}
         onClick={handleCheckboxChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleCheckboxChange()
+          }
+        }}
       >
         {isChecked && (
           <svg
@@ -1192,6 +1258,7 @@ const Checkbox = ({
             strokeWidth='2'
             strokeLinecap='round'
             strokeLinejoin='round'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M5 12l5 5l10 -10' />
@@ -1199,6 +1266,7 @@ const Checkbox = ({
         )}
       </div>
       <label
+        id={\`\${id}-label\`}
         htmlFor={id}
         onClick={handleCheckboxChange}
         className={\`ms-2 cursor-pointer \${textColors[color]}\`}
@@ -1210,6 +1278,7 @@ const Checkbox = ({
 }
 
 export default Checkbox
+
 `
 
 export const CheckboxGroupReact = `import { useState } from 'react'
@@ -1405,14 +1474,19 @@ const Code = ({
         \${variant === 'default' && colors[color]}
         \${textColors[color]}
         \`}
+      role='region'
+      aria-label='Code block with copy button'
     >
-      <pre className=''>
+      <pre className='' aria-live='polite'>
         <code className={\`language-\${language}\`}>{codeString}</code>
       </pre>
 
       <button
         onClick={handleCopy}
         className={\`flex text-white px-1.5 py-1 rounded-lg transition duration-300 ease-out \${hoverColors[color]}\`}
+        aria-label={
+          copied ? 'Code copied to clipboard' : 'Copy code to clipboard'
+        }
       >
         {copied ? (
           <span className='inline-flex items-center'>
@@ -1427,6 +1501,8 @@ const Code = ({
               strokeLinecap='round'
               strokeLinejoin='round'
               className={\`size-4 \${textColors[color]}\`}
+              role='img'
+              aria-label='Copied icon'
             >
               <path stroke='none' d='M0 0h24v24H0z' fill='none' />
               <path stroke='none' d='M0 0h24v24H0z' />
@@ -1448,6 +1524,8 @@ const Code = ({
               strokeLinecap='round'
               strokeLinejoin='round'
               className={\`size-4 \${textColors[color]}\`}
+              role='img'
+              aria-label='Copy icon'
             >
               <path stroke='none' d='M0 0h24v24H0z' fill='none' />
               <path d='M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z' />
@@ -1461,6 +1539,7 @@ const Code = ({
 }
 
 export default Code
+
 `
 
 export const DateInputReact = `import { useState, useRef } from 'react'
@@ -1552,17 +1631,24 @@ const DateInput = ({
       \${hoverColors[color]}
       \`}
     >
-      {label && <label className={\`\${textColors[color]}\`}>{label}</label>}
+      {label && (
+        <label htmlFor='date-input' className={\`\${textColors[color]}\`}>
+          {label}
+        </label>
+      )}
       <div
         className={\`w-full flex items-center cursor-pointer \${textColors[color]} \`}
         onClick={() => !disabled && datePickerRef.current?.showPicker()}
       >
         <input
+          id='date-input'
           type='date'
           ref={datePickerRef}
           value={selectedDate}
           onChange={handleDateChange}
           disabled={disabled}
+          aria-label={label || 'Select a date'}
+          aria-disabled={disabled}
           className={\`w-full bg-transparent focus:outline-none custom-date-input cursor-pointer\`}
         />
         {icon && (
@@ -1573,6 +1659,8 @@ const DateInput = ({
             viewBox='0 0 24 24'
             stroke='currentColor'
             strokeWidth='2'
+            role='img'
+            aria-hidden='true'
           >
             <path
               strokeLinecap='round'
@@ -1587,194 +1675,200 @@ const DateInput = ({
 }
 
 export default DateInput
+
 `
 
 export const ImageReact = `const Image = ({
-    imageSrc,
-    alt = 'img preview',
-    zoomedWrapper,
-    filter,
-    rounded = 'md',
-    shadow = 'md',
-    className
-  }) => {
-    const filters = {
-      none: '',
-      blur: 'blur-lg',
-      grayscale: 'grayscale',
-      sepia: 'sepia'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-md',
-      md: 'rounded-lg',
-      lg: 'rounded-2xl',
-      full: 'rounded-full'
-    }
-  
-    const shadows = {
-      none: 'shadow-none',
-      sm: 'shadow-xs',
-      md: 'shadow-md',
-      lg: 'shadow-lg',
-      xl: 'shadow-xl'
-    }
-  
-    const zoomed = zoomedWrapper
-      ? 'transition-transform duration-500 ease-in-out transform group-hover:scale-110'
-      : ''
-  
-    return (
-      <div className={\`relative\`}>
-        <div
-          className={\`overflow-hidden group \${roundeds[rounded]} \${shadows[shadow]} dark:shadow-neutral-100/20\`}
-        >
-          <img
-            src={imageSrc}
-            alt={alt}
-            className={\`object-cover \${filters[filter]} \${
-              filter !== 'blur' && zoomed
-            } \${roundeds[rounded]} \${
-              className === '' && 'w-full h-full'
-            } \${className}\`}
-          />
-  
-          {filter === 'blur' && (
-            <div className={\`absolute inset-0 flex items-center justify-center\`}>
-              <img
-                src={imageSrc}
-                alt={alt}
-                className={\`size-6/7 object-cover shadow-lg \${
-                  roundeds[rounded]
-                } \${filter === 'blur' && zoomed}\`}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    )
+  imageSrc,
+  alt = 'img preview',
+  zoomedWrapper,
+  filter,
+  rounded = 'md',
+  shadow = 'md',
+  className
+}) => {
+  const filters = {
+    none: '',
+    blur: 'blur-lg',
+    grayscale: 'grayscale',
+    sepia: 'sepia'
   }
-  
-  export default Image
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-md',
+    md: 'rounded-lg',
+    lg: 'rounded-2xl',
+    full: 'rounded-full'
+  }
+
+  const shadows = {
+    none: 'shadow-none',
+    sm: 'shadow-xs',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    xl: 'shadow-xl'
+  }
+
+  const zoomed = zoomedWrapper
+    ? 'transition-transform duration-500 ease-in-out transform group-hover:scale-110'
+    : ''
+
+  return (
+    <div className={\`relative\`} role='img' aria-label={alt}>
+      <div
+        className={\`overflow-hidden group \${roundeds[rounded]} \${shadows[shadow]} dark:shadow-neutral-100/20\`}
+      >
+        <img
+          src={imageSrc}
+          alt={alt}
+          className={\`object-cover \${filters[filter]} \${
+            filter !== 'blur' && zoomed
+          } \${roundeds[rounded]} \${
+            className === '' && 'w-full h-full'
+          } \${className}\`}
+        />
+
+        {filter === 'blur' && (
+          <div className={\`absolute inset-0 flex items-center justify-center\`}>
+            <img
+              src={imageSrc}
+              alt={alt}
+              className={\`size-6/7 object-cover shadow-lg \${
+                roundeds[rounded]
+              } \${filter === 'blur' && zoomed}\`}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default Image
+
   `
 
 export const LinkReact = `const Link = ({
-    variant = 'light',
-    color = 'default',
-    rounded = 'md',
-    isDisabled = false,
-    size = 'md',
-    underline = 'hover',
-    isExternal = false,
-    defaultIcon = false,
-    children,
-    href = '#'
-  }) => {
-    const variants = {
-      default: 'border-0 shadow-md backdrop-blur-sm px-3 py-1',
-      bordered: 'border shadow-lg px-3 py-1',
-      light: ''
-    }
-  
-    const colors = {
-      default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
-      primary: 'bg-blue-500/20 ',
-      secondary: 'bg-indigo-500/20 ',
-      success: 'bg-green-500/30 ',
-      warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
-      danger: 'bg-red-500/20 '
-    }
-  
-    const textColors = {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-800 dark:text-blue-600',
-      secondary: 'text-indigo-800 dark:text-indigo-600',
-      success: 'text-green-800 dark:text-green-600',
-      warning: 'text-yellow-800 dark:text-yellow-600',
-      danger: 'text-red-800 dark:text-red-500'
-    }
-  
-    const borderColors = {
-      default: 'border-gray-800 dark:border-gray-300',
-      primary: 'border-blue-800 dark:border-blue-500',
-      secondary: 'border-indigo-800 dark:border-indigo-500',
-      success: 'border-green-800 dark:border-green-500',
-      warning: 'border-yellow-800 dark:border-yellow-500',
-      danger: 'border-red-800 dark:border-red-500'
-    }
-  
-    const sizeStyles = {
-      sm: 'text-sm',
-      md: 'text-base',
-      lg: 'text-lg'
-    }
-  
-    const iconSizeStyles = {
-      sm: 'size-4',
-      md: 'size-5',
-      lg: 'size-6'
-    }
-  
-    const roundeds = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-md',
-      lg: 'rounded-lg',
-      full: 'rounded-full'
-    }
-  
-    const underlineStyles = {
-      none: 'no-underline',
-      hover: 'hover:underline',
-      always: 'underline',
-      active: 'active:underline'
-    }
-  
-    const disabledStyles = isDisabled
-      ? 'opacity-50 cursor-not-allowed pointer-events-none'
-      : ''
-  
-    const className = \`flex items-center justify-center text-center gap-2 transition-colors duration-200 \${
-      variants[variant]
-    } \${variant === 'default' && colors[color]} \${sizeStyles[size]} \${
-      textColors[color]
-    } \${variant === 'bordered' && borderColors[color]} \${
-      variant !== 'light' && roundeds[rounded]
-    } \${underlineStyles[underline]} \${disabledStyles}\`
-  
-    return (
-      <a
-        className={className}
-        target={\`\${isExternal ? '_blank' : ''}\`}
-        rel={\`\${isExternal ? 'noopener noreferrer' : ''}\`}
-        href={href}
-      >
-        {children}
-        {defaultIcon && (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            className={iconSizeStyles[size]}
-          >
-            <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-            <path d='M9 15l6 -6' />
-            <path d='M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464' />
-            <path d='M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463' />
-          </svg>
-        )}
-      </a>
-    )
+  variant = 'light',
+  color = 'default',
+  rounded = 'md',
+  isDisabled = false,
+  size = 'md',
+  underline = 'hover',
+  isExternal = false,
+  defaultIcon = false,
+  children,
+  href = '#',
+  ariaLabel = ''
+}) => {
+  const variants = {
+    default: 'border-0 shadow-md backdrop-blur-sm px-3 py-1',
+    bordered: 'border shadow-lg px-3 py-1',
+    light: ''
   }
-  
-  export default Link
+
+  const colors = {
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
+    primary: 'bg-blue-500/20 ',
+    secondary: 'bg-indigo-500/20 ',
+    success: 'bg-green-500/30 ',
+    warning: 'bg-yellow-500/40 dark:bg-yellow-500/20 ',
+    danger: 'bg-red-500/20 '
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-600',
+    secondary: 'text-indigo-800 dark:text-indigo-600',
+    success: 'text-green-800 dark:text-green-600',
+    warning: 'text-yellow-800 dark:text-yellow-600',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  const borderColors = {
+    default: 'border-gray-800 dark:border-gray-300',
+    primary: 'border-blue-800 dark:border-blue-500',
+    secondary: 'border-indigo-800 dark:border-indigo-500',
+    success: 'border-green-800 dark:border-green-500',
+    warning: 'border-yellow-800 dark:border-yellow-500',
+    danger: 'border-red-800 dark:border-red-500'
+  }
+
+  const sizeStyles = {
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg'
+  }
+
+  const iconSizeStyles = {
+    sm: 'size-4',
+    md: 'size-5',
+    lg: 'size-6'
+  }
+
+  const roundeds = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    full: 'rounded-full'
+  }
+
+  const underlineStyles = {
+    none: 'no-underline',
+    hover: 'hover:underline',
+    always: 'underline',
+    active: 'active:underline'
+  }
+
+  const disabledStyles = isDisabled
+    ? 'opacity-50 cursor-not-allowed pointer-events-none'
+    : ''
+
+  const className = \`flex items-center justify-center text-center gap-2 transition-colors duration-200 \${
+    variants[variant]
+  } \${variant === 'default' && colors[color]} \${sizeStyles[size]} \${
+    textColors[color]
+  } \${variant === 'bordered' && borderColors[color]} \${
+    variant !== 'light' && roundeds[rounded]
+  } \${underlineStyles[underline]} \${disabledStyles}\`
+
+  return (
+    <a
+      className={className}
+      target={\`\${isExternal ? '_blank' : ''}\`}
+      rel={\`\${isExternal ? 'noopener noreferrer' : ''}\`}
+      href={href}
+      aria-label={ariaLabel}
+    >
+      {children}
+      {defaultIcon && (
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='2'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          className={iconSizeStyles[size]}
+          aria-hidden='true'
+        >
+          <path stroke='none' d='M0 0h24v24H0z' fill='none' />
+          <path d='M9 15l6 -6' />
+          <path d='M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464' />
+          <path d='M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463' />
+        </svg>
+      )}
+    </a>
+  )
+}
+
+export default Link
+
   `
 
 export const SliderReact = `import { useState, useRef, useEffect } from 'react'
@@ -1875,6 +1969,24 @@ const Slider = ({
     document.removeEventListener('mouseup', handleThumbMouseUp)
     document.removeEventListener('touchmove', handleThumbDrag)
     document.removeEventListener('touchend', handleThumbMouseUp)
+  }
+
+  const handleKeyDown = (e) => {
+    if (disabled) return
+    let newValue = value
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'ArrowRight':
+        newValue = Math.min(value + step, max)
+        break
+      case 'ArrowDown':
+      case 'ArrowLeft':
+        newValue = Math.max(value - step, min)
+        break
+      default:
+        return
+    }
+    handleValueChange(newValue)
   }
 
   const calculatePercentage = () => {
@@ -2030,6 +2142,14 @@ const Slider = ({
             onMouseLeave={() => setThumbHovering(false)}
             onFocus={() => setThumbFocused(true)}
             onBlur={() => setThumbFocused(false)}
+            onKeyDown={handleKeyDown}
+            tabIndex={disabled ? -1 : 0}
+            role='slider'
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={value}
+            aria-orientation={orientation}
+            aria-disabled={disabled}
             data-dragging={isDragging}
             data-hover={thumbHovering}
             data-pressed={thumbPressed}
@@ -2045,77 +2165,84 @@ const Slider = ({
 }
 
 export default Slider
+
 `
 
 export const SpinnerReact = `const Spinner = ({
-    label,
-    variant = 'default',
-    size = 'md',
-    color = 'default',
-    textColor = 'default'
-  }) => {
-    const variants = {
-      default: 'backdrop-blur-sm shadow-lg',
-      light: ''
-    }
-  
-    const sizes = {
-      xs: 'size-4',
-      sm: 'size-6',
-      md: 'size-8',
-      lg: 'size-10',
-      xl: 'size-12'
-    }
-  
-    const firstCircleColors = {
-      default: 'border-zinc-500',
-      primary: 'border-blue-500',
-      secondary: 'border-indigo-500',
-      success: 'border-green-500',
-      warning: 'border-yellow-500',
-      danger: 'border-red-500'
-    }
-  
-    const secondCircleColors = {
-      default: 'border-zinc-400',
-      primary: 'border-blue-300',
-      secondary: 'border-indigo-300',
-      success: 'border-green-300',
-      warning: 'border-yellow-300',
-      danger: 'border-red-300'
-    }
-  
-    const textColors = {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-800 dark:text-blue-600',
-      secondary: 'text-indigo-800 dark:text-indigo-600',
-      success: 'text-green-800 dark:text-green-600',
-      warning: 'text-yellow-800 dark:text-yellow-600',
-      danger: 'text-red-800 dark:text-red-500'
-    }
-  
-    return (
-      <div className='flex flex-col items-center justify-center space-y-2'>
-        <div className='relative'>
-          <div
-            className={\`relative rounded-full \${variants[variant]} \${sizes[size]}\`}
-          >
-            <div
-              className={\`absolute w-full h-full rounded-full border-4 border-t-transparent border-r-transparent border-l-transparent \${firstCircleColors[color]} animate-spin\`}
-            ></div>
-            <div
-              className={\`absolute w-full h-full rounded-full border-4 border-t-transparent border-b-transparent border-l-transparent \${secondCircleColors[color]} animate-spin\`}
-            ></div>
-          </div>
-        </div>
-        {label && (
-          <span className={\`text-sm \${textColors[textColor]}\`}>{label}</span>
-        )}
-      </div>
-    )
+  label,
+  variant = 'default',
+  size = 'md',
+  color = 'default',
+  textColor = 'default'
+}) => {
+  const variants = {
+    default: 'backdrop-blur-sm shadow-lg',
+    light: ''
   }
-  
-  export default Spinner
+
+  const sizes = {
+    xs: 'size-4',
+    sm: 'size-6',
+    md: 'size-8',
+    lg: 'size-10',
+    xl: 'size-12'
+  }
+
+  const firstCircleColors = {
+    default: 'border-zinc-500',
+    primary: 'border-blue-500',
+    secondary: 'border-indigo-500',
+    success: 'border-green-500',
+    warning: 'border-yellow-500',
+    danger: 'border-red-500'
+  }
+
+  const secondCircleColors = {
+    default: 'border-zinc-400',
+    primary: 'border-blue-300',
+    secondary: 'border-indigo-300',
+    success: 'border-green-300',
+    warning: 'border-yellow-300',
+    danger: 'border-red-300'
+  }
+
+  const textColors = {
+    default: 'text-gray-800 dark:text-gray-300',
+    primary: 'text-blue-800 dark:text-blue-600',
+    secondary: 'text-indigo-800 dark:text-indigo-600',
+    success: 'text-green-800 dark:text-green-600',
+    warning: 'text-yellow-800 dark:text-yellow-600',
+    danger: 'text-red-800 dark:text-red-500'
+  }
+
+  return (
+    <div
+      className='flex flex-col items-center justify-center space-y-2'
+      role='status'
+      aria-live='polite'
+      aria-label={label || 'Loading'}
+    >
+      <div className='relative'>
+        <div
+          className={\`relative rounded-full \${variants[variant]} \${sizes[size]}\`}
+        >
+          <div
+            className={\`absolute w-full h-full rounded-full border-4 border-t-transparent border-r-transparent border-l-transparent \${firstCircleColors[color]} animate-spin\`}
+          ></div>
+          <div
+            className={\`absolute w-full h-full rounded-full border-4 border-t-transparent border-b-transparent border-l-transparent \${secondCircleColors[color]} animate-spin\`}
+          ></div>
+        </div>
+      </div>
+      {label && (
+        <span className={\`text-sm \${textColors[textColor]}\`}>{label}</span>
+      )}
+    </div>
+  )
+}
+
+export default Spinner
+
   `
 
 export const SwitchReact = `import { useState, useEffect } from 'react'
@@ -2131,7 +2258,8 @@ const Switch = ({
   color = 'default',
   textColor = 'default',
   rounded = 'full',
-  size = 'md'
+  size = 'md',
+  id
 }) => {
   const [isSelected, setIsSelected] = useState(initialSelected)
   const [isHovered, setIsHovered] = useState(false)
@@ -2159,6 +2287,13 @@ const Switch = ({
   const handleInputChange = (e) => {
     if (!isReadOnly && !isDisabled) {
       setIsSelected(e.target.checked)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (!isReadOnly && !isDisabled && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault()
+      setIsSelected(!isSelected)
     }
   }
 
@@ -2231,11 +2366,19 @@ const Switch = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleToggle}
+      onKeyDown={handleKeyDown}
+      role='switch'
+      aria-checked={isSelected}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : 0}
     >
       {label && (
-        <span className={\`\${textSizes[size]} \${textColors[textColor]}\`}>
+        <label
+          htmlFor={id}
+          className={\`\${textSizes[size]} \${textColors[textColor]}\`}
+        >
           {label}
-        </span>
+        </label>
       )}
       <div
         className={\`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors \${
@@ -2246,6 +2389,7 @@ const Switch = ({
       >
         <input
           type='checkbox'
+          id={id}
           className='hidden'
           checked={isSelected}
           onChange={handleInputChange}
@@ -2287,6 +2431,7 @@ const Switch = ({
 }
 
 export default Switch
+
 `
 
 export const TextareaReact = `import { useState } from 'react'
@@ -2313,6 +2458,8 @@ const Textarea = ({
 
     if (newValue === '' && isRequired) {
       setIsInvalid(true)
+    } else {
+      setIsInvalid(false)
     }
 
     if (externalOnChange) {
@@ -2382,6 +2529,7 @@ const Textarea = ({
       <div className='headerWrapper'>
         {label && (
           <label
+            htmlFor={props.id || 'textarea'}
             className={\`label text-sm font-medium \${textColors['default']}\`}
           >
             {label}
@@ -2392,13 +2540,21 @@ const Textarea = ({
 
       <div className='inputWrapper'>
         <textarea
+          id={props.id || 'textarea'}
           className={inputClasses}
+          role='textbox'
           aria-invalid={isInvalid}
           aria-required={isRequired}
           aria-readonly={isReadOnly}
           aria-disabled={isDisabled}
-          aria-describedby={description ? 'description' : undefined}
-          aria-errormessage={errorMessage ? 'errorMessage' : undefined}
+          aria-describedby={
+            description ? \`\${props.id || 'textarea'}-description\` : undefined
+          }
+          aria-errormessage={
+            isInvalid && errorMessage
+              ? \`\${props.id || 'textarea'}-errorMessage\`
+              : undefined
+          }
           disabled={isDisabled}
           readOnly={isReadOnly}
           value={value}
@@ -2412,7 +2568,7 @@ const Textarea = ({
 
       {description && (
         <div
-          id='description'
+          id={\`\${props.id || 'textarea'}-description\`}
           className={\`description text-sm \${textColors['default']}\`}
         >
           {description}
@@ -2421,8 +2577,9 @@ const Textarea = ({
 
       {isInvalid && errorMessage && (
         <div
-          id='errorMessage'
+          id={\`\${props.id || 'textarea'}-errorMessage\`}
           className={\`errorMessage text-sm \${textColors['danger']}\`}
+          aria-live='assertive'
         >
           {errorMessage}
         </div>
@@ -2432,6 +2589,7 @@ const Textarea = ({
 }
 
 export default Textarea
+
 `
 
 export const TooltipReact = `import { useState, useEffect } from 'react'
@@ -2507,6 +2665,7 @@ const Tooltip = ({
           data-open={isOpen}
           data-placement={placement}
           data-disabled={isDisabled}
+          aria-hidden={!isOpen}
           className={\`absolute z-50 border-0 shadow-md backdrop-blur-sm \${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
           \${roundeds[rounded]}
           \${textColors[color]}
@@ -2522,6 +2681,7 @@ const Tooltip = ({
 }
 
 export default Tooltip
+
 `
 
 export const UserReact = `import Avatar from '@/components/react/Avatar'
@@ -2594,17 +2754,20 @@ const User = ({
   return (
     <div
       className={\`base flex items-center \${variants[variant]} 
-        \${sizes[size]} 
+        \{sizes[size]} 
         \${roundeds[rounded]} 
         \${textColors[color]}
         \${variant === 'default' && colors[color]}
         \${textSizes[size]}
       \`}
+      role='group'
+      aria-labelledby='user-name'
+      aria-describedby='user-description'
     >
       <Avatar
         src={avatarSrc}
         name={name}
-        alt={avatarAlt}
+        alt={avatarAlt || \`Avatar of \${name}\`}
         size={avatarSize}
         rounded={avatarRounded}
         bordered={avatarBordered}
@@ -2614,14 +2777,23 @@ const User = ({
         dotPosition={avatarDotPosition}
       />
       <div className='wrapper'>
-        <div className={\`font-semibold\`}>{name}</div>
-        <div className={\`font-normal\`}>{description}</div>
+        <div id='user-name' className={\`font-semibold\`} aria-label='User name'>
+          {name}
+        </div>
+        <div
+          id='user-description'
+          className={\`font-normal\`}
+          aria-label='User description'
+        >
+          {description}
+        </div>
       </div>
     </div>
   )
 }
 
 export default User
+
 `
 
 export const CardReact = `const Card = ({
@@ -2636,7 +2808,8 @@ export const CardReact = `const Card = ({
   maxWidth = 'sm',
   padding = 'none',
   height = 'auto',
-  className = ''
+  className = '',
+  ariaLabel = ''
 }) => {
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
@@ -2725,6 +2898,9 @@ export const CardReact = `const Card = ({
   return (
     <Component
       href={isLink ? href : undefined}
+      role={isLink ? 'link' : 'region'}
+      aria-label={ariaLabel || (isLink ? 'Link card' : 'Card')}
+      tabIndex={isLink ? 0 : undefined}
       className={\` 
           w-full overflow-hidden backdrop-blur-sm
           \${heights[height]}
@@ -2753,6 +2929,7 @@ export const CardReact = `const Card = ({
 }
 
 export default Card
+
 `
 
 export const CardContentReact = `const CardContent = ({
@@ -2762,7 +2939,9 @@ export const CardContentReact = `const CardContent = ({
   textSize = 'sm',
   textAlign = 'left',
   padding = 'md',
-  className = ''
+  className = '',
+  role = 'region',
+  ariaLabel = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700/80 dark:text-neutral-100/70',
@@ -2808,6 +2987,8 @@ export const CardContentReact = `const CardContent = ({
 
   return (
     <div
+      role={role}
+      aria-label={ariaLabel}
       className={\`
         \${textColors[textColor]} 
         \${fonts[font]} 
@@ -2822,6 +3003,7 @@ export const CardContentReact = `const CardContent = ({
 }
 
 export default CardContent
+
 `
 
 export const CardHeaderReact = `const CardHeader = ({
@@ -2834,7 +3016,9 @@ export const CardHeaderReact = `const CardHeader = ({
   padding = 'md',
   isLink = false,
   href = '#',
-  className = ''
+  className = '',
+  ariaLabel = '',
+  role = ''
 }) => {
   const textColors = {
     default: 'text-zinc-700 dark:text-neutral-100/80',
@@ -2892,6 +3076,8 @@ export const CardHeaderReact = `const CardHeader = ({
   return (
     <Component
       href={isLink ? href : undefined}
+      aria-label={ariaLabel}
+      role={role}
       className={\`
         \${textColors[textColor]} 
         \${textHoverColor && textHoverColors[textHoverColor]} 
@@ -2907,6 +3093,7 @@ export const CardHeaderReact = `const CardHeader = ({
 }
 
 export default CardHeader
+
 `
 
 export const CustomCardReact = `import Card from '@/components/react/Card/Card'
@@ -2935,6 +3122,7 @@ const CustomCard = ({ title, description, imageUrl, actions }) => {
 }
 
 export default CustomCard
+
 `
 
 export const DrawerReact = `import { useEffect, useRef } from 'react'
@@ -2947,9 +3135,12 @@ const Drawer = ({
   effect = 'opaque',
   size = 'md',
   color = 'default',
-  children
+  children,
+  labelledBy,
+  describedBy
 }) => {
   const drawerRef = useRef(null)
+  const lastFocusedElement = useRef(null)
 
   const colors = {
     default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
@@ -3035,16 +3226,25 @@ const Drawer = ({
 
   useEffect(() => {
     if (isOpen) {
+      lastFocusedElement.current = document.activeElement
+      drawerRef.current?.focus()
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
+      lastFocusedElement.current?.focus()
     }
   }, [isOpen])
 
   if (!isOpen) return null
 
   return (
-    <div className={\`fixed inset-0 z-50 \${textColors[color]}\`}>
+    <div
+      className={\`fixed inset-0 z-50 \${textColors[color]}\`}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
+    >
       <div
         className={\`fixed inset-0 \${backdropEffects[effect]}\`}
         aria-hidden='true'
@@ -3062,16 +3262,21 @@ const Drawer = ({
 }
 
 export default Drawer
+
 `
 
 export const DrawerHeaderReact = `const DrawerHeader = ({ children, closeDrawer }) => (
-  <div className='flex-shrink-0 flex items-center justify-between p-2'>
+  <div
+    className='flex-shrink-0 flex items-center justify-between p-2'
+    role='banner'
+  >
     <div>{children}</div>
     {closeDrawer && (
       <button
         onClick={closeDrawer}
         className='p-2 transition duration-300 ease-in-out hover:text-red-700'
-        aria-label='Close'
+        aria-label='Close Drawer'
+        title='Close Drawer'
       >
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -3080,6 +3285,8 @@ export const DrawerHeaderReact = `const DrawerHeader = ({ children, closeDrawer 
           viewBox='0 0 24 24'
           fill='currentColor'
           className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+          role='img'
+          aria-hidden='true'
         >
           <path stroke='none' d='M0 0h24v24H0z' fill='none' />
           <path
@@ -3094,20 +3301,35 @@ export const DrawerHeaderReact = `const DrawerHeader = ({ children, closeDrawer 
 )
 
 export default DrawerHeader
+
 `
 
 export const DrawerBodyReact = `const DrawerBody = ({ children }) => (
-  <div className='flex-1 overflow-y-auto p-2'>{children}</div>
+  <div
+    className='flex-1 overflow-y-auto p-2'
+    role='region'
+    aria-label='Drawer Content'
+  >
+    {children}
+  </div>
 )
 
 export default DrawerBody
+
 `
 
 export const DrawerContentReact = `const DrawerContent = ({ children }) => (
-  <div className='flex-1 flex flex-col overflow-hidden'>{children}</div>
+  <div
+    className='flex-1 flex flex-col overflow-hidden'
+    role='region'
+    aria-label='Drawer Content'
+  >
+    {children}
+  </div>
 )
 
 export default DrawerContent
+
 `
 
 export const CustomDrawerReact = `import { useState } from 'react'
@@ -3160,13 +3382,21 @@ const CustomDrawer = ({
 }
 
 export default CustomDrawer
+
 `
 
 export const DrawerFooterReact = `const DrawerFooter = ({ children }) => (
-  <div className='flex-shrink-0 p-2'>{children}</div>
+  <div
+    className='flex-shrink-0 p-2'
+    role='contentinfo'
+    aria-label='Drawer Footer'
+  >
+    {children}
+  </div>
 )
 
 export default DrawerFooter
+
 `
 
 export const DropdownReact = `import { createContext, useContext, useState } from 'react'
@@ -3182,7 +3412,13 @@ const Dropdown = ({ children, ...props }) => {
 
   return (
     <DropdownContext.Provider value={{ isOpen, toggleDropdown }}>
-      <div className='relative inline-block' {...props}>
+      <div
+        className='relative inline-block'
+        {...props}
+        role='menu'
+        aria-expanded={isOpen}
+        aria-haspopup='true'
+      >
         {children}
       </div>
     </DropdownContext.Provider>
@@ -3198,6 +3434,7 @@ export const useDropdown = () => {
 }
 
 export default Dropdown
+
 `
 
 export const DropdownItemReact = `const DropdownItem = ({
@@ -3280,6 +3517,10 @@ export const DropdownItemReact = `const DropdownItem = ({
         !disabled && hoverColors[color]
       } \${selected && selectedColors[color]}\`}
       onClick={onClick}
+      disabled={disabled}
+      aria-pressed={selected}
+      aria-disabled={disabled}
+      aria-label={title}
       {...props}
     >
       <div className='flex flex-col text-left'>
@@ -3292,15 +3533,17 @@ export const DropdownItemReact = `const DropdownItem = ({
 }
 
 export default DropdownItem
+
 `
 
-export const DropdownMenuReact = `import { useDropdown } from './Dropdown'
+export const DropdownMenuReact = `import { useDropdown } from '@/components/react/Dropdown/Dropdown'
 
 const DropdownMenu = ({
   children,
   variant = 'default',
   color = 'default',
   rounded = 'md',
+  id = 'dropdown-menu',
   ...props
 }) => {
   const variants = {
@@ -3338,6 +3581,9 @@ const DropdownMenu = ({
 
   return (
     <div
+      id={id}
+      role='menu'
+      aria-hidden={!isOpen}
       className={\`origin-top-right flex flex-col right-0 mt-2 w-full \${
         isOpen ? 'block' : 'hidden'
       }
@@ -3354,6 +3600,7 @@ const DropdownMenu = ({
 }
 
 export default DropdownMenu
+
 `
 
 export const DropdownSectionReact = `const DropdownSection = ({
@@ -3423,7 +3670,12 @@ export const DropdownSectionReact = `const DropdownSection = ({
   }
 
   return (
-    <div className='flex flex-col' {...props}>
+    <div
+      className='flex flex-col'
+      {...props}
+      role='region'
+      aria-label={heading || 'Dropdown Section'}
+    >
       {heading && (
         <h3
           className={\`px-4 \${variants[variant]} \${
@@ -3437,16 +3689,20 @@ export const DropdownSectionReact = `const DropdownSection = ({
       )}
       {children}
       {showDivider && (
-        <div className={\`my-2 h-px \${dividerColors[color]}\`}></div>
+        <div
+          className={\`my-2 h-px \${dividerColors[color]}\`}
+          role='separator'
+        ></div>
       )}
     </div>
   )
 }
 
 export default DropdownSection
+
 `
 
-export const DropdownTriggerReact = `import { useDropdown } from './Dropdown'
+export const DropdownTriggerReact = `import { useDropdown } from '@/components/react/Dropdown/Dropdown'
 
 const DropdownTrigger = ({
   children,
@@ -3512,7 +3768,7 @@ const DropdownTrigger = ({
     full: 'rounded-full'
   }
 
-  const { toggleDropdown } = useDropdown()
+  const { toggleDropdown, isOpen } = useDropdown()
 
   return (
     <button
@@ -3526,6 +3782,9 @@ const DropdownTrigger = ({
         \${hoverColors[color]}
       \`}
       onClick={toggleDropdown}
+      aria-haspopup='menu'
+      aria-expanded={isOpen}
+      role='button'
       {...props}
     >
       {children}
@@ -3534,6 +3793,7 @@ const DropdownTrigger = ({
 }
 
 export default DropdownTrigger
+
 `
 
 export const InputReact = `const Input = ({
@@ -3555,7 +3815,8 @@ export const InputReact = `const Input = ({
   variant = 'default',
   color = 'default',
   rounded = 'md',
-  size = 'md'
+  size = 'md',
+  id
 }) => {
   const handleClear = () => {
     onValueChange('')
@@ -3611,7 +3872,7 @@ export const InputReact = `const Input = ({
   return (
     <div className={\`flex flex-col space-y-2 \${textColors[color]}\`}>
       {label && (
-        <label className='text-sm font-medium'>
+        <label htmlFor={id} className='text-sm font-medium'>
           {label}
           {isRequired && <span className='text-red-500'> *</span>}
         </label>
@@ -3625,6 +3886,7 @@ export const InputReact = `const Input = ({
         >
           <div className='flex-1 relative'>
             <input
+              id={id}
               type={type}
               value={value}
               onChange={(e) => onValueChange(e.target.value)}
@@ -3635,6 +3897,8 @@ export const InputReact = `const Input = ({
               readOnly={isReadOnly}
               disabled={isDisabled}
               placeholder={placeholder}
+              aria-invalid={isInvalid}
+              aria-describedby={description ? \`\${id}-description\` : undefined}
               className={\`w-full focus:outline-none \${
                 variant === 'light' && 'border-b-2'
               }  \${isInvalid && 'border-2 border-red-500'} \${
@@ -3647,6 +3911,7 @@ export const InputReact = `const Input = ({
                 type='button'
                 onClick={handleClear}
                 className='absolute inset-y-0 right-0 pr-3 flex items-center'
+                aria-label='Clear input'
               >
                 <span className='text-gray-500 hover:text-gray-700'>
                   <svg
@@ -3672,7 +3937,11 @@ export const InputReact = `const Input = ({
       </div>
 
       <div className='text-sm'>
-        {description && <p className='font-normal'>{description}</p>}
+        {description && (
+          <p id={\`\${id}-description\`} className='font-normal'>
+            {description}
+          </p>
+        )}
         {isInvalid && errorMessage && (
           <p className='text-red-500'>{errorMessage}</p>
         )}
@@ -3682,6 +3951,7 @@ export const InputReact = `const Input = ({
 }
 
 export default Input
+
 `
 
 export const CustomInputReact = `import { useState } from 'react'
@@ -3743,6 +4013,7 @@ const CustomInput = ({
 }
 
 export default CustomInput
+
 `
 
 export const ModalReact = `import { useEffect, useRef } from 'react'
@@ -3776,15 +4047,45 @@ const Modal = ({
       }
     }
 
+    const trapFocus = (event) => {
+      if (isOpen && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (event.key === 'Tab') {
+          if (event.shiftKey) {
+            if (document.activeElement === firstElement) {
+              event.preventDefault()
+              lastElement.focus()
+            }
+          } else {
+            if (document.activeElement === lastElement) {
+              event.preventDefault()
+              firstElement.focus()
+            }
+          }
+        }
+      }
+    }
+
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', trapFocus)
       document.body.style.overflow = 'hidden'
+
+      if (modalRef.current) {
+        modalRef.current.focus()
+      }
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', trapFocus)
       document.body.style.overflow = 'auto'
     }
   }, [isOpen, isDismissable, onClose])
@@ -3825,9 +4126,14 @@ const Modal = ({
   return (
     <div
       className={\`fixed inset-0 z-50 flex items-center justify-center \${backdropEffects[effect]}\`}
+      role='dialog'
+      aria-modal='true'
+      aria-labelledby='modal-title'
+      aria-describedby='modal-description'
     >
       <div
         ref={modalRef}
+        tabIndex='-1'
         className={\`\${colors[color]} \${roundeds[rounded]} shadow-lg w-full \${
           sizes[size]
         } border-0 backdrop-blur-sm \${
@@ -3841,17 +4147,21 @@ const Modal = ({
 }
 
 export default Modal
+
 `
 
 export const ModalHeaderReact = `const ModalHeader = ({ children, onClose }) => {
   return (
     <div className='flex justify-between items-center pb-4 mb-4'>
-      <h3 className='text-lg font-semibold'>{children}</h3>
+      <h3 className='text-lg font-semibold' id='modal-header-title'>
+        {children}
+      </h3>
       {onClose && (
         <button
           onClick={onClose}
           className='p-2 transition duration-300 ease-in-out hover:text-red-700'
           aria-label='Close'
+          aria-labelledby='modal-header-title'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -3860,6 +4170,8 @@ export const ModalHeaderReact = `const ModalHeader = ({ children, onClose }) => 
             viewBox='0 0 24 24'
             fill='currentColor'
             className='icon icon-tabler icons-tabler-filled icon-tabler-square-rounded-x'
+            role='img'
+            aria-hidden='true'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path
@@ -3875,27 +4187,47 @@ export const ModalHeaderReact = `const ModalHeader = ({ children, onClose }) => 
 }
 
 export default ModalHeader
+
 `
 
 export const ModalBodyReact = `const ModalBody = ({ children }) => {
-  return <div className='mb-4'>{children}</div>
+  return (
+    <div className='mb-4' role='region' aria-label='Modal Content'>
+      {children}
+    </div>
+  )
 }
 
 export default ModalBody
+
 `
 
 export const ModalContentReact = `const ModalContent = ({ children }) => {
-  return <div className='p-6'>{children}</div>
+  return (
+    <div className='p-6' role='dialog' aria-modal='true'>
+      {children}
+    </div>
+  )
 }
 
 export default ModalContent
+
 `
 
 export const ModalFooterReact = `const ModalFooter = ({ children }) => {
-  return <div className='flex justify-end space-x-2'>{children}</div>
+  return (
+    <div
+      className='flex justify-end space-x-2'
+      role='contentinfo'
+      aria-label='Modal Footer'
+    >
+      {children}
+    </div>
+  )
 }
 
 export default ModalFooter
+
 `
 
 export const PopoverReact = `import { useState, useRef, useEffect, Children, cloneElement } from 'react'
@@ -3936,7 +4268,7 @@ const Popover = ({
   }, [])
 
   return (
-    <div className='relative' ref={popoverRef}>
+    <div className='relative' ref={popoverRef} role='dialog'>
       {Children.map(children, (child) => {
         if (child.type === PopoverTrigger) {
           return cloneElement(child, {
@@ -3960,12 +4292,16 @@ const Popover = ({
 }
 
 export default Popover
+
 `
 
 export const PopoverContentReact = `import { forwardRef } from 'react'
 
 const PopoverContent = forwardRef(
-  ({ children, isOpen, backdrop, placement, color, rounded }, ref) => {
+  (
+    { children, isOpen, backdrop, placement, color, rounded, ariaLabel },
+    ref
+  ) => {
     if (!isOpen) return null
 
     const backdropClass = {
@@ -3991,19 +4327,23 @@ const PopoverContent = forwardRef(
 
     const colors = {
       default: 'bg-neutral-100/80 dark:bg-zinc-800/80 dark:shadow-zinc-700/10',
-      primary: 'bg-blue-500/80 ',
-      secondary: 'bg-indigo-500/80 ',
-      success: 'bg-green-500/80 dark:bg-green-600/80 ',
-      warning: 'bg-yellow-500/80 ',
-      danger: 'bg-red-500/80 '
+      primary: 'bg-blue-500/80',
+      secondary: 'bg-indigo-500/80',
+      success: 'bg-green-500/80 dark:bg-green-600/80',
+      warning: 'bg-yellow-500/80',
+      danger: 'bg-red-500/80'
     }
 
     return (
       <>
-        <div className={\`fixed inset-0 \${backdropClass[backdrop]}\`}></div>
+        <div
+          className={\`fixed inset-0 \${backdropClass[backdrop]}\`}
+          aria-hidden='true'
+        ></div>
         <div
           className={\`absolute z-10 \${placementStyles[placement]}\`}
           ref={ref}
+          role='dialog'
         >
           <div
             className={\`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 \${colors[color]} \${roundeds[rounded]}\`}
@@ -4017,17 +4357,30 @@ const PopoverContent = forwardRef(
 )
 
 export default PopoverContent
+
 `
 
-export const PopoverTriggerReact = `const PopoverTrigger = ({ children, onClick }) => {
+export const PopoverTriggerReact = `const PopoverTrigger = ({ children, onClick, ariaLabel }) => {
   return (
-    <div className='cursor-pointer' onClick={onClick}>
+    <div
+      className='cursor-pointer'
+      onClick={onClick}
+      role='button'
+      tabIndex={0}
+      aria-label={ariaLabel}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onClick?.(e)
+        }
+      }}
+    >
       {children}
     </div>
   )
 }
 
 export default PopoverTrigger
+
 `
 
 export const RadioReact = `import { useState } from 'react'
@@ -4071,6 +4424,13 @@ const Radio = ({
     setIsHovered(false)
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleChange()
+    }
+  }
+
   const colors = {
     default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
     primary: 'bg-blue-500/50 ',
@@ -4082,6 +4442,10 @@ const Radio = ({
 
   return (
     <div
+      role='radio'
+      aria-checked={isSelected}
+      aria-disabled={isDisabled}
+      tabIndex={isDisabled ? -1 : 0}
       data-selected={isSelected}
       data-pressed={isPressed}
       data-readonly={isReadOnly}
@@ -4093,6 +4457,7 @@ const Radio = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleChange}
+      onKeyDown={handleKeyDown}
       className={\`flex items-center gap-2 \${
         isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }\`}
@@ -4130,9 +4495,10 @@ const Radio = ({
 }
 
 export default Radio
+
 `
 
-export const RadioGroupReact = `import React from 'react'
+export const RadioGroupReact = `import { Children, cloneElement } from 'react'
 
 const RadioGroup = ({
   children,
@@ -4146,7 +4512,8 @@ const RadioGroup = ({
   onChange,
   variant = 'default',
   color = 'default',
-  rounded = 'md'
+  rounded = 'md',
+  id
 }) => {
   const variants = {
     default: 'border-0 backdrop-blur-sm shadow-md',
@@ -4196,9 +4563,16 @@ const RadioGroup = ({
       } \${roundeds[rounded]} \${variant === 'bordered' && borderColors[color]}\`}
       data-orientation={orientation}
       role='radiogroup'
+      aria-labelledby={label ? \`\${id}-label\` : undefined}
+      aria-describedby={description ? \`\${id}-description\` : undefined}
+      aria-invalid={isInvalid || undefined}
+      aria-disabled={isDisabled || undefined}
     >
       {label && (
-        <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+        <span
+          id={\`\${id}-label\`}
+          className='text-sm font-medium text-gray-600 dark:text-gray-400'
+        >
           {label}
         </span>
       )}
@@ -4208,8 +4582,8 @@ const RadioGroup = ({
           orientation === 'horizontal' ? 'flex-row gap-4' : 'flex-col gap-2'
         } \${textColors[color]}\`}
       >
-        {React.Children.map(children, (child) =>
-          React.cloneElement(child, {
+        {Children.map(children, (child) =>
+          cloneElement(child, {
             isSelected: child.props.value === selectedValue,
             onChange: onChange,
             color: color,
@@ -4218,7 +4592,11 @@ const RadioGroup = ({
         )}
       </div>
 
-      {description && <p className='text-sm text-gray-500'>{description}</p>}
+      {description && (
+        <p id={\`\${id}-description\`} className='text-sm text-gray-500'>
+          {description}
+        </p>
+      )}
 
       {isInvalid && errorMessage && (
         <p className='text-sm text-red-600'>{errorMessage}</p>
@@ -4228,6 +4606,7 @@ const RadioGroup = ({
 }
 
 export default RadioGroup
+
 `
 
 export const SelectReact = `import { useState, useRef, Children, cloneElement } from 'react'
@@ -4312,10 +4691,20 @@ const Select = ({
       data-invalid={isInvalid}
     >
       {label && (
-        <label className='block text-sm font-medium mb-1'>{label}</label>
+        <label
+          htmlFor='select-trigger'
+          className='block text-sm font-medium mb-1'
+        >
+          {label}
+        </label>
       )}
 
       <div
+        id='select-trigger'
+        role='button'
+        aria-haspopup='listbox'
+        aria-expanded={isOpen}
+        aria-disabled={isDisabled}
         className={\`trigger flex items-center justify-between p-2 \${
           variants[variant]
         } \${variant === 'default' && colors[color]} \${textColors[color]} \${
@@ -4328,7 +4717,7 @@ const Select = ({
           {selectedValue ? selectedLabel : placeholder}
         </div>
 
-        <div className='selector-icon' data-open={isOpen}>
+        <div className='selector-icon' data-open={isOpen} aria-hidden='true'>
           <svg
             className={\`w-4 h-4 transition-transform \${
               isOpen ? 'rotate-180' : ''
@@ -4351,7 +4740,11 @@ const Select = ({
         <div
           className={\`listbox-wrapper absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 \${colors[color]}\`}
         >
-          <ul className='listbox'>
+          <ul
+            className='listbox'
+            role='listbox'
+            aria-labelledby='select-trigger'
+          >
             {Children.map(children, (child) =>
               cloneElement(child, {
                 onSelect: handleSelect,
@@ -4366,13 +4759,16 @@ const Select = ({
       {description && <p className='text-sm mt-1'>{description}</p>}
 
       {isInvalid && errorMessage && (
-        <p className='text-sm text-red-500 mt-1'>{errorMessage}</p>
+        <p className='text-sm text-red-500 mt-1' role='alert'>
+          {errorMessage}
+        </p>
       )}
     </div>
   )
 }
 
 export default Select
+
 `
 
 export const SelectItemReact = `import { useState } from 'react'
@@ -4420,6 +4816,9 @@ const SelectItem = ({
       data-selected={isSelected}
       data-hover={isHovered}
       data-pressed={isPressed}
+      role='option'
+      aria-selected={isSelected}
+      aria-disabled={isDisabled}
     >
       {children}
     </li>
@@ -4427,6 +4826,7 @@ const SelectItem = ({
 }
 
 export default SelectItem
+
 `
 
 export const SkeletonReact = `const Skeleton = ({ isLoaded, children, className }) => {
@@ -4436,9 +4836,15 @@ export const SkeletonReact = `const Skeleton = ({ isLoaded, children, className 
         isLoaded ? '' : \`backdrop-blur-sm shadow-lg animate-pulse \${className}\`
       }\`}
       data-loaded={isLoaded}
+      role='status'
+      aria-busy={!isLoaded}
+      aria-live='polite'
     >
       {!isLoaded && (
-        <div className='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse' />
+        <div
+          className='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse'
+          aria-hidden='true'
+        />
       )}
       <div className={isLoaded ? '' : 'opacity-0'}>{children}</div>
     </div>
@@ -4446,16 +4852,27 @@ export const SkeletonReact = `const Skeleton = ({ isLoaded, children, className 
 }
 
 export default Skeleton
+
 `
 
 export const TabReact = `const Tab = ({ label, children, disabled = false, href }) => {
-  return <div>{children}</div>
+  return (
+    <div
+      role='tab'
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
+      aria-label={label}
+    >
+      {children}
+    </div>
+  )
 }
 
 export default Tab
+
 `
 
-export const TabsReact = `import { useState, Children } from 'react'
+export const TabsReact = `import { useState, Children, useRef } from 'react'
 
 const Tabs = ({
   children,
@@ -4468,6 +4885,7 @@ const Tabs = ({
   disabled = false
 }) => {
   const [activeTab, setActiveTab] = useState(0)
+  const tabsRef = useRef([])
 
   const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row'
 
@@ -4550,8 +4968,23 @@ const Tabs = ({
     full: 'rounded-full'
   }
 
+  const handleKeyDown = (event, index) => {
+    if (disabled) return
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      const nextIndex = (index + 1) % children.length
+      setActiveTab(nextIndex)
+      tabsRef.current[nextIndex]?.focus()
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      const prevIndex = (index - 1 + children.length) % children.length
+      setActiveTab(prevIndex)
+      tabsRef.current[prevIndex]?.focus()
+    }
+  }
+
   return (
     <div className={\`flex \${placementClass}\`}>
+      {/* Botones de las pestañas */}
       <div
         className={\`flex \${orientationClass} \${variants[variant]} \${
           variant === 'default' && colors[color]
@@ -4559,6 +4992,8 @@ const Tabs = ({
         \${sizes[size]}
         \${variant !== 'light' && roundeds[radius]}
         \`}
+        role='tablist'
+        aria-orientation={orientation}
       >
         {Children.map(children, (child, index) => {
           const isDisabled = child.props.disabled
@@ -4567,7 +5002,9 @@ const Tabs = ({
           return (
             <button
               key={index}
+              ref={(el) => (tabsRef.current[index] = el)}
               onClick={() => !isDisabled && !disabled && setActiveTab(index)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
               className={\`px-4 py-2 transition-colors duration-300 ease-in-out \${
                 activeTab === index
                   ? \`\${activeVariants[variant]} \${borderColors[color]} \${
@@ -4580,6 +5017,9 @@ const Tabs = ({
                   : hoverColors[color]
               }\`}
               disabled={isDisabled}
+              role='tab'
+              aria-selected={activeTab === index}
+              aria-controls={\`tabpanel-\${index}\`}
             >
               {isLink ? (
                 <a
@@ -4598,16 +5038,25 @@ const Tabs = ({
         })}
       </div>
 
+      {/* Contenido de las pestañas */}
       <div className={\`p-4 \${textColors[color]}\`}>
-        {Children.map(children, (child, index) =>
-          activeTab === index ? child.props.children : null
-        )}
+        {Children.map(children, (child, index) => (
+          <div
+            id={\`tabpanel-\${index}\`}
+            role='tabpanel'
+            hidden={activeTab !== index}
+            aria-labelledby={\`tab-\${index}\`}
+          >
+            {activeTab === index ? child.props.children : null}
+          </div>
+        ))}
       </div>
     </div>
   )
 }
 
 export default Tabs
+
 `
 
 export const TableReact = `const Table = ({
@@ -4662,8 +5111,13 @@ export const TableReact = `const Table = ({
       className={\`w-full overflow-auto \${variants[variant]} \${
         roundeds[rounded]
       } \${textColors[color]} \${variant === 'bordered' && borderColors[color]}\`}
+      role='region'
+      aria-label='Data Table'
     >
-      <table className={\`w-full \${variant === 'default' && colors[color]}\`}>
+      <table
+        className={\`w-full \${variant === 'default' && colors[color]}\`}
+        role='table'
+      >
         {children}
       </table>
     </div>
@@ -4671,6 +5125,7 @@ export const TableReact = `const Table = ({
 }
 
 export default Table
+
 `
 
 export const TableBodyReact = `const TableBody = ({
@@ -4693,7 +5148,7 @@ export const TableBodyReact = `const TableBody = ({
 
   if (isLoading) {
     return (
-      <tbody>
+      <tbody aria-busy='true'>
         <tr>
           <td colSpan='100%' className='py-6 text-center'>
             {loadingContent}
@@ -4707,7 +5162,12 @@ export const TableBodyReact = `const TableBody = ({
     return (
       <tbody>
         <tr>
-          <td colSpan='100%' className='py-6 text-center'>
+          <td
+            colSpan='100%'
+            className='py-6 text-center'
+            role='alert'
+            aria-live='polite'
+          >
             {emptyMessage}
           </td>
         </tr>
@@ -4716,20 +5176,27 @@ export const TableBodyReact = `const TableBody = ({
   }
 
   return (
-    <tbody className={\` \${divide && \`divide-y \${divideColors[color]}\`}\`}>
+    <tbody
+      className={\` \${divide && \`divide-y \${divideColors[color]}\`}\`}
+      role='rowgroup'
+    >
       {children}
     </tbody>
   )
 }
 
 export default TableBody
+
 `
 
 export const TableCellReact = `const TableCell = ({
   isSelected,
   isFocusVisible,
   selectColor = 'default',
-  children
+  children,
+  role = 'cell',
+  tabIndex = 0,
+  ariaSelected
 }) => {
   const selectedColors = {
     default: 'bg-neutral-100/70 dark:bg-zinc-700/80 ',
@@ -4741,6 +5208,9 @@ export const TableCellReact = `const TableCell = ({
   }
   return (
     <td
+      role={role}
+      tabIndex={tabIndex}
+      aria-selected={ariaSelected}
       className={\`
           px-6 py-4 whitespace-nowrap text-sm
           \${isSelected ? selectedColors[selectColor] : ''}
@@ -4753,6 +5223,7 @@ export const TableCellReact = `const TableCell = ({
 }
 
 export default TableCell
+
 `
 
 export const TableHeaderReact = `const TableHeader = ({ children, color = 'default' }) => {
@@ -4766,13 +5237,17 @@ export const TableHeaderReact = `const TableHeader = ({ children, color = 'defau
   }
 
   return (
-    <thead className={\`border-0 backdrop-blur-md shadow-md \${colors[color]}\`}>
+    <thead
+      className={\`border-0 backdrop-blur-md shadow-md \${colors[color]}\`}
+      role='rowgroup'
+    >
       <tr>{children}</tr>
     </thead>
   )
 }
 
 export default TableHeader
+
 `
 
 export const TableRowReact = `const TableRow = ({
@@ -4819,6 +5294,9 @@ export const TableRowReact = `const TableRow = ({
   return (
     <tr
       key={id}
+      role='row'
+      aria-selected={isSelected}
+      tabIndex={isDisabled ? -1 : 0}
       className={\`
           \${isSelected ? selectedColors[selectedColor] : ''}
           \${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}
@@ -4836,15 +5314,21 @@ export const TableRowReact = `const TableRow = ({
 }
 
 export default TableRow
+
 `
 
 export const TableColumnReact = `const TableColumn = ({ children }) => {
   return (
-    <th className='px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider'>
+    <th
+      className='px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider'
+      scope='col'
+      role='columnheader'
+    >
       {children}
     </th>
   )
 }
 
 export default TableColumn
+
 `
