@@ -11,15 +11,32 @@ import TailwindCSSIcon from '@/components/Icons/TailwindCSSIcon.astro'
   >
     Novedades de <span
       class='text-transparent bg-clip-text bg-gradient-to-r to-cyan-600 from-cyan-400'
-      >MictlanUI v0.0.2</span
+      >MictlanUI v0.0.3</span
     >
   </h2>
 </div>
 
 <div
-  class='grid grid-cols-[1fr] grid-rows-[repeat(3,1fr)] md:grid-cols-[repeat(3,1fr)] md:grid-rows-[repeat(2,1fr)] gap-4 justify-center content-center'
+  class='grid grid-cols-[1fr] grid-rows-[repeat(3,1fr)] md:grid-cols-[repeat(3,1fr)] md:grid-rows-[repeat(3,1fr)] gap-4 justify-center content-center'
 >
-  <div
+  <article
+    class='cursor-default col-span-1 md:col-span-3 rounded-xl transition ease-in-out duration-300 hover:translate-y-2 gap-y-4 px-4 py-2 flex flex-col items-center justify-center bg-gradient-to-b from-cyan-400/80 to-cyan-600/80 dark:from-cyan-600/80 dark:to-cyan-800/80 backdrop-blur-md border-0 shadow-xl'
+  >
+    <h3
+      class='font-bold text-2xl md:text-4xl text-center text-gray-800 dark:text-gray-200'
+    >
+      ¡MictlanUI ahora es más accesible 😀!
+    </h3>
+    <p
+      class='text-pretty font-normal text-md md:text-xl text-gray-700 dark:text-gray-300'
+    >
+      Se realizaron mejoras para aumentar la accesibilidad de los componentes de
+      MictlanUI. Estos cambios incluyen ajustes en el manejo de foco, roles
+      ARIA, entre otros, con el objetivo de ofrecer una experiencia más
+      inclusiva para todos los usuarios.
+    </p>
+  </article>
+  <article
     class='cursor-default col-span-1 md:col-span-2 rounded-xl transition ease-in-out duration-300 hover:-translate-y-2 gap-y-4 px-4 py-2 flex flex-col items-center justify-center bg-gradient-to-tl from-cyan-400/80 to-cyan-600/80 dark:from-cyan-600/80 dark:to-cyan-800/80 backdrop-blur-md border-0 shadow-xl'
   >
     <h3
@@ -34,7 +51,7 @@ import TailwindCSSIcon from '@/components/Icons/TailwindCSSIcon.astro'
       TypeScript de todos los componentes disponibles, lo que significa que
       ahora puedes utilizar MictlanUI en proyectos de React y TypeScript.
     </p>
-  </div>
+  </article>
   <a
     href='/components/accordion'
     class='rounded-xl transition ease-in-out duration-300 hover:-translate-y-2 px-4 py-2 flex flex-col items-center justify-center gap-y-2 bg-gradient-to-tr from-cyan-400/80 to-cyan-600/80 dark:from-cyan-600/80 dark:to-cyan-800/80 backdrop-blur-md border-0 shadow-xl'
