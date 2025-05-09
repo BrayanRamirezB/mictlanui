@@ -1,20 +1,34 @@
+import React, { useMemo } from 'react'
 import Tab from '@/components/react/Tabs/Tab.jsx'
 import Tabs from '@/components/react/Tabs/Tabs.jsx'
 import CodeBlock from '@/components/landing/CodeBlock'
+import hljs from 'highlight.js/lib/core'
+import javascript from 'highlight.js/lib/languages/javascript'
+import 'highlight.js/styles/atom-one-dark.min.css'
 
-const CodeTabs = ({ tabs }) => {
+if (!hljs.getLanguage('javascript')) {
+  hljs.registerLanguage('javascript', javascript)
+}
+
+const CodeTabs = React.memo(({ tabs }) => {
+  const highlights = useMemo(() => {
+    return tabs.map(({ label, code }) => {
+      const html = hljs.highlight(code, { language: 'javascript' }).value
+      return { label, html }
+    })
+  }, [tabs])
+
   return (
     <div className='max-w-3xl w-auto mx-auto p-2 not-prose'>
       <Tabs variant='light'>
-        {tabs.map((tab) => (
-          <Tab key={tab.label} label={tab.label}>
+        {highlights.map(({ label, html }) => (
+          <Tab key={label} label={label}>
             <CodeBlock>
-              <pre
-                className='p-4 rounded-md overflow-auto'
-                aria-label={`Code snippet for ${tab.label}`}
-                role='region'
-              >
-                <code className='font-mono'>{tab.code}</code>
+              <pre className='rounded-md overflow-auto p-4 text-sm'>
+                <code
+                  className='language-javascript'
+                  dangerouslySetInnerHTML={{ __html: html }}
+                />
               </pre>
             </CodeBlock>
           </Tab>
@@ -22,6 +36,6 @@ const CodeTabs = ({ tabs }) => {
       </Tabs>
     </div>
   )
-}
+})
 
 export default CodeTabs
