@@ -1,0 +1,193 @@
+---
+interface CodeProps {
+  codeString: string
+  language?: string
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+}
+
+const {
+  codeString,
+  language = 'bash',
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  rounded = 'md'
+} = Astro.props as CodeProps
+
+type StyleObject = Record<string, string>
+
+const variants: StyleObject = {
+  default: 'border-0 shadow-lg backdrop-blur-sm',
+  bordered: 'border shadow-md',
+  light: ''
+}
+
+const colors: StyleObject = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+  primary: 'bg-blue-500/20',
+  secondary: 'bg-indigo-500/20',
+  success: 'bg-green-500/30',
+  warning: 'bg-yellow-500/40 dark:bg-yellow-500/20',
+  danger: 'bg-red-500/20'
+}
+
+const textColors: StyleObject = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-800 dark:text-blue-500',
+  secondary: 'text-indigo-800 dark:text-indigo-500',
+  success: 'text-green-800 dark:text-green-500',
+  warning: 'text-yellow-800 dark:text-yellow-500',
+  danger: 'text-red-800 dark:text-red-500'
+}
+
+const borderColors: StyleObject = {
+  default: 'border-gray-800 dark:border-gray-300',
+  primary: 'border-blue-800 dark:border-blue-500',
+  secondary: 'border-indigo-800 dark:border-indigo-500',
+  success: 'border-green-800 dark:border-green-500',
+  warning: 'border-yellow-800 dark:border-yellow-500',
+  danger: 'border-red-800 dark:border-red-500'
+}
+
+const hoverColors: StyleObject = {
+  default: 'hover:bg-neutral-100 dark:hover:bg-zinc-700/50',
+  primary: 'hover:bg-blue-500/50 dark:hover:bg-blue-500/50',
+  secondary: 'hover:bg-indigo-500/50 dark:hover:bg-indigo-500/50',
+  success: 'hover:bg-green-500/80 dark:hover:bg-green-500/60',
+  warning: 'hover:bg-yellow-500/80 dark:hover:bg-yellow-500/50',
+  danger: 'hover:bg-red-500/50 dark:hover:bg-red-500/50'
+}
+
+const sizes: StyleObject = {
+  sm: 'text-xs px-1 py-1',
+  md: 'text-sm px-2 py-1.5',
+  lg: 'text-base px-4 py-2',
+  xl: 'text-base px-6 py-2.5'
+}
+
+const roundeds: StyleObject = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const getStyle = (obj: StyleObject, key: string, fallback: string = '') => {
+  return key in obj ? obj[key] : fallback
+}
+---
+
+<div
+  class={`inline-flex justify-around items-center gap-x-4 overflow-auto
+    ${getStyle(variants, variant)}
+    ${getStyle(sizes, size)}
+    ${getStyle(roundeds, rounded)}
+    ${variant === 'bordered' ? getStyle(borderColors, color) : ''}
+    ${variant === 'default' ? getStyle(colors, color) : ''}
+    ${getStyle(textColors, color)}
+  `}
+  role='region'
+  aria-label='Code block with copy button'
+  data-code={codeString}
+>
+  <pre
+    class='flex items-center justify-center'
+    aria-live='polite'>
+    <code class={`language-${language}`}>{codeString}</code>
+  </pre>
+
+  <button
+    class={`copy-button flex text-white px-1.5 py-1 rounded-lg transition duration-300 ease-out ${getStyle(hoverColors, color)}`}
+    aria-label='Copy code to clipboard'
+  >
+    <div class='inline-flex items-center'>
+      <svg
+        class='copy-icon absolute right-0 transition-opacity duration-200 size-4'
+        xmlns='http://www.w3.org/2000/svg'
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+      >
+        <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
+        <path
+          d='M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z'
+        ></path>
+        <path
+          d='M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'
+        ></path>
+      </svg>
+
+      <svg
+        class='check-icon absolute right-0 opacity-0 transition-opacity duration-200 size-4'
+        xmlns='http://www.w3.org/2000/svg'
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+      >
+        <path stroke='none' d='M0 0h24v24H0z' fill='none'></path>
+        <path
+          d='M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z'
+        ></path>
+        <path
+          d='M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'
+        ></path>
+        <path d='M11 14l2 2l4 -4'></path>
+      </svg>
+    </div>
+  </button>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.copy-button').forEach((button) => {
+      const copyIcon = button.querySelector('.copy-icon')
+      const checkIcon = button.querySelector('.check-icon')
+      const code = button.closest('[data-code]').dataset.code
+
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code)
+
+          // Animación suave
+          copyIcon.classList.add('opacity-0')
+          checkIcon.classList.remove('opacity-0')
+
+          setTimeout(() => {
+            checkIcon.classList.add('opacity-0')
+            copyIcon.classList.remove('opacity-0')
+          }, 2000)
+        } catch (err) {
+          console.error('Error al copiar:', err)
+        }
+      })
+    })
+  })
+</script>
+
+<style>
+  .copy-button {
+    position: relative;
+  }
+
+  .copy-icon,
+  .check-icon {
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+  }
+
+  /* Eliminar la declaración de opacity: 0 para .check-icon */
+</style>
