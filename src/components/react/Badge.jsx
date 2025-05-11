@@ -101,7 +101,7 @@ const Badge = ({
   return (
     <span
       className={`relative inline-flex items-center justify-center font-medium ${sizeClass} ${roundedClass} ${
-        type === 'bordered' ? `bg-transparent` : colorClass
+        type === 'bordered' ? 'bg-transparent' : colorClass
       } ${textColorClass} ${typeClass}`}
       role='status'
       aria-label={ariaLabel || text}

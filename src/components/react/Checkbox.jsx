@@ -85,10 +85,8 @@ const Checkbox = ({
   return (
     <div
       className={`flex items-center ${roundeds[rounded]} ${variants[variant]} ${
-        sizes[size]
-      } ${variant === 'default' && colors[color]} ${
-        variant !== 'light' && sizes[size]
-      }
+        variant === 'default' && colors[color]
+      } ${variant !== 'light' && sizes[size]}
       ${variant === 'bordered' && borderColors[color]}`}
     >
       <div

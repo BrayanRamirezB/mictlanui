@@ -94,15 +94,15 @@ const Checkbox: FC<CheckboxProps> = ({
   const handleCheckboxChange = () => {
     if (!disabled) {
       setIsChecked(!isChecked)
-      onChange?.() // Llamar a onChange si está definido
+      onChange?.()
     }
   }
 
   return (
     <div
-      className={`flex items-center ${roundeds[rounded]} ${variants[variant]} ${
-        sizes[size]
-      } ${variant === 'default' && colors[color]} ${
+      className={`flex items-center ${roundeds[rounded]} ${
+        variants[variant]
+      }  ${variant === 'default' && colors[color]} ${
         variant !== 'light' && sizes[size]
       }
       ${variant === 'bordered' && borderColors[color]}`}

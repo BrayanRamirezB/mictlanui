@@ -94,7 +94,7 @@ const ButtonGroup = ({
     ${sizes[size]}
     ${
       variant === 'bordered' || variant === 'light'
-        ? `bg-transparent`
+        ? 'bg-transparent'
         : colors[color]
     }
       ${variant === 'default' && shadowColors[color]}

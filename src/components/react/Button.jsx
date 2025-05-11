@@ -78,13 +78,13 @@ const Button = ({
 
   const buttonClasses = `
       group inline-flex items-center justify-center font-medium text-center 
-      transition duration-300 
+      transition duration-300
       ${variants[variant]} 
       ${sizes[size]} 
       ${roundeds[rounded]} 
       ${
         variant === 'bordered' || variant === 'light'
-          ? `bg-transparent`
+          ? 'bg-transparent'
           : colors[color]
       }
       ${
@@ -93,7 +93,7 @@ const Button = ({
           : textColors[color]
       }
       ${hoverColors[color]}
-      ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+      ${disabled || isLoading ? 'opacity-50 cursor-not-allowed gap-2' : ''}
     `
 
   return (

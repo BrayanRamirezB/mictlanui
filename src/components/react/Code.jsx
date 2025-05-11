@@ -86,7 +86,7 @@ const Code = ({
       role='region'
       aria-label='Code block with copy button'
     >
-      <pre className='' aria-live='polite'>
+      <pre aria-live='polite'>
         <code className={`language-${language}`}>{codeString}</code>
       </pre>
 
