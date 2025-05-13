@@ -1,0 +1,292 @@
+---
+interface SliderProps {
+  min?: number
+  max?: number
+  step?: number
+  value?: number
+  showValue?: boolean
+  label?: string
+  startContent?: any
+  endContent?: any
+  disabled?: boolean
+  orientation?: 'horizontal' | 'vertical'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  textColor?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+  size?: 'sm' | 'md' | 'lg'
+  sliderLength?: 'sm' | 'md' | 'lg' | 'full'
+  thumbRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  showThumb?: boolean
+  id?: string
+}
+
+const {
+  min = 0,
+  max = 100,
+  step = 1,
+  value = 0,
+  showValue = true,
+  label = '',
+  disabled = false,
+  orientation = 'horizontal',
+  color = 'default',
+  textColor = 'default',
+  size = 'md',
+  sliderLength = 'md',
+  thumbRadius = 'full',
+  showThumb = true,
+  startContent = null,
+  endContent = null,
+  id
+} = Astro.props as SliderProps
+
+const textColors = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-600',
+  secondary: 'text-indigo-600',
+  success: 'text-green-600',
+  warning: 'text-yellow-600',
+  danger: 'text-red-600'
+}
+
+const colors = {
+  default: 'bg-neutral-100/90 dark:bg-zinc-700/90',
+  primary: 'bg-blue-500/40 ',
+  secondary: 'bg-indigo-500/40 ',
+  success: 'bg-green-500/40 ',
+  warning: 'bg-yellow-500/40',
+  danger: 'bg-red-500/40 '
+}
+
+const thumbColors = {
+  default: 'bg-neutral-100 dark:bg-zinc-700',
+  primary: 'bg-blue-500',
+  secondary: 'bg-indigo-500',
+  success: 'bg-green-500',
+  warning: 'bg-yellow-500',
+  danger: 'bg-red-500'
+}
+
+const thumbSizes = {
+  sm: 'w-4 h-4',
+  md: 'w-5 h-5',
+  lg: 'w-7 h-7'
+}
+
+const thumbRadiuses = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const verticalBarSizes = {
+  sm: 'w-4',
+  md: 'w-5',
+  lg: 'w-7'
+}
+
+const horizontalBarSizes = {
+  sm: 'h-4',
+  md: 'h-5',
+  lg: 'h-7'
+}
+
+const sliderWidth = {
+  sm: 'w-40',
+  md: 'w-64',
+  lg: 'w-96',
+  full: 'w-full'
+}
+
+const sliderHeight = {
+  sm: 'h-40',
+  md: 'h-64',
+  lg: 'h-96',
+  full: 'h-full'
+}
+---
+
+<div
+  id={id}
+  class={`slider-container flex items-center justify-center ${
+    orientation === 'horizontal' ? 'flex-col' : 'flex-col-reverse gap-y-4'
+  } ${textColors[textColor]}`}
+  data-min={min}
+  data-max={max}
+  data-step={step}
+  data-value={value}
+  data-orientation={orientation}
+  data-disabled={disabled}
+>
+  <div class='flex items-center'>
+    {label && <span class='text-sm mr-2'>{label}</span>}
+    {showValue && <span class='slider-value text-sm'>{value}</span>}
+  </div>
+
+  <div
+    class={`flex justify-between items-center ${
+      orientation === 'horizontal' ? 'flex-row space-x-2' : 'flex-col space-y-2'
+    }`}
+  >
+    {startContent && <span class='flex items-center'>{startContent}</span>}
+
+    <div
+      class={`slider-track relative ${
+        orientation === 'horizontal'
+          ? `${sliderWidth[sliderLength]} h-10`
+          : `${sliderHeight[sliderLength]} w-10`
+      } ${disabled ? 'opacity-50' : ''}`}
+    >
+      <div
+        class={`absolute ${
+          orientation === 'horizontal'
+            ? `top-1/2 left-0 w-full ${horizontalBarSizes[size]} -translate-y-1/2`
+            : `left-1/2 top-0 h-full ${verticalBarSizes[size]} -translate-x-1/2`
+        } backdrop-blur-sm shadow-md bg-neutral-100/20 dark:bg-zinc-700/30 rounded-md ${
+          disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+        }`}
+      >
+        <div
+          class={`slider-fill absolute ${
+            orientation === 'horizontal'
+              ? 'left-0 top-0 h-full'
+              : 'bottom-0 left-0 w-full'
+          } ${colors[color]} rounded-md`}
+        >
+        </div>
+      </div>
+
+      <div
+        class={`slider-thumb absolute ${
+          orientation === 'horizontal'
+            ? 'top-1/2 -translate-y-1/2 -translate-x-1/2 left-0'
+            : 'left-1/2 -translate-x-1/2 -translate-y-1/2 top-0'
+        } ${thumbSizes[size]} ${thumbRadiuses[thumbRadius]} ${
+          showThumb &&
+          `${thumbColors[color]} border-2 border-zinc-700/30 dark:border-neutral-100/20`
+        } shadow-sm ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+        tabindex={disabled ? -1 : 0}
+        role='slider'
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-orientation={orientation}
+        aria-disabled={disabled}
+      >
+      </div>
+    </div>
+
+    {endContent && <span class='flex items-center'>{endContent}</span>}
+  </div>
+</div>
+
+<script>
+  function initializeSlider(container) {
+    const track = container.querySelector('.slider-track')
+    const thumb = container.querySelector('.slider-thumb')
+    const fill = container.querySelector('.slider-fill')
+    const valueDisplay = container.querySelector('.slider-value')
+
+    const min = Number(container.dataset.min)
+    const max = Number(container.dataset.max)
+    const step = Number(container.dataset.step)
+    const orientation = container.dataset.orientation
+    const disabled = container.dataset.disabled === 'true'
+    let value = Number(container.dataset.value) || min
+
+    const dispatchChangeEvent = () => {
+      const event = new CustomEvent('slider-change', {
+        detail: {
+          value: value,
+          id: container.id
+        },
+        bubbles: true
+      })
+      container.dispatchEvent(event)
+    }
+
+    const updateSliderUI = () => {
+      const percent = ((value - min) / (max - min)) * 100
+      if (orientation === 'horizontal') {
+        thumb.style.left = `${percent}%`
+        fill.style.width = `${percent}%`
+      } else {
+        thumb.style.top = `${100 - percent}%`
+        fill.style.height = `${percent}%`
+      }
+      if (valueDisplay) valueDisplay.textContent = value.toString()
+      thumb.setAttribute('aria-valuenow', value.toString())
+      dispatchChangeEvent()
+    }
+
+    const setValueFromPosition = (clientX: number, clientY: number) => {
+      const rect = track.getBoundingClientRect()
+      let percent
+      if (orientation === 'horizontal') {
+        percent = (clientX - rect.left) / rect.width
+      } else {
+        percent = (rect.bottom - clientY) / rect.height
+      }
+      const rawValue = min + percent * (max - min)
+      value = Math.round(rawValue / step) * step
+      value = Math.max(min, Math.min(max, value))
+      updateSliderUI()
+    }
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (disabled) return
+      setValueFromPosition(e.clientX, e.clientY)
+    }
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (disabled || !e.touches.length) return
+      const touch = e.touches[0]
+      setValueFromPosition(touch.clientX, touch.clientY)
+    }
+
+    const stopDragging = () => {
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', stopDragging)
+      document.removeEventListener('touchmove', onTouchMove)
+      document.removeEventListener('touchend', stopDragging)
+    }
+
+    thumb.addEventListener('mousedown', (e: MouseEvent) => {
+      if (disabled) return
+      e.preventDefault()
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', stopDragging)
+    })
+
+    thumb.addEventListener('touchstart', (e: TouchEvent) => {
+      if (disabled) return
+      document.addEventListener('touchmove', onTouchMove)
+      document.addEventListener('touchend', stopDragging)
+    })
+
+    track.addEventListener('click', (e: MouseEvent) => {
+      if (disabled) return
+      setValueFromPosition(e.clientX, e.clientY)
+    })
+
+    thumb.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (disabled) return
+      if (['ArrowRight', 'ArrowUp'].includes(e.key)) {
+        value = Math.min(max, value + step)
+      } else if (['ArrowLeft', 'ArrowDown'].includes(e.key)) {
+        value = Math.max(min, value - step)
+      }
+      updateSliderUI()
+    })
+
+    updateSliderUI()
+  }
+
+  document.querySelectorAll('.slider-container').forEach(initializeSlider)
+</script>
