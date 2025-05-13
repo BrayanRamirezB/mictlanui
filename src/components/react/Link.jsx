@@ -86,8 +86,8 @@ const Link = ({
   return (
     <a
       className={className}
-      target={`${isExternal ? '_blank' : ''}`}
-      rel={`${isExternal ? 'noopener noreferrer' : ''}`}
+      target={isExternal ? '_blank' : ''}
+      rel={isExternal ? 'noopener noreferrer' : ''}
       href={href}
       aria-label={ariaLabel}
     >

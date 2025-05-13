@@ -77,7 +77,7 @@ const DateInput = ({
   return (
     <div
       className={`flex flex-col gap-2 ${
-        disabled ? 'opacity-50 cursor-not-allowed' : ''
+        disabled && 'opacity-50 cursor-not-allowed'
       } ${sizes[size]} ${variants[variant]} ${
         variant === 'default' && colors[color]
       }
@@ -93,7 +93,7 @@ const DateInput = ({
         </label>
       )}
       <div
-        className={`w-full flex items-center cursor-pointer ${textColors[color]} `}
+        className={`w-full flex items-center cursor-pointer ${textColors[color]}`}
         onClick={() => !disabled && datePickerRef.current?.showPicker()}
       >
         <input
@@ -105,7 +105,7 @@ const DateInput = ({
           disabled={disabled}
           aria-label={label || 'Select a date'}
           aria-disabled={disabled}
-          className={`w-full bg-transparent focus:outline-none custom-date-input cursor-pointer`}
+          className='w-full bg-transparent focus:outline-none custom-date-input cursor-pointer'
         />
         {icon && (
           <svg
