@@ -1,0 +1,190 @@
+---
+interface Props {
+  label?: string
+  placeholder?: string
+  description?: string
+  errorMessage?: string
+  isRequired?: boolean
+  isReadOnly?: boolean
+  isDisabled?: boolean
+  defaultValue?: string
+  variant?: 'default' | 'bordered' | 'light'
+  id?: string
+}
+
+const {
+  label,
+  placeholder = '',
+  description,
+  errorMessage,
+  isRequired = false,
+  isReadOnly = false,
+  isDisabled = false,
+  defaultValue = '',
+  variant = 'default',
+  id: customId,
+  ...props
+} = Astro.props
+
+const uniqueId = customId || `textarea-${crypto.randomUUID().slice(0, 8)}`
+
+const variants = {
+  default: 'border-0 shadow-md backdrop-blur-sm',
+  bordered: 'border bg-transparent',
+  light: 'bg-transparent'
+}
+
+const colors = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+  danger: 'bg-red-500/20'
+}
+
+const borderColors = {
+  default: 'border-gray-800 dark:border-gray-300'
+}
+
+const textColors = {
+  default:
+    'text-zinc-800 dark:text-neutral-100 placeholder-zinc-800/30 dark:placeholder-neutral-100/30',
+  danger: 'text-red-800 dark:text-red-500'
+}
+
+const baseClasses = `flex flex-col space-y-2 ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`
+
+const initialInputClasses = [
+  'w-full p-2 rounded-lg transition focus:outline-none',
+  variants[variant],
+  variant === 'default' && colors['default'],
+  textColors['default'],
+  variant === 'bordered' && borderColors['default'],
+  isDisabled ? 'bg-gray-100' : ''
+]
+  .filter(Boolean)
+  .join(' ')
+
+const initialIsInvalid = defaultValue === '' && isRequired
+
+const descriptionId = description ? `${uniqueId}-description` : undefined
+const errorMessageId = errorMessage ? `${uniqueId}-errorMessage` : undefined
+---
+
+<div class={baseClasses} data-textarea-wrapper>
+  {
+    label && (
+      <label
+        for={uniqueId}
+        class:list={['label text-sm font-medium', textColors['default']]}
+      >
+        {label}
+        {isRequired && (
+          <span class:list={['ml-1', textColors['danger']]}>*</span>
+        )}
+      </label>
+    )
+  }
+
+  <div class='inputWrapper relative'>
+    <textarea
+      id={uniqueId}
+      class:list={[initialInputClasses, initialIsInvalid && colors['danger']]}
+      role='textbox'
+      aria-invalid={initialIsInvalid ? 'true' : 'false'}
+      aria-required={isRequired ? 'true' : 'false'}
+      aria-readonly={isReadOnly ? 'true' : 'false'}
+      aria-disabled={isDisabled ? 'true' : 'false'}
+      aria-describedby={descriptionId}
+      aria-errormessage={initialIsInvalid && errorMessage
+        ? errorMessageId
+        : undefined}
+      disabled={isDisabled}
+      readonly={isReadOnly}
+      placeholder={placeholder}
+      {...props}>{defaultValue}</textarea
+    >
+  </div>
+
+  {
+    description && (
+      <div
+        id={descriptionId}
+        class:list={['description text-sm', textColors['default']]}
+      >
+        {description}
+      </div>
+    )
+  }
+
+  {
+    errorMessage && (
+      <div
+        id={errorMessageId}
+        class:list={[
+          'errorMessage text-sm',
+          textColors['danger'],
+          !initialIsInvalid && 'hidden'
+        ]}
+        aria-live='assertive'
+      >
+        {errorMessage}
+      </div>
+    )
+  }
+</div>
+
+<script
+  define:vars={{
+    uniqueId,
+    isRequired,
+    errorMessageId,
+    dangerBgClass: colors.danger,
+    focusRingClass: 'ring-2 ring-blue-500'
+  }}
+>
+  const textareaElement = document.getElementById(uniqueId)
+  const errorMessageElement = document.getElementById(errorMessageId)
+
+  if (textareaElement) {
+    let isInvalid = textareaElement.getAttribute('aria-invalid') === 'true'
+
+    const handleChange = (e) => {
+      const newValue = e.target.value
+      const currentlyInvalid = newValue === '' && isRequired
+
+      if (currentlyInvalid !== isInvalid) {
+        isInvalid = currentlyInvalid
+        textareaElement.setAttribute(
+          'aria-invalid',
+          isInvalid ? 'true' : 'false'
+        )
+
+        if (isInvalid) {
+          textareaElement.classList.add(dangerBgClass)
+          if (errorMessageElement) {
+            textareaElement.setAttribute('aria-errormessage', errorMessageId)
+            errorMessageElement.classList.remove('hidden')
+          }
+        } else {
+          textareaElement.classList.remove(dangerBgClass)
+          if (errorMessageElement) {
+            textareaElement.removeAttribute('aria-errormessage')
+            errorMessageElement.classList.add('hidden')
+          }
+        }
+      }
+    }
+
+    const handleFocus = (e) => {
+      textareaElement.classList.add(...focusRingClass.split(' '))
+    }
+
+    const handleBlur = () => {
+      textareaElement.classList.remove(...focusRingClass.split(' '))
+
+      handleChange({ target: textareaElement })
+    }
+
+    textareaElement.addEventListener('input', handleChange)
+    textareaElement.addEventListener('focus', handleFocus)
+    textareaElement.addEventListener('blur', handleBlur)
+  }
+</script>
