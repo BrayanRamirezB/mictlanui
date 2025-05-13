@@ -1,0 +1,329 @@
+---
+interface SwitchProps {
+  label?: string
+  startContent?: string
+  endContent?: string
+  thumbIcon?: string
+  isSelected?: boolean
+  isReadOnly?: boolean
+  isDisabled?: boolean
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  textColor?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
+}
+
+const {
+  label,
+  isSelected: initialSelected = false,
+  isReadOnly = false,
+  isDisabled = false,
+  color = 'default',
+  textColor = 'default',
+  rounded = 'full',
+  size = 'md',
+  id
+  // Las props startContent, endContent, thumbIcon se manejan con slots
+} = Astro.props as SwitchProps
+
+const colors = {
+  default: 'bg-zinc-700/30 dark:bg-neutral-100/20 dark:shadow-zinc-700/20',
+  primary: 'bg-blue-500/50',
+  secondary: 'bg-indigo-500/50',
+  success: 'bg-green-500/50',
+  warning: 'bg-yellow-500/50',
+  danger: 'bg-red-500/50'
+}
+
+const textColors = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-800 dark:text-blue-600',
+  secondary: 'text-indigo-800 dark:text-indigo-600',
+  success: 'text-green-800 dark:text-green-600',
+  warning: 'text-yellow-800 dark:text-yellow-600',
+  danger: 'text-red-800 dark:text-red-500'
+}
+
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const sizes = {
+  sm: 'h-6 w-11',
+  md: 'h-8 w-16',
+  lg: 'h-9 w-16',
+  xl: 'h-10 w-20'
+}
+
+const textSizes = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl'
+}
+
+const circleSizes = {
+  sm: 'size-5',
+  md: 'size-6',
+  lg: 'size-7',
+  xl: 'size-9'
+}
+
+const circleTranslate = {
+  sm: 'translate-x-4',
+  md: 'translate-x-8',
+  lg: 'translate-x-7',
+  xl: 'translate-x-9'
+}
+
+const contentSizes = {
+  sm: 'text-sm size-5',
+  md: 'text-base size-6',
+  lg: 'text-lg size-7',
+  xl: 'text-xl size-9'
+}
+
+const uniqueId = id || `switch-${Math.random().toString(36).substring(2, 9)}`
+
+const wrapperBaseClass = 'flex items-center space-x-2 switch-component-wrapper'
+const wrapperCursorClass = isDisabled
+  ? 'opacity-50 cursor-not-allowed'
+  : 'cursor-pointer'
+
+const switchTrackBaseClass =
+  'flex items-center border-0 shadow-xl backdrop-blur-md transition-colors switch-track'
+const switchTrackSelectedClass = initialSelected ? colors[color] : 'bg-gray-300'
+
+const thumbBaseClass = `absolute bg-neutral-100 shadow-lg transform transition-transform switch-thumb ${circleSizes[size]} ${roundeds[rounded]}`
+const thumbTranslateClass = initialSelected
+  ? circleTranslate[size]
+  : 'translate-x-0'
+
+const hasLabel = !!label
+const hasStartContent = Astro.slots.has('startContent')
+const hasEndContent = Astro.slots.has('endContent')
+const hasThumbIcon = Astro.slots.has('thumbIcon')
+---
+
+<div
+  class:list={[wrapperBaseClass, wrapperCursorClass]}
+  role='switch'
+  aria-checked={initialSelected}
+  aria-disabled={isDisabled}
+  tabindex={isDisabled ? -1 : 0}
+  data-color={color}
+  data-size={size}
+>
+  {
+    hasLabel && (
+      <label
+        for={uniqueId}
+        class:list={[textSizes[size], textColors[textColor]]}
+      >
+        {label}
+      </label>
+    )
+  }
+  <div
+    class:list={[
+      switchTrackBaseClass,
+      switchTrackSelectedClass,
+      roundeds[rounded],
+      sizes[size]
+    ]}
+  >
+    <input
+      type='checkbox'
+      id={uniqueId}
+      class='hidden'
+      checked={initialSelected}
+      readonly={isReadOnly}
+      disabled={isDisabled}
+      aria-hidden='true'
+    />
+    <div class='flex items-center justify-between w-full px-1 relative'>
+      {
+        hasStartContent && (
+          <span
+            class:list={[
+              'flex items-center justify-center',
+              contentSizes[size]
+            ]}
+          >
+            <slot name='startContent' />
+          </span>
+        )
+      }
+      <div class:list={[thumbBaseClass, thumbTranslateClass]}>
+        {
+          hasThumbIcon && (
+            <span
+              class:list={[
+                'flex items-center justify-center w-full h-full',
+                contentSizes[size]
+              ]}
+            >
+              <slot name='thumbIcon' />
+            </span>
+          )
+        }
+      </div>
+      {
+        hasEndContent && (
+          <span
+            class:list={[
+              'flex items-center justify-center',
+              contentSizes[size]
+            ]}
+          >
+            <slot name='endContent' />
+          </span>
+        )
+      }
+    </div>
+  </div>
+</div>
+
+<script
+  define:vars={{
+    scriptInitialSelected: initialSelected,
+    scriptIsReadOnly: isReadOnly,
+    scriptIsDisabled: isDisabled,
+    scriptColor: color,
+    scriptSize: size
+  }}
+>
+  const SCRIPT_COLORS = {
+    default: 'bg-zinc-700/30 dark:bg-neutral-100/20 dark:shadow-zinc-700/20',
+    primary: 'bg-blue-500/50',
+    secondary: 'bg-indigo-500/50',
+    success: 'bg-green-500/50',
+    warning: 'bg-yellow-500/50',
+    danger: 'bg-red-500/50'
+  }
+  const SCRIPT_CIRCLE_TRANSLATE = {
+    sm: 'translate-x-4',
+    md: 'translate-x-8',
+    lg: 'translate-x-7',
+    xl: 'translate-x-9'
+  }
+  const DEFAULT_BG_CLASS = 'bg-gray-300'
+
+  const switchWrapper = document.currentScript.previousElementSibling
+
+  if (switchWrapper && !scriptIsDisabled) {
+    const track = switchWrapper.querySelector('.switch-track')
+    const thumb = switchWrapper.querySelector('.switch-thumb')
+    const input = switchWrapper.querySelector('input[type="checkbox"]')
+    const componentColor = switchWrapper.dataset.color || 'default'
+    const componentSize = switchWrapper.dataset.size || 'md'
+
+    let currentIsSelected = scriptInitialSelected
+
+    const applyClassList = (element, classesStr, action = 'add') => {
+      const classesArray = classesStr.split(' ').filter((c) => c.length > 0)
+      classesArray.forEach((cls) => element.classList[action](cls))
+    }
+
+    const updateVisuals = () => {
+      switchWrapper.setAttribute('aria-checked', currentIsSelected.toString())
+
+      const currentBgColorKey = scriptColor
+      const activeColorClasses = SCRIPT_COLORS[currentBgColorKey]
+      const defaultColorClasses = DEFAULT_BG_CLASS
+
+      Object.values(SCRIPT_COLORS).forEach((clsStr) =>
+        applyClassList(track, clsStr, 'remove')
+      )
+      applyClassList(track, defaultColorClasses, 'remove')
+
+      if (switchWrapper.matches(':hover') && !scriptIsReadOnly) {
+        applyClassList(track, activeColorClasses, 'add')
+      } else {
+        if (currentIsSelected) {
+          applyClassList(track, activeColorClasses, 'add')
+        } else {
+          applyClassList(track, defaultColorClasses, 'add')
+        }
+      }
+
+      const translateClassForSelected = SCRIPT_CIRCLE_TRANSLATE[componentSize]
+      const translateClassForUnselected = 'translate-x-0'
+
+      Object.values(SCRIPT_CIRCLE_TRANSLATE).forEach((cls) =>
+        applyClassList(thumb, cls, 'remove')
+      )
+      applyClassList(thumb, translateClassForUnselected, 'remove')
+
+      if (currentIsSelected) {
+        applyClassList(thumb, translateClassForSelected, 'add')
+      } else {
+        applyClassList(thumb, translateClassForUnselected, 'add')
+      }
+
+      if (input) {
+        input.checked = currentIsSelected
+      }
+    }
+
+    const handleToggle = () => {
+      if (scriptIsReadOnly) return
+      currentIsSelected = !currentIsSelected
+      updateVisuals()
+      const event = new CustomEvent('switch-change', {
+        bubbles: true,
+        detail: { isSelected: currentIsSelected, id: input ? input.id : null }
+      })
+      switchWrapper.dispatchEvent(event)
+    }
+
+    switchWrapper.addEventListener('click', handleToggle)
+
+    switchWrapper.addEventListener('keydown', (e) => {
+      if (scriptIsReadOnly) return
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        handleToggle()
+      }
+    })
+
+    if (input) {
+      input.addEventListener('change', (e) => {
+        if (scriptIsReadOnly) {
+          e.target.checked = currentIsSelected
+          return
+        }
+        if (currentIsSelected !== e.target.checked) {
+          currentIsSelected = e.target.checked
+          updateVisuals()
+          const event = new CustomEvent('switch-change', {
+            bubbles: true,
+            detail: { isSelected: currentIsSelected, id: input.id }
+          })
+          switchWrapper.dispatchEvent(event)
+        }
+      })
+    }
+
+    switchWrapper.addEventListener('mouseenter', () => {
+      if (!scriptIsReadOnly) {
+        updateVisuals()
+      }
+    })
+
+    switchWrapper.addEventListener('mouseleave', () => {
+      updateVisuals()
+    })
+  }
+</script>
