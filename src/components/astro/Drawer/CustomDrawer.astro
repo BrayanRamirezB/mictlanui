@@ -1,0 +1,61 @@
+---
+import Drawer from './Drawer.astro'
+import DrawerHeader from './DrawerHeader.astro'
+import DrawerBody from './DrawerBody.astro'
+import DrawerFooter from './DrawerFooter.astro'
+import DrawerContent from './DrawerContent.astro'
+
+const {
+  id = `drawer-${Math.random().toString(36).slice(2, 9)}`,
+  text = 'Open Drawer',
+  position = 'right',
+  effect = 'opaque',
+  size = 'md',
+  color = 'default',
+  isDismissable = true
+} = Astro.props
+---
+
+<button
+  class='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'
+  onclick={`
+    (() => {
+      window.drawerInstances = window.drawerInstances || {};
+      window.drawerInstances['${id}']?.open();
+       event.stopPropagation();
+    })()
+  `}
+  aria-controls={id}
+>
+  {text}
+</button>
+
+<Drawer
+  id={id}
+  position={position}
+  effect={effect}
+  size={size}
+  color={color}
+  isDismissable={isDismissable}
+>
+  <DrawerContent>
+    <DrawerHeader drawerId={id} closeButton>
+      <slot name='title'>Default Title</slot>
+    </DrawerHeader>
+
+    <DrawerBody>
+      <slot name='body'>
+        <p>Default content</p>
+      </slot>
+    </DrawerBody>
+
+    <DrawerFooter>
+      <button
+        class='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors'
+        onclick={`window.drawerInstances['${id}']?.close()`}
+      >
+        Close
+      </button>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
