@@ -1,0 +1,163 @@
+---
+import BreadcrumbItem from './BreadcrumbItem.astro'
+import BreadcrumbSeparator from './BreadcrumbSeparator.astro'
+
+interface BreadcrumbsProps {
+  items: Array<BreadcrumbItemProps>
+  variant?: 'default' | 'bordered' | 'light'
+  size?: 'sm' | 'md' | 'lg'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  separator?: string
+  collapsible?: boolean
+  instanceId?: string
+}
+
+interface BreadcrumbItemProps {
+  label: string
+  href?: string
+  icon?: string
+}
+const {
+  items = [],
+  variant = 'default',
+  size = 'md',
+  color = 'default',
+  rounded = 'md',
+  separator = '/',
+  collapsible = false,
+  instanceId = Math.random().toString(36).substring(2, 9)
+} = Astro.props as BreadcrumbsProps
+
+const variants = {
+  default: 'border-0 shadow-lg backdrop-blur-sm',
+  bordered: 'border shadow-lg bg-transparent',
+  light: 'border-0 bg-transparent'
+}
+
+const sizes = {
+  sm: 'text-xs px-2 py-1',
+  md: 'text-sm px-3 py-1.5',
+  lg: 'text-base px-4 py-2'
+}
+
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const colors = {
+  default: 'bg-neutral-200/30 dark:bg-zinc-700/30 dark:shadow-zinc-700/20',
+  primary: 'bg-blue-500/20 dark:shadow-blue-500/20',
+  secondary: 'bg-indigo-500/20 dark:shadow-indigo-500/20',
+  success: 'bg-green-500/20 dark:shadow-green-500/20',
+  warning: 'bg-yellow-500/10 dark:bg-yellow-500/20 dark:shadow-yellow-500/20',
+  danger: 'bg-red-500/20 dark:shadow-red-500/20'
+}
+
+const textColors = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-800 dark:text-blue-500',
+  secondary: 'text-indigo-800 dark:text-indigo-500',
+  success: 'text-green-800 dark:text-green-500',
+  warning: 'text-yellow-800 dark:text-yellow-500',
+  danger: 'text-red-800 dark:text-red-500'
+}
+
+const borderColors = {
+  default: 'border-neutral-100/40 dark:border-zinc-700/60',
+  primary: 'border-blue-500',
+  secondary: 'border-indigo-500',
+  success: 'border-green-500',
+  warning: 'border-yellow-500',
+  danger: 'border-red-500'
+}
+
+const sizeClass = sizes[size]
+const roundedClass = roundeds[rounded]
+const colorClass = colors[color]
+const variantClass = variants[variant]
+const textcolorClass = textColors[color]
+const borderClass = borderColors[color]
+
+const containerClasses = [
+  'flex mx-auto items-center gap-2 px-2',
+  variantClass,
+  roundedClass,
+  variant === 'bordered' ? borderClass : colorClass
+].join(' ')
+
+const initialSelected = items[0]?.label
+---
+
+<nav
+  class='flex flex-row mx-auto p-2'
+  aria-label='Breadcrumb'
+  data-breadcrumb-instance={instanceId}
+>
+  <ul class={containerClasses} role='list'>
+    {
+      collapsible && items.length > 2 ? (
+        <>
+          <BreadcrumbItem
+            {...items[0]}
+            selected={items[0].label === initialSelected}
+            {sizeClass}
+            {roundedClass}
+            colorClass={textcolorClass}
+            instanceId={instanceId}
+          />
+          <span class={`mx-2 ${textcolorClass}`}>...</span>
+          <BreadcrumbItem
+            {...items[items.length - 1]}
+            selected={items[items.length - 1].label === initialSelected}
+            {sizeClass}
+            {roundedClass}
+            colorClass={textcolorClass}
+            instanceId={instanceId}
+          />
+        </>
+      ) : (
+        items.map((item, index) => (
+          <li class='flex items-center'>
+            <BreadcrumbItem
+              {...item}
+              selected={item.label === initialSelected}
+              {sizeClass}
+              {roundedClass}
+              colorClass={textcolorClass}
+              instanceId={instanceId}
+            />
+            {index !== items.length - 1 && (
+              <BreadcrumbSeparator {separator} colorClass={textcolorClass} />
+            )}
+          </li>
+        ))
+      )
+    }
+  </ul>
+</nav>
+
+<script is:inline>
+  document
+    .querySelectorAll('[data-breadcrumb-instance]')
+    .forEach((container) => {
+      const instanceId = container.dataset.breadcrumbInstance
+
+      container.addEventListener('click', (e) => {
+        const item = e.target.closest(`[data-breadcrumb="${instanceId}"]`)
+        if (!item) return
+
+        container.querySelectorAll('[data-breadcrumb]').forEach((el) => {
+          el.classList.remove('font-bold')
+          el.setAttribute('aria-current', 'false')
+        })
+
+        item.classList.add('font-bold')
+        item.setAttribute('aria-current', 'page')
+      })
+    })
+</script>

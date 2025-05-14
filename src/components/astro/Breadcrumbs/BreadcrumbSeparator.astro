@@ -1,0 +1,11 @@
+---
+const { separator, colorClass } = Astro.props
+---
+
+<span
+  class={`mx-1 ${colorClass}`}
+  role='separator'
+  aria-label='breadcrumb separator'
+>
+  {separator}
+</span>

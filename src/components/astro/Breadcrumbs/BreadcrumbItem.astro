@@ -1,0 +1,36 @@
+---
+const {
+  label,
+  href,
+  icon,
+  sizeClass = '',
+  roundedClass = '',
+  colorClass = '',
+  instanceId
+} = Astro.props
+
+const Tag = href ? 'a' : 'button'
+const classes = [
+  'inline-flex items-center gap-1 cursor-pointer',
+  sizeClass,
+  roundedClass,
+  colorClass,
+  'transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50'
+].join(' ')
+---
+
+<Tag
+  {...href && { href }}
+  class={classes}
+  aria-current='false'
+  data-breadcrumb={instanceId}
+>
+  {
+    icon && (
+      <span class='inline-block' aria-hidden='true'>
+        {icon}
+      </span>
+    )
+  }
+  {label}
+</Tag>
