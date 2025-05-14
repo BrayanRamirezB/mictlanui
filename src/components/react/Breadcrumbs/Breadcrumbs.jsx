@@ -68,7 +68,7 @@ const Breadcrumbs = ({
   const borderClass = borderColors[color]
 
   const handleClick = (label) => {
-    setSelected(label) // Actualiza el elemento seleccionado
+    setSelected(label)
   }
 
   const renderItem = (item, isLast) => (

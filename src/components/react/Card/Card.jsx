@@ -14,16 +14,16 @@ const Card = ({
   ariaLabel = ''
 }) => {
   const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 ',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/30 ',
-    warning: 'bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
+    default: 'bg-neutral-100/20 dark:bg-zinc-700/30',
+    primary: 'bg-blue-500/20',
+    secondary: 'bg-indigo-500/20',
+    success: 'bg-green-500/30',
+    warning: 'bg-yellow-500/20',
+    danger: 'bg-red-500/20'
   }
 
   const hoverColors = {
-    default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10 ',
+    default: 'hover:bg-neutral-100/50 dark:hover:bg-zinc-700/10',
     primary: 'hover:bg-blue-500/30 dark:hover:bg-blue-500/10',
     secondary: 'hover:bg-indigo-500/30 dark:hover:bg-indigo-500/20',
     success: 'hover:bg-green-500/60 dark:hover:bg-green-500/30',
