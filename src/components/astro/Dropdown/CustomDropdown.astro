@@ -1,0 +1,51 @@
+---
+import Dropdown from './Dropdown.astro'
+import DropdownTrigger from './DropdownTrigger.astro'
+import DropdownMenu from './DropdownMenu.astro'
+import DropdownItem from './DropdownItem.astro'
+import DropdownSection from './DropdownSection.astro'
+---
+
+<div class='flex flex-wrap items-center justify-center gap-2 w-full m-auto'>
+  <Dropdown>
+    <DropdownTrigger>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger default' />
+    </DropdownMenu>
+  </Dropdown>
+
+  <Dropdown>
+    <DropdownTrigger color='primary'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger primary' />
+    </DropdownMenu>
+  </Dropdown>
+
+  <Dropdown>
+    <DropdownTrigger color='secondary'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger secondary' />
+    </DropdownMenu>
+  </Dropdown>
+
+  <Dropdown>
+    <DropdownTrigger color='success'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger success' />
+    </DropdownMenu>
+  </Dropdown>
+
+  <Dropdown>
+    <DropdownTrigger color='warning'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger warning' />
+    </DropdownMenu>
+  </Dropdown>
+
+  <Dropdown>
+    <DropdownTrigger color='danger'>Open Dropdown</DropdownTrigger>
+    <DropdownMenu>
+      <DropdownItem title='Trigger danger' />
+    </DropdownMenu>
+  </Dropdown>
+</div>

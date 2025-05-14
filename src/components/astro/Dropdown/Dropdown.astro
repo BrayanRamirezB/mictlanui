@@ -1,0 +1,92 @@
+---
+const { class: userClass, ...props } = Astro.props
+
+const uniqueId = `dropdown-${Math.random().toString(36).substring(2, 9)}`
+---
+
+<div
+  class:list={['relative inline-block', userClass]}
+  data-dropdown-id={uniqueId}
+  role='none'
+  {...props}
+>
+  <slot />
+</div>
+
+<script define:vars={{ uniqueId }}>
+  document.addEventListener('astro:page-load', () => {
+    const dropdownContainer = document.querySelector(
+      `[data-dropdown-id="${uniqueId}"]`
+    )
+    if (!dropdownContainer) {
+      console.error(`Dropdown container with ID ${uniqueId} not found.`)
+      return
+    }
+
+    const trigger = dropdownContainer.querySelector('[data-dropdown-trigger]')
+    const menu = dropdownContainer.querySelector('[data-dropdown-menu]')
+
+    if (!trigger || !menu) {
+      console.warn(
+        `Dropdown con ID ${uniqueId} necesita un [data-dropdown-trigger] y un [data-dropdown-menu].`
+      )
+      return
+    }
+
+    const setDropdownState = (isOpen) => {
+      trigger.setAttribute('aria-expanded', String(isOpen))
+      menu.setAttribute('aria-hidden', String(!isOpen))
+      if (isOpen) {
+        menu.classList.remove('hidden')
+        menu.classList.add('block')
+      } else {
+        menu.classList.remove('block')
+        menu.classList.add('hidden')
+      }
+    }
+
+    setDropdownState(false)
+    trigger.setAttribute('aria-haspopup', 'true')
+
+    const toggleDropdown = (event) => {
+      event.stopPropagation()
+      const currentState = trigger.getAttribute('aria-expanded') === 'true'
+      setDropdownState(!currentState)
+    }
+
+    trigger.addEventListener('click', toggleDropdown)
+
+    document.addEventListener('click', (event) => {
+      if (
+        trigger.getAttribute('aria-expanded') === 'true' &&
+        !dropdownContainer.contains(event.target)
+      ) {
+        setDropdownState(false)
+      }
+    })
+
+    dropdownContainer.addEventListener('keydown', (event) => {
+      if (
+        event.key === 'Escape' &&
+        trigger.getAttribute('aria-expanded') === 'true'
+      ) {
+        setDropdownState(false)
+        trigger.focus()
+      }
+    })
+
+    menu.addEventListener('click', (event) => {
+      if (
+        event.target.closest('button[role="menuitem"]') ||
+        event.target.closest('a[role="menuitem"]')
+      ) {
+        if (trigger.getAttribute('aria-expanded') === 'true') {
+          setTimeout(() => {
+            setDropdownState(false)
+            trigger.focus()
+          }, 0)
+        }
+      }
+    })
+  })
+</script>

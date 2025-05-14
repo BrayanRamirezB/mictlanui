@@ -1,0 +1,72 @@
+---
+interface Props {
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg'
+  id?: string
+  class?: string
+}
+
+const {
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  id,
+  class: userClass,
+  ...props
+} = Astro.props
+
+const variants = {
+  default: 'border-0 shadow-lg backdrop-blur-sm saturate-100',
+  bordered: 'border shadow-md',
+  light: ''
+}
+
+const colors = {
+  default: 'bg-neutral-100/70 dark:bg-zinc-700/70 dark:shadow-zinc-700/10',
+  primary: 'bg-blue-500/70 ',
+  secondary: 'bg-indigo-500/70 ',
+  success: 'bg-green-500/70 ',
+  warning: 'bg-yellow-500/70 dark:bg-yellow-500/70 ',
+  danger: 'bg-red-500/70 '
+}
+
+const borderColors = {
+  default: 'border-gray-800 dark:border-gray-300',
+  primary: 'border-blue-800 dark:border-blue-500',
+  secondary: 'border-indigo-800 dark:border-indigo-500',
+  success: 'border-green-800 dark:border-green-500',
+  warning: 'border-yellow-800 dark:border-yellow-500',
+  danger: 'border-red-800 dark:border-red-500'
+}
+
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg'
+}
+
+const baseClasses =
+  'origin-top-right flex flex-col right-0 mt-2 w-full absolute z-99999'
+const classList = [
+  baseClasses,
+  'hidden',
+  variants[variant],
+  variant === 'default' && colors[color],
+  variant === 'bordered' && borderColors[color],
+  roundeds[rounded],
+  userClass
+].filter(Boolean)
+---
+
+<div
+  id={id || 'dropdown-menu'}
+  data-dropdown-menu
+  role='menu'
+  aria-hidden='true'
+  class:list={classList}
+  {...props}
+>
+  <slot />
+</div>
