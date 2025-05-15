@@ -72,7 +72,7 @@ const Select = ({
 
   return (
     <div
-      className={`relative w-full space-y-2 text-gray-600 dark:text-gray-500`}
+      className='relative w-full space-y-2 text-gray-600 dark:text-gray-500'
       ref={selectRef}
       data-filled={isFilled}
       data-has-value={hasValue}

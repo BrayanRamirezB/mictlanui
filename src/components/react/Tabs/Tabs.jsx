@@ -110,7 +110,6 @@ const Tabs = ({
 
   return (
     <div className={`flex ${placementClass}`}>
-      {/* Botones de las pestañas */}
       <div
         className={`flex ${orientationClass} ${variants[variant]} ${
           variant === 'default' && colors[color]
@@ -164,7 +163,6 @@ const Tabs = ({
         })}
       </div>
 
-      {/* Contenido de las pestañas */}
       <div className={`p-4 ${textColors[color]}`}>
         {Children.map(children, (child, index) => (
           <div
