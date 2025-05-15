@@ -1,0 +1,25 @@
+---
+import Popover from './Popover.astro'
+
+const {
+  backdrop = 'transparent',
+  placement = 'bottom',
+  color = 'default',
+  rounded = 'md'
+} = Astro.props
+---
+
+<Popover
+  backdrop={backdrop}
+  placement={placement}
+  color={color}
+  rounded={rounded}
+>
+  <Fragment slot='trigger'>
+    <button>Mostrar Popover</button>
+  </Fragment>
+
+  <Fragment slot='content'>
+    <p class='text-sm'>This is the popover content!</p>
+  </Fragment>
+</Popover>

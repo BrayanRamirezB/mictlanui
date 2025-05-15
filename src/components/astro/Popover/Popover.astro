@@ -1,0 +1,110 @@
+---
+interface Props {
+  backdrop?: 'transparent' | 'opaque' | 'blur'
+  placement?: 'top' | 'bottom' | 'left' | 'right'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  id?: string
+}
+const {
+  backdrop = 'transparent',
+  placement = 'bottom',
+  color = 'default',
+  rounded = 'md',
+  id = `popover-${crypto.randomUUID()}`
+} = Astro.props
+
+const placementStyles = {
+  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+  right: 'left-full top-1/2 -translate-y-1/2 ml-2'
+}
+
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const colors = {
+  default: 'bg-neutral-100/80 dark:bg-zinc-800/80',
+  primary: 'bg-blue-500/80',
+  secondary: 'bg-indigo-500/80',
+  success: 'bg-green-500/80 dark:bg-green-600/80',
+  warning: 'bg-yellow-500/80',
+  danger: 'bg-red-500/80'
+}
+
+const backdropClass = {
+  transparent: 'bg-transparent',
+  opaque: 'bg-gray-200/50 dark:bg-black/50',
+  blur: 'backdrop-blur-sm'
+}
+---
+
+<div class='relative inline-block' role='dialog' id={id}>
+  <div data-popover-trigger class='cursor-pointer inline-block' tabindex='0'>
+    <slot name='trigger' />
+  </div>
+
+  <div
+    class={`fixed inset-0 ${backdropClass[backdrop]} hidden z-[998]`}
+    data-popover-backdrop
+  >
+  </div>
+
+  <div
+    class={`absolute z-[999] ${placementStyles[placement]} hidden`}
+    data-popover-content
+    style='transform: translateZ(0)'
+  >
+    <div
+      class={`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 ${colors[color]} ${roundeds[rounded]}`}
+    >
+      <slot name='content' />
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ id }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const popover = document.querySelector(`#${id}`)
+    const trigger = popover.querySelector('[data-popover-trigger]')
+    const content = popover.querySelector('[data-popover-content]')
+    const backdrop = popover.querySelector('[data-popover-backdrop]')
+
+    let isOpen = false
+
+    const togglePopover = (e) => {
+      e.stopPropagation()
+      isOpen = !isOpen
+      content.classList.toggle('hidden', !isOpen)
+      backdrop.classList.toggle('hidden', !isOpen)
+    }
+
+    trigger.addEventListener('click', togglePopover)
+
+    trigger.addEventListener('keydown', (e) => {
+      if (['Enter', ' '].includes(e.key)) togglePopover(e)
+    })
+
+    document.addEventListener('click', (e) => {
+      if (!popover.contains(e.target)) {
+        isOpen = false
+        content.classList.add('hidden')
+        backdrop.classList.add('hidden')
+      }
+    })
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        isOpen = false
+        content.classList.add('hidden')
+        backdrop.classList.add('hidden')
+      }
+    })
+  })
+</script>
