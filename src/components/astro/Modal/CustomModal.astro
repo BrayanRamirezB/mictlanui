@@ -1,0 +1,99 @@
+---
+import Modal from './Modal.astro'
+import ModalContent from './ModalContent.astro'
+import ModalHeader from './ModalHeader.astro'
+import ModalBody from './ModalBody.astro'
+import ModalFooter from './ModalFooter.astro'
+
+export interface Props {
+  isDismissable?: boolean
+  effect?: 'opaque' | 'blur' | 'transparent'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  text?: string
+  triggerId?: string
+  modalId: string
+}
+
+const {
+  isDismissable = true,
+  effect = 'opaque',
+  color = 'default',
+  rounded = 'md',
+  size = 'md',
+  text = 'Open Modal',
+  triggerId = `open-modal-button-${Math.random().toString(36).substring(2, 9)}`,
+  modalId = crypto.randomUUID()
+} = Astro.props
+
+const closeEventName = `close-${modalId}`
+const headerCloseButtonId = `header-close-${modalId}`
+---
+
+<div class='p-4'>
+  <button id={triggerId}>
+    {text}
+  </button>
+
+  <Modal
+    modalId={modalId}
+    isOpen={false}
+    isDismissable={isDismissable}
+    effect={effect}
+    color={color}
+    rounded={rounded}
+    size={size}
+    closeEventName={closeEventName}
+  >
+    <ModalContent>
+      <ModalHeader closeButtonId={headerCloseButtonId}>Modal Title</ModalHeader>
+      <ModalBody>
+        <p>This is the modal body content.</p>
+      </ModalBody>
+      <ModalFooter>
+        <button id={`footer-close-${modalId}`}> Close </button>
+        <button> Save changes </button>
+      </ModalFooter>
+    </ModalContent>
+  </Modal>
+</div>
+
+<script
+  define:vars={{ modalId, triggerId, closeEventName, headerCloseButtonId }}
+>
+  const modalElement = document.getElementById(modalId)
+  const openModalButton = document.getElementById(triggerId)
+  const modalHeaderCloseButton = document.getElementById(headerCloseButtonId)
+  const modalFooterCloseButton = document.getElementById(
+    `footer-close-${modalId}`
+  )
+
+  function openModal() {
+    if (modalElement) {
+      modalElement.classList.remove('hidden')
+    }
+  }
+
+  function closeModal() {
+    if (modalElement) {
+      modalElement.classList.add('hidden')
+    }
+  }
+
+  if (openModalButton) {
+    openModalButton.addEventListener('click', openModal)
+  }
+
+  if (modalElement) {
+    modalElement.addEventListener(closeEventName, closeModal)
+  }
+
+  if (modalHeaderCloseButton) {
+    modalHeaderCloseButton.addEventListener('click', closeModal)
+  }
+
+  if (modalFooterCloseButton) {
+    modalFooterCloseButton.addEventListener('click', closeModal)
+  }
+</script>

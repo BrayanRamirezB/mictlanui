@@ -1,0 +1,202 @@
+---
+export interface Props {
+  isOpen?: boolean
+  isDismissable?: boolean
+  effect?: 'opaque' | 'blur' | 'transparent'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  modalId: string
+  closeEventName?: string
+}
+
+const {
+  isOpen = false,
+  isDismissable = true,
+  effect = 'opaque',
+  color = 'default',
+  rounded = 'md',
+  size = 'md',
+  modalId = crypto.randomUUID(),
+  closeEventName = 'closemodal'
+} = Astro.props
+
+const backdropEffects = {
+  opaque: 'bg-black/50',
+  blur: 'backdrop-blur-sm bg-black/30',
+  transparent: 'bg-transparent'
+}
+
+const colors = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+  primary: 'bg-blue-500/20',
+  secondary: 'bg-indigo-500/20',
+  success: 'bg-green-500/20',
+  warning: 'bg-yellow-500/30',
+  danger: 'bg-red-500/20'
+}
+
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-xl',
+  xl: 'rounded-2xl'
+}
+
+const sizes = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  full: 'max-w-full min-h-screen sm:min-h-full'
+}
+
+const backdropClass = backdropEffects[effect] || backdropEffects.opaque
+const colorClass = colors[color] || colors.default
+const roundedClass = roundeds[rounded] || roundeds.md
+const sizeClass = sizes[size] || sizes.md
+const textColorClass = effect === 'opaque' ? 'text-gray-200' : 'text-gray-800'
+---
+
+<div
+  id={modalId}
+  class:list={[
+    'fixed inset-0 z-50 flex items-center justify-center',
+    backdropClass,
+    !isOpen && 'hidden'
+  ]}
+  role='dialog'
+  aria-modal='true'
+  aria-labelledby='modal-title'
+  aria-describedby='modal-description'
+  data-is-dismissable={isDismissable.toString()}
+  data-close-event-name={closeEventName}
+>
+  <div
+    id={`${modalId}-content`}
+    tabindex='-1'
+    class:list={[
+      'shadow-lg w-full border-0',
+      colorClass,
+      roundedClass,
+      sizeClass,
+      effect === 'blur' && 'backdrop-blur-md',
+      textColorClass,
+      'dark:text-gray-300'
+    ]}
+  >
+    <slot />
+  </div>
+</div>
+
+<script define:vars={{ modalId }}>
+  function getModalElements(currentModalId) {
+    const modalElement = document.getElementById(currentModalId)
+    if (!modalElement) return null
+    const modalContent = document.getElementById(`${currentModalId}-content`)
+    return { modalElement, modalContent }
+  }
+
+  function setupModal(currentModalId) {
+    const elements = getModalElements(currentModalId)
+    if (!elements) return
+
+    const { modalElement, modalContent } = elements
+    const isDismissable = modalElement.dataset.isDismissable === 'true'
+    const closeEventName = modalElement.dataset.closeEventName
+
+    const dispatchCloseEvent = () => {
+      modalElement.dispatchEvent(
+        new CustomEvent(closeEventName, { bubbles: true })
+      )
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && isDismissable) {
+        dispatchCloseEvent()
+      }
+    }
+
+    const handleClickOutside = (event) => {
+      if (
+        modalContent &&
+        !modalContent.contains(event.target) &&
+        modalElement.contains(event.target) &&
+        isDismissable
+      ) {
+        dispatchCloseEvent()
+      }
+    }
+
+    const trapFocus = (event) => {
+      if (!modalElement || modalElement.classList.contains('hidden')) return
+
+      const focusableElements = modalContent.querySelectorAll(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusableElements.length === 0) return
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (event.key === 'Tab') {
+        if (event.shiftKey) {
+          if (document.activeElement === firstElement) {
+            event.preventDefault()
+            lastElement.focus()
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            event.preventDefault()
+            firstElement.focus()
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (!modalElement.classList.contains('hidden')) {
+        handleKeyDown(event)
+        trapFocus(event)
+      }
+    })
+    modalElement.addEventListener('mousedown', (event) => {
+      if (!modalElement.classList.contains('hidden')) {
+        handleClickOutside(event)
+      }
+    })
+
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class'
+        ) {
+          const isOpenNow = !modalElement.classList.contains('hidden')
+          if (isOpenNow) {
+            document.body.style.overflow = 'hidden'
+            const focusableElements = modalContent.querySelectorAll(
+              'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )
+            if (focusableElements.length > 0) {
+              focusableElements[0].focus()
+            } else {
+              modalContent.focus()
+            }
+          } else {
+            document.body.style.overflow = 'auto'
+          }
+        }
+      }
+    })
+
+    observer.observe(modalElement, { attributes: true })
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setupModal(modalId))
+  } else {
+    setupModal(modalId)
+  }
+</script>
