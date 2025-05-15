@@ -1,0 +1,203 @@
+---
+interface Props {
+  label?: string
+  description?: string
+  errorMessage?: string
+  isInvalid?: boolean
+  isDisabled?: boolean
+  placeholder?: string
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  selectId?: string
+}
+
+const {
+  label,
+  description,
+  errorMessage,
+  isInvalid,
+  isDisabled = false,
+  placeholder = 'Selecciona una opción',
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  selectId = Math.random().toString(36).substring(2, 9)
+} = Astro.props
+
+const variants = {
+  default: 'border-0 backdrop-blur-sm shadow-md',
+  bordered: 'border border-current shadow-md',
+  light: 'border-b border-current'
+}
+
+const colors = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
+  primary: 'bg-blue-500/20 ',
+  secondary: 'bg-indigo-500/20 ',
+  success: 'bg-green-500/30 ',
+  warning: 'bg-yellow-500/20 ',
+  danger: 'bg-red-500/20 '
+}
+
+const textColors = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-600',
+  secondary: 'text-indigo-600',
+  success: 'text-green-600',
+  warning: 'text-yellow-600',
+  danger: 'text-red-600'
+}
+
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  full: 'rounded-full'
+}
+---
+
+<div
+  class='relative w-full space-y-2 text-gray-600 dark:text-gray-500'
+  data-invalid={isInvalid}
+  id={selectId}
+>
+  {
+    label && (
+      <label for='select-trigger' class='block text-sm font-medium mb-1'>
+        {label}
+      </label>
+    )
+  }
+
+  <div
+    id='select-trigger'
+    role='button'
+    aria-haspopup='listbox'
+    aria-disabled={isDisabled}
+    class={`trigger flex items-center justify-between p-2 ${
+      variants[variant]
+    } ${variant === 'default' && colors[color]} ${textColors[color]} ${
+      variant !== 'light' && roundeds[rounded]
+    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+    data-open='false'
+  >
+    <div class='value' data-value=''>{placeholder}</div>
+
+    <div class='selector-icon' aria-hidden='true'>
+      <svg
+        class='w-4 h-4 transition-transform'
+        fill='none'
+        stroke='currentColor'
+        viewBox='0 0 24 24'
+      >
+        <path
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          stroke-width='2'
+          d='M19 9l-7 7-7-7'></path>
+      </svg>
+    </div>
+  </div>
+
+  <div
+    class={`listbox-wrapper hidden absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 ${colors[color]}`}
+  >
+    <ul class='listbox' role='listbox' aria-labelledby='select-trigger'>
+      <slot />
+    </ul>
+  </div>
+
+  {description && <p class='text-sm mt-1'>{description}</p>}
+
+  {
+    isInvalid && errorMessage && (
+      <p class='text-sm text-red-500 mt-1 error-message' role='alert'>
+        {errorMessage}
+      </p>
+    )
+  }
+
+  <script is:inline define:vars={{ selectId, isInvalid }}>
+    ;(function () {
+      const select = document.getElementById(selectId)
+      const trigger = select.querySelector('.trigger')
+      const listbox = select.querySelector('.listbox-wrapper')
+      const valueDisplay = select.querySelector('.value')
+      const icon = select.querySelector('svg')
+
+      const toggleListbox = () => {
+        const isOpen = listbox.classList.toggle('hidden')
+        trigger.setAttribute('data-open', !isOpen)
+        icon.style.transform = isOpen ? 'rotate(180deg)' : ''
+      }
+
+      const closeListbox = () => {
+        listbox.classList.add('hidden')
+        trigger.setAttribute('data-open', 'false')
+        icon.style.transform = ''
+      }
+
+      trigger.addEventListener('click', () => {
+        if (
+          !select
+            .querySelector('.trigger')
+            .classList.contains('cursor-not-allowed')
+        ) {
+          toggleListbox()
+        }
+      })
+
+      document.addEventListener('click', (e) => {
+        if (!select.contains(e.target)) closeListbox()
+      })
+
+      select.querySelectorAll('li').forEach((item) => {
+        item.addEventListener('click', () => {
+          if (item.getAttribute('data-disabled') !== 'true') {
+            valueDisplay.textContent = item.textContent
+            valueDisplay.setAttribute(
+              'data-value',
+              item.getAttribute('data-value')
+            )
+            closeListbox()
+
+            // Dispatch custom event
+            const event = new CustomEvent('select-change', {
+              detail: { value: item.getAttribute('data-value') }
+            })
+            select.dispatchEvent(event)
+          }
+        })
+      })
+
+      // Actualizar estado de validación
+      const updateValidation = () => {
+        const errorElement = select.querySelector('.error-message')
+        if (errorElement) {
+          errorElement.style.display = select.hasAttribute('data-invalid')
+            ? 'block'
+            : 'none'
+        }
+      }
+
+      // Escuchar cambios en atributos
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-invalid') {
+            updateValidation()
+          }
+        })
+      })
+
+      observer.observe(select, {
+        attributes: true
+      })
+
+      // Actualización inicial
+      updateValidation()
+    })()
+  </script>
+</div>
