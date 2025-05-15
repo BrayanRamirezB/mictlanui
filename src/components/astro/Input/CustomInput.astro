@@ -1,0 +1,100 @@
+---
+import Input from './Input.astro'
+
+interface InputProps {
+  label: string
+  placeholder: string
+  type?: 'text' | 'email' | 'number' | 'password' | 'tel'
+  isRequired?: boolean
+  isClearable?: boolean
+  isInvalid?: boolean
+  errorMessage?: string
+  description?: string
+  isMinLength?: boolean
+  minLength?: number
+  maxLength?: number
+  pattern?: string
+  isReadOnly?: boolean
+  isDisabled?: boolean
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  size?: 'sm' | 'md' | 'lg'
+  id?: string
+}
+
+const {
+  label,
+  placeholder,
+  type,
+  isRequired = false,
+  isClearable = false,
+  isInvalid = false,
+  errorMessage = '',
+  description = '',
+  isMinLength = false,
+  minLength,
+  maxLength,
+  pattern,
+  isReadOnly = false,
+  isDisabled = false,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  size = 'md',
+  id = `custom-input-${crypto.randomUUID()}`
+} = Astro.props as InputProps
+---
+
+<div class='p-4'>
+  <Input
+    label={label}
+    placeholder={placeholder}
+    type={type}
+    isRequired={isRequired}
+    isClearable={isClearable}
+    isInvalid={isInvalid}
+    errorMessage={errorMessage}
+    description={description}
+    minLength={minLength}
+    maxLength={maxLength}
+    pattern={pattern}
+    isReadOnly={isReadOnly}
+    isDisabled={isDisabled}
+    variant={variant}
+    color={color}
+    rounded={rounded}
+    size={size}
+    id={id}
+  />
+</div>
+
+<!-- Componente padre (actualizado) -->
+<script
+  is:inline
+  define:vars={{ id, isInvalid, minLength, isMinLength, isRequired }}
+>
+  let invalid = false
+  const input = document.getElementById(id)
+
+  const validateInput = (value) => {
+    // Validaciones independientes
+    const requiredError = isRequired && value.length === 0
+    const lengthError = minLength && value.length < minLength
+    const customError =
+      !isMinLength && !isRequired && isInvalid && !value.includes('@') // Ejemplo de validación personalizada
+
+    // Lógica de combinación clara
+    invalid = requiredError || lengthError || customError
+
+    // Actualizar el Input
+    input.dispatchEvent(
+      new CustomEvent('updateValidation', {
+        detail: { invalid }
+      })
+    )
+  }
+
+  input.addEventListener('input', (e) => validateInput(e.target.value))
+  input.addEventListener('valueChange', (e) => validateInput(e.detail.value))
+</script>
