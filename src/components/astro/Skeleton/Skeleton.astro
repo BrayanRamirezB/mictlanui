@@ -1,0 +1,40 @@
+---
+export interface Props {
+  isLoaded: boolean
+  className?: string
+}
+
+const { isLoaded, className: customClassesWhenLoading } = Astro.props
+
+const wrapperClasses = [
+  'relative',
+  'overflow-hidden',
+  { 'backdrop-blur-sm shadow-lg animate-pulse': !isLoaded },
+  customClassesWhenLoading && !isLoaded ? customClassesWhenLoading : ''
+]
+---
+
+<div
+  class:list={wrapperClasses}
+  data-loaded={isLoaded}
+  role='status'
+  aria-busy={!isLoaded}
+  aria-live='polite'
+  data-skeleton-wrapper
+  data-custom-loading-classes={!isLoaded && customClassesWhenLoading
+    ? customClassesWhenLoading
+    : ''}
+>
+  {
+    !isLoaded && (
+      <div
+        class='absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse'
+        aria-hidden='true'
+        data-skeleton-pulse
+      />
+    )
+  }
+  <div class:list={[{ 'opacity-0': !isLoaded }]} data-skeleton-content>
+    <slot />
+  </div>
+</div>

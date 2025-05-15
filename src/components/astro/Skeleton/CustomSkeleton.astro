@@ -1,0 +1,152 @@
+---
+import Button from '@/components/astro/Button.astro'
+import Card from '@/components/astro/Card/Card.astro'
+import CardHeader from '@/components/astro/Card/CardHeader.astro'
+import CardContent from '@/components/astro/Card/CardContent.astro'
+import Skeleton from '@/components/astro/Skeleton/Skeleton.astro'
+
+const { onlyCard = true, initialLoadState = false } = Astro.props
+---
+
+<div
+  class='flex flex-col justify-center items-center gap-y-4 custom-skeleton-container'
+>
+  {
+    onlyCard && (
+      <>
+        <Card maxWidth='xs' shadow='md' rounded='lg' color='default'>
+          <Skeleton isLoaded={initialLoadState} className='w-full'>
+            <img
+              src='/img-preview1.webp'
+              alt='Card image'
+              class='w-full h-40 object-cover rounded-t-lg'
+            />
+            <CardHeader textSize='lg' padding='md' font='bold'>
+              <h3>Title</h3>
+            </CardHeader>
+            <CardContent textSize='sm'>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Mollitia veniam at quaerat accusamus beatae, debitis nostrum
+                minima iure! Voluptas rem quo nihil inventore impedit harum?
+                Voluptatum minima iure blanditiis velit.
+              </p>
+            </CardContent>
+          </Skeleton>
+        </Card>
+        <Button id='loadButtonCard' class='my-button'>
+          Toggle Card Load
+        </Button>
+      </>
+    )
+  }
+
+  {
+    !onlyCard && (
+      <div class='flex flex-col items-center justify-center gap-y-2'>
+        <Skeleton
+          isLoaded={initialLoadState}
+          className='flex w-20 h-20 rounded-lg'
+        />
+        <div class='flex flex-col gap-3'>
+          <Skeleton
+            isLoaded={initialLoadState}
+            className='flex w-40 h-3 rounded-lg'
+          />
+          <Skeleton
+            isLoaded={initialLoadState}
+            className='flex w-40 h-3 rounded-lg'
+          />
+          <Skeleton
+            isLoaded={initialLoadState}
+            className='flex w-40 h-3 rounded-lg'
+          />
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<script define:vars={{ initialLoadStateFromProps: initialLoadState }}>
+  let isClientLoaded = initialLoadStateFromProps
+
+  function applySkeletonVisualState(skeletonWrapper, loaded) {
+    const pulseElement = skeletonWrapper.querySelector('[data-skeleton-pulse]')
+    const contentElement = skeletonWrapper.querySelector(
+      '[data-skeleton-content]'
+    )
+
+    const customLoadingClassesString =
+      skeletonWrapper.dataset.customLoadingClasses || ''
+    const customLoadingClasses = customLoadingClassesString
+      .split(' ')
+      .filter(Boolean)
+
+    skeletonWrapper.dataset.loaded = loaded.toString()
+    skeletonWrapper.setAttribute('aria-busy', (!loaded).toString())
+
+    const baseLoadingClasses = [
+      'backdrop-blur-sm',
+      'shadow-lg',
+      'animate-pulse'
+    ]
+
+    if (loaded) {
+      baseLoadingClasses.forEach((cls) => skeletonWrapper.classList.remove(cls))
+      customLoadingClasses.forEach((cls) =>
+        skeletonWrapper.classList.remove(cls)
+      )
+
+      if (pulseElement) {
+        pulseElement.remove()
+      }
+      if (contentElement) {
+        contentElement.classList.remove('opacity-0')
+      }
+    } else {
+      baseLoadingClasses.forEach((cls) => skeletonWrapper.classList.add(cls))
+      customLoadingClasses.forEach((cls) => skeletonWrapper.classList.add(cls))
+
+      if (!pulseElement && contentElement) {
+        const newPulse = document.createElement('div')
+        newPulse.className =
+          'absolute inset-0 transform bg-zinc-700/30 dark:bg-gray-600 animate-pulse'
+        newPulse.setAttribute('aria-hidden', 'true')
+        newPulse.dataset.skeletonPulse = ''
+
+        skeletonWrapper.insertBefore(
+          newPulse,
+          contentElement || skeletonWrapper.firstChild
+        )
+      }
+      if (contentElement) {
+        contentElement.classList.add('opacity-0')
+      }
+    }
+  }
+
+  function handleToggleAllSkeletons() {
+    isClientLoaded = !isClientLoaded
+
+    const allSkeletonsInContainer = document.querySelectorAll(
+      '.custom-skeleton-container [data-skeleton-wrapper]'
+    )
+    allSkeletonsInContainer.forEach((wrapper) => {
+      applySkeletonVisualState(wrapper, isClientLoaded)
+    })
+  }
+
+  const cardButton = document.getElementById('loadButtonCard')
+  if (cardButton) {
+    cardButton.addEventListener('click', handleToggleAllSkeletons)
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const allSkeletonsInContainer = document.querySelectorAll(
+      '.custom-skeleton-container [data-skeleton-wrapper]'
+    )
+    allSkeletonsInContainer.forEach((wrapper) => {
+      applySkeletonVisualState(wrapper, isClientLoaded)
+    })
+  })
+</script>
