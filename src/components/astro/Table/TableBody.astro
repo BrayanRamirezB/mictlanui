@@ -1,0 +1,66 @@
+---
+interface Props {
+  isLoading?: boolean
+  loadingContent?: string
+  isEmpty?: boolean
+  emptyMessage?: string
+  divide?: boolean
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+}
+
+const {
+  isLoading,
+  loadingContent,
+  isEmpty,
+  emptyMessage = 'No data available.',
+  divide = false,
+  color = 'default'
+} = Astro.props
+
+const divideColors = {
+  default: 'divide-gray-800 dark:divide-gray-300',
+  primary: 'divide-blue-800 dark:divide-blue-500',
+  secondary: 'divide-indigo-800 dark:divide-indigo-500',
+  success: 'divide-green-800 dark:divide-green-500',
+  warning: 'divide-yellow-800 dark:divide-yellow-500',
+  danger: 'divide-red-800 dark:divide-red-500'
+}
+
+let tbodyClasses = ''
+if (divide) {
+  tbodyClasses = `divide-y ${divideColors[color]}`
+}
+---
+
+{
+  isLoading ? (
+    <tbody aria-busy='true'>
+      <tr>
+        <td colspan='100%' class='py-6 text-center'>
+          {loadingContent ? (
+            <Fragment set:html={loadingContent} />
+          ) : (
+            'Loading...'
+          )}
+        </td>
+      </tr>
+    </tbody>
+  ) : isEmpty ? (
+    <tbody>
+      <tr>
+        <td
+          colspan='100%'
+          class='py-6 text-center'
+          role='alert'
+          aria-live='polite'
+        >
+          {emptyMessage}
+        </td>
+      </tr>
+    </tbody>
+  ) : (
+    <tbody class={tbodyClasses.trim()} role='rowgroup'>
+      <slot />
+    </tbody>
+  )
+}

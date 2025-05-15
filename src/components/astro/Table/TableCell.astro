@@ -1,0 +1,48 @@
+---
+import type { AriaRole } from 'react'
+
+interface Props {
+  isSelected?: boolean
+  isFocusVisible?: boolean
+  selectColor?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+  role?: string | AriaRole
+  tabIndex?: number
+  ariaSelected?: boolean
+}
+
+const {
+  isSelected,
+  isFocusVisible,
+  selectColor = 'default',
+  role = 'cell',
+  tabIndex = 0,
+  ariaSelected
+} = Astro.props
+
+const selectedColors = {
+  default: 'bg-neutral-100/70 dark:bg-zinc-700/80',
+  primary: 'bg-blue-500/70',
+  secondary: 'bg-indigo-500/70',
+  success: 'bg-green-500/80',
+  warning: 'bg-yellow-500/90 dark:bg-yellow-500/70',
+  danger: 'bg-red-500/70'
+}
+
+const cellClasses = [
+  'px-6 py-4 whitespace-nowrap text-sm',
+  isSelected ? selectedColors[selectColor] : '',
+  isFocusVisible ? 'ring-2 ring-blue-500' : ''
+]
+  .join(' ')
+  .trim()
+---
+
+<td tabindex={tabIndex} aria-selected={ariaSelected} class={cellClasses}>
+  <slot />
+</td>
