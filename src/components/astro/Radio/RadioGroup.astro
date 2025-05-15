@@ -1,0 +1,154 @@
+---
+interface Props {
+  orientation?: 'vertical' | 'horizontal'
+  label?: string
+  description?: string
+  errorMessage?: string
+  isInvalid?: boolean
+  isDisabled?: boolean
+  selectedValue?: string | null
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
+}
+
+const {
+  orientation = 'vertical',
+  label,
+  description,
+  errorMessage,
+  isInvalid = false,
+  isDisabled = false,
+  selectedValue,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  id = `radiogroup-${Math.random().toString(36).substring(2, 9)}`
+} = Astro.props
+
+const variants = {
+  default: 'border-0 backdrop-blur-sm shadow-md',
+  bordered: 'border shadow-md',
+  light: ''
+}
+const bgColors = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
+  primary: 'bg-blue-500/20',
+  secondary: 'bg-indigo-500/20',
+  success: 'bg-green-500/20',
+  warning: 'bg-yellow-500/20',
+  danger: 'bg-red-500/20'
+}
+const borderColors = {
+  default: 'border-zinc-700/30 dark:border-neutral-100/20',
+  primary: 'border-blue-500',
+  secondary: 'border-indigo-500',
+  success: 'border-green-500',
+  warning: 'border-yellow-500',
+  danger: 'border-red-500'
+}
+const textColors = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-600',
+  secondary: 'text-indigo-600',
+  success: 'text-green-600',
+  warning: 'text-yellow-600',
+  danger: 'text-red-600'
+}
+const roundeds = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-xl',
+  xl: 'rounded-3xl'
+}
+---
+
+<div
+  id={id}
+  class={`flex flex-col gap-3 px-4 py-3 ${variants[variant]} ${
+    variant === 'default' ? bgColors[color] : ''
+  } ${roundeds[rounded]} ${variant === 'bordered' ? borderColors[color] : ''}`}
+  data-orientation={orientation}
+  role='radiogroup'
+  aria-labelledby={label ? `${id}-label` : undefined}
+  aria-describedby={description ? `${id}-description` : undefined}
+  aria-invalid={isInvalid || undefined}
+  aria-disabled={isDisabled || undefined}
+>
+  {
+    label && (
+      <span
+        id={`${id}-label`}
+        class='text-sm font-medium text-gray-600 dark:text-gray-400'
+      >
+        {label}
+      </span>
+    )
+  }
+
+  <div
+    class={`flex ${orientation === 'horizontal' ? 'flex-row gap-4' : 'flex-col gap-2'} ${textColors[color]}`}
+  >
+    <slot />
+  </div>
+
+  {
+    description && (
+      <p id={`${id}-description`} class='text-sm text-gray-500'>
+        {description}
+      </p>
+    )
+  }
+  {
+    isInvalid && errorMessage && (
+      <p class='text-sm text-red-600 error-message'>{errorMessage}</p>
+    )
+  }
+</div>
+
+<script define:vars={{ id, selectedValue, isDisabled }}>
+  const root = document.getElementById(id)
+  const radios = Array.from(root.querySelectorAll('[role=radio]'))
+
+  function updateRadios(value) {
+    radios.forEach((r) => {
+      const input = r.querySelector('input[type=radio]')
+      const dot = r.querySelector('.inner-dot')
+      const isSel = input.value === value
+
+      r.setAttribute('aria-checked', isSel)
+      r.setAttribute('data-selected', isSel)
+
+      if (isDisabled) {
+        r.setAttribute('aria-disabled', 'true')
+        r.setAttribute('data-disabled', 'true')
+        r.tabIndex = -1
+        input.disabled = true
+        r.classList.add('opacity-50', 'pointer-events-none')
+      } else {
+        r.setAttribute('aria-disabled', 'false')
+        r.setAttribute('data-disabled', 'false')
+        r.tabIndex = 0
+        input.disabled = false
+        r.classList.remove('opacity-50', 'pointer-events-none')
+      }
+
+      if (dot) {
+        dot.classList.toggle('opacity-100', isSel)
+        dot.classList.toggle('opacity-0', !isSel)
+      }
+    })
+  }
+
+  updateRadios(selectedValue)
+
+  radios.forEach((radioEl) => {
+    radioEl.addEventListener('change', (e) => {
+      const newVal = e.detail
+      updateRadios(newVal)
+      root.dispatchEvent(new CustomEvent('change', { detail: newVal }))
+    })
+  })
+</script>

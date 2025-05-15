@@ -1,0 +1,149 @@
+---
+interface Props {
+  value: string
+  isSelected?: boolean
+  isDisabled?: boolean
+  isReadOnly?: boolean
+  description?: string
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  id?: string
+}
+
+const {
+  value,
+  isSelected = false,
+  isDisabled = false,
+  isReadOnly = false,
+  description,
+  color = 'default',
+  id = `radio-${Math.random().toString(36).substring(2, 9)}`
+} = Astro.props
+
+const colors = {
+  default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
+  primary: 'bg-blue-500/50',
+  secondary: 'bg-indigo-500/50',
+  success: 'bg-green-500/60',
+  warning: 'bg-yellow-500/60',
+  danger: 'bg-red-500/50'
+}
+---
+
+<div
+  id={id}
+  class={`flex items-center gap-2 transition-colors ${
+    isDisabled
+      ? 'opacity-50 cursor-not-allowed pointer-events-none'
+      : 'cursor-pointer'
+  }`}
+  role='radio'
+  aria-checked={isSelected}
+  aria-disabled={isDisabled}
+  tabindex={isDisabled ? -1 : 0}
+  data-selected={isSelected}
+  data-readonly={isReadOnly}
+  data-disabled={isDisabled}
+  data-pressed='false'
+  data-hover='false'
+  data-hover-unselected='false'
+>
+  <input
+    type='radio'
+    value={value}
+    checked={isSelected}
+    disabled={isDisabled || isReadOnly}
+    class='hidden'
+  />
+
+  <div
+    class={`size-5 rounded-full flex items-center justify-center transition-colors
+      ${isSelected ? colors[color] : 'border-2 border-zinc-700/50 dark:border-neutral-100/50'}`}
+  >
+    <div
+      class={`inner-dot size-3 rounded-full border-2 border-transparent ${colors[color]} opacity-0`}
+    >
+    </div>
+  </div>
+
+  <div class='flex flex-col'>
+    <div class='text-sm font-medium'><slot /></div>
+    {description && <p class='text-sm font-light'>{description}</p>}
+  </div>
+</div>
+
+<script define:vars={{ id, isSelected, isDisabled, isReadOnly, value }}>
+  const root = document.getElementById(id)
+  const input = root.querySelector('input[type=radio]')
+  const dot = root.querySelector('.inner-dot')
+  let isPressed = false
+  let isHovered = false
+
+  function updateAttrs() {
+    root.setAttribute('data-pressed', isPressed)
+    root.setAttribute('data-hover', isHovered)
+    root.setAttribute(
+      'data-hover-unselected',
+      isHovered && root.getAttribute('aria-checked') === 'false'
+    )
+  }
+
+  function updateDot(show) {
+    dot.classList.toggle('opacity-100', show)
+    dot.classList.toggle('opacity-0', !show)
+  }
+
+  function handleChange() {
+    if (
+      root.getAttribute('aria-disabled') === 'true' ||
+      root.getAttribute('data-readonly') === 'true'
+    )
+      return
+    input.checked = true
+    root.setAttribute('aria-checked', 'true')
+    root.setAttribute('data-selected', 'true')
+    root.dispatchEvent(new CustomEvent('change', { detail: value }))
+  }
+
+  updateDot(isSelected)
+
+  root.addEventListener('mousedown', () => {
+    if (
+      root.getAttribute('aria-disabled') === 'false' &&
+      root.getAttribute('data-readonly') === 'false'
+    ) {
+      isPressed = true
+      updateAttrs()
+    }
+  })
+
+  root.addEventListener('mouseup', () => {
+    isPressed = false
+    updateAttrs()
+  })
+
+  root.addEventListener('mouseenter', () => {
+    if (
+      root.getAttribute('aria-disabled') === 'false' &&
+      root.getAttribute('data-readonly') === 'false'
+    ) {
+      isHovered = true
+      updateAttrs()
+    }
+  })
+
+  root.addEventListener('mouseleave', () => {
+    isHovered = false
+    updateAttrs()
+  })
+
+  root.addEventListener('click', handleChange)
+  root.addEventListener('keydown', (e) => {
+    if (
+      (e.key === 'Enter' || e.key === ' ') &&
+      root.getAttribute('aria-disabled') === 'false'
+    ) {
+      e.preventDefault()
+      handleChange()
+    }
+  })
+</script>

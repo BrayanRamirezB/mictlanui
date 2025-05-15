@@ -1,0 +1,96 @@
+---
+import RadioGroup from './RadioGroup.astro'
+import Radio from './Radio.astro'
+
+const {
+  orientation = 'vertical',
+  label,
+  description: showDescription = false,
+  errorMessage = '',
+  IsInvalid = false,
+  isDisabled = false,
+  variant = 'default',
+  color = 'default',
+  rounded = 'md',
+  itemDescription = false,
+  itemDisabled = false
+} = Astro.props
+
+const idVal = `customradio-${Math.random().toString(36).substring(2, 9)}`
+---
+
+<div id={idVal} class='p-4'>
+  <RadioGroup
+    id={`${idVal}-group`}
+    label={label}
+    description={showDescription ? `Selected value: null` : undefined}
+    errorMessage={errorMessage}
+    orientation={orientation}
+    selectedValue={null}
+    isInvalid={IsInvalid && true}
+    isDisabled={isDisabled}
+    variant={variant}
+    color={color}
+    rounded={rounded}
+  >
+    <Radio
+      value='option1'
+      description={itemDescription ? 'This is option 1' : undefined}
+    >
+      Option 1
+    </Radio>
+    <Radio
+      value='option2'
+      description={itemDescription ? 'This is option 2' : undefined}
+    >
+      Option 2
+    </Radio>
+    <Radio
+      value='option3'
+      description={itemDescription ? 'This is option 3' : undefined}
+      isDisabled={itemDisabled}
+    >
+      Option 3
+    </Radio>
+  </RadioGroup>
+</div>
+
+<script
+  type='module'
+  define:vars={{
+    idVal,
+    IsInvalid,
+    itemDescription,
+    itemDisabled,
+    showDescription
+  }}
+>
+  let selectedValue = null
+  const validOptions = ['option2']
+
+  const root = document.getElementById(idVal)
+  const group = document.getElementById(`${idVal}-group`)
+
+  function updateGroup(val) {
+    const isInvalidInternal = !validOptions.includes(val)
+
+    selectedValue = val
+
+    group.setAttribute('selectedValue', selectedValue)
+    group.setAttribute('aria-invalid', String(IsInvalid && isInvalidInternal))
+
+    if (showDescription) {
+      const desc = group.querySelector('#' + `${idVal}-group` + '-description')
+      if (desc) desc.textContent = `Selected value: ${selectedValue}`
+    }
+
+    const errEl = root.querySelector('.error-message')
+    if (errEl) {
+      errEl.style.display = IsInvalid && isInvalidInternal ? '' : 'none'
+    }
+  }
+
+  group.addEventListener('change', (e) => {
+    updateGroup(e.detail)
+  })
+</script>
