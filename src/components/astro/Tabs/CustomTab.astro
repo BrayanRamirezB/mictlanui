@@ -1,0 +1,50 @@
+---
+import Tabs from './Tabs.astro'
+import Tab from './Tab.astro'
+
+export interface Props {
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  radius?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  placement?: 'top' | 'bottom' | 'left' | 'right'
+  orientation?: 'horizontal' | 'vertical'
+  disabled?: boolean
+  isDisabled?: boolean
+  href?: string
+}
+
+const {
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  radius = 'md',
+  placement = 'top',
+  orientation = 'horizontal',
+  disabled = false,
+  isDisabled = false,
+  href
+} = Astro.props
+---
+
+<div class='p-8'>
+  <Tabs
+    variant={variant}
+    color={color}
+    size={size}
+    radius={radius}
+    placement={placement}
+    orientation={orientation}
+    disabled={disabled}
+  >
+    <Tab label='Tab 1'>
+      <div>Contenido de la pestaña 1</div>
+    </Tab>
+    <Tab label='Tab 2' disabled={isDisabled}>
+      <div>Contenido de la pestaña 2</div>
+    </Tab>
+    <Tab label='Tab 3' href={href}>
+      <div>Contenido de la pestaña 3</div>
+    </Tab>
+  </Tabs>
+</div>

@@ -1,0 +1,21 @@
+---
+export interface Props {
+  label: string
+  disabled?: boolean
+  href?: string
+}
+
+const { label, disabled = false, href } = Astro.props
+---
+
+<div
+  class='astro-tab-source-data'
+  data-label={label}
+  data-disabled={disabled ? 'true' : undefined}
+  data-href={href}
+  style='display: none;'
+>
+</div>
+<div class='astro-tab-panel-content'>
+  <slot />
+</div>

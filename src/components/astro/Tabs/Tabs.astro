@@ -1,0 +1,351 @@
+---
+export interface Props {
+  variant?: 'default' | 'bordered' | 'light'
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  radius?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  placement?: 'top' | 'bottom' | 'left' | 'right'
+  orientation?: 'horizontal' | 'vertical'
+  disabled?: boolean
+  uniqueId?: string
+}
+
+const {
+  variant = 'default',
+  color = 'default',
+  size = 'md',
+  radius = 'md',
+  placement = 'top',
+  orientation = 'horizontal',
+  disabled = false,
+  uniqueId = `tabs-${Math.random().toString(36).substring(2, 9)}`
+} = Astro.props
+
+const orientationClass = orientation === 'vertical' ? 'flex-col' : 'flex-row'
+
+const placementClassMap = {
+  top: 'flex-col',
+  bottom: 'flex-col-reverse',
+  left: 'flex-row',
+  right: 'flex-row-reverse'
+}
+const placementClass = placementClassMap[placement]
+
+const variantsMap = {
+  default: 'border-0 shadow-lg backdrop-blur-sm',
+  bordered: 'border shadow-md',
+  light: 'border-b'
+}
+
+const activeVariantsMap = {
+  default: 'border-0 shadow-lg backdrop-blur-sm',
+  bordered: 'border',
+  light: 'border-b-2'
+}
+
+const colorsMap = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+  primary: 'bg-blue-500/20',
+  secondary: 'bg-indigo-500/20',
+  success: 'bg-green-500/20',
+  warning: 'bg-yellow-500/20',
+  danger: 'bg-red-500/20'
+}
+
+const textColorsMap = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-800 dark:text-blue-500',
+  secondary: 'text-indigo-800 dark:text-indigo-500',
+  success: 'text-green-800 dark:text-green-500',
+  warning: 'text-yellow-800 dark:text-yellow-500',
+  danger: 'text-red-800 dark:text-red-500'
+}
+
+const noActiveTextColorsMap = {
+  default: 'text-gray-800/50 dark:text-gray-300/50',
+  primary: 'text-blue-800/50 dark:text-blue-500/50',
+  secondary: 'text-indigo-800/50 dark:text-indigo-500/50',
+  success: 'text-green-800/50 dark:text-green-500/50',
+  warning: 'text-yellow-800/50 dark:text-yellow-500/50',
+  danger: 'text-red-800/50 dark:text-red-500/50'
+}
+
+const borderColorsMap = {
+  default: 'border-gray-800 dark:border-gray-300',
+  primary: 'border-blue-800 dark:border-blue-500',
+  secondary: 'border-indigo-800 dark:border-indigo-500',
+  success: 'border-green-800 dark:border-green-500',
+  warning: 'border-yellow-800 dark:border-yellow-500',
+  danger: 'border-red-800 dark:border-red-500'
+}
+
+const hoverColorsMap = {
+  default: 'hover:text-gray-800/80 dark:hover:dark:text-gray-300/80',
+  primary: 'hover:text-blue-500/50 dark:hover:text-blue-500/50',
+  secondary: 'hover:text-indigo-500/50 dark:hover:text-indigo-500/50',
+  success: 'hover:text-green-500/80 dark:hover:text-green-500/60',
+  warning: 'hover:text-yellow-500/80 dark:hover:text-yellow-500/50',
+  danger: 'hover:text-red-500/50 dark:hover:text-red-500/50'
+}
+
+const sizesMap = {
+  sm: 'px-3 py-2 text-xs',
+  md: 'px-4 py-2.5 text-sm',
+  lg: 'px-5 py-3 text-base',
+  xl: 'px-6 py-3.5 text-lg'
+}
+
+const roundedsMap = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const tabListClasses = [
+  'flex',
+  orientationClass,
+  variantsMap[variant],
+  variant === 'default' && colorsMap[color],
+  variant !== 'default' && borderColorsMap[color],
+  sizesMap[size],
+  variant !== 'light' && roundedsMap[radius]
+]
+  .filter(Boolean)
+  .join(' ')
+
+const tabPanelsContainerClasses = ['p-4', textColorsMap[color]]
+  .filter(Boolean)
+  .join(' ')
+---
+
+<div class:list={[`flex`, placementClass, uniqueId]}>
+  <div class={tabListClasses} role='tablist' aria-orientation={orientation}>
+  </div>
+
+  <div class={tabPanelsContainerClasses}></div>
+
+  <div class='astro-tabs-slot-container' style='display: none;'>
+    <slot />
+  </div>
+</div>
+
+<script
+  define:vars={{
+    variant,
+    color,
+    size,
+    radius,
+    placement,
+    orientation,
+    disabled,
+    variantsMap,
+    activeVariantsMap,
+    colorsMap,
+    textColorsMap,
+    noActiveTextColorsMap,
+    borderColorsMap,
+    hoverColorsMap,
+    sizesMap,
+    roundedsMap,
+    uniqueId,
+    allDisabled: disabled
+  }}
+>
+  document.addEventListener('astro:page-load', () => {
+    const tabsContainer = document.querySelector(`.${uniqueId}`)
+    if (!tabsContainer) return
+
+    const tabList = tabsContainer.querySelector('[role="tablist"]')
+    const tabPanelsContainer = tabsContainer.querySelector(
+      `.${uniqueId} > div:nth-child(2)`
+    )
+    const slottedContentContainer = tabsContainer.querySelector(
+      '.astro-tabs-slot-container'
+    )
+
+    if (!tabList || !tabPanelsContainer || !slottedContentContainer) {
+      console.error('Tabs structure not found for ID:', uniqueId)
+      return
+    }
+
+    const tabSources = Array.from(
+      slottedContentContainer.querySelectorAll('.astro-tab-source-data')
+    )
+    const tabs = []
+    const panels = []
+
+    let activeTabIndex = 0
+
+    tabSources.forEach((sourceEl, index) => {
+      const label = sourceEl.dataset.label
+      const isDisabled = sourceEl.dataset.disabled === 'true'
+      const href = sourceEl.dataset.href
+
+      const button = document.createElement(href ? 'a' : 'button')
+      button.setAttribute('role', 'tab')
+      button.setAttribute('aria-controls', `${uniqueId}-tabpanel-${index}`)
+      button.id = `${uniqueId}-tab-${index}`
+      button.textContent = label
+      if (href) {
+        button.href = href
+        if (isDisabled || allDisabled) {
+          button.classList.add('pointer-events-none')
+        }
+      } else {
+        button.type = 'button'
+      }
+
+      button.tabIndex = isDisabled || allDisabled ? -1 : 0
+      button.disabled = isDisabled || allDisabled
+
+      const panelContentSource = sourceEl.nextElementSibling
+      const panel = document.createElement('div')
+      panel.id = `${uniqueId}-tabpanel-${index}`
+      panel.setAttribute('role', 'tabpanel')
+      panel.setAttribute('aria-labelledby', `${uniqueId}-tab-${index}`)
+      if (
+        panelContentSource &&
+        panelContentSource.classList.contains('astro-tab-panel-content')
+      ) {
+        while (panelContentSource.firstChild) {
+          panel.appendChild(panelContentSource.firstChild)
+        }
+      } else {
+        panel.textContent = `Error: Panel content for "${label}" not found.`
+      }
+
+      tabList.appendChild(button)
+      tabPanelsContainer.appendChild(panel)
+      tabs.push(button)
+      panels.push(panel)
+
+      button.addEventListener('click', (e) => {
+        if (isDisabled || allDisabled) {
+          e.preventDefault()
+          return
+        }
+        if (!href) e.preventDefault()
+        setActiveTab(index)
+      })
+
+      button.addEventListener('keydown', (event) => {
+        if (isDisabled || allDisabled) return
+        handleKeyDown(event, index)
+      })
+    })
+
+    function applyTabStyles() {
+      tabs.forEach((button, index) => {
+        const tabIsDisabled = button.disabled
+        const tabIsLink = button.tagName === 'A'
+
+        const baseButtonClasses = [
+          'px-4',
+          'py-2',
+          'transition-colors',
+          'duration-300',
+          'ease-in-out'
+        ]
+        button.className = ''
+        baseButtonClasses.forEach((cls) => button.classList.add(cls))
+
+        if (index === activeTabIndex) {
+          button.classList.add(...activeVariantsMap[variant].split(' '))
+          button.classList.add(...borderColorsMap[color].split(' '))
+          button.classList.add(...textColorsMap[color].split(' '))
+          if (variant !== 'light') {
+            button.classList.add(...roundedsMap[radius].split(' '))
+          }
+          button.setAttribute('aria-selected', 'true')
+          button.tabIndex = 0
+          panels[index].hidden = false
+        } else {
+          button.classList.add(...noActiveTextColorsMap[color].split(' '))
+          button.setAttribute('aria-selected', 'false')
+          button.tabIndex = -1
+          panels[index].hidden = true
+        }
+
+        if (tabIsDisabled) {
+          button.classList.add('opacity-50', 'cursor-not-allowed')
+          if (tabIsLink) button.classList.add('pointer-events-none')
+        } else {
+          if (button.tagName !== 'A' || !button.getAttribute('href')) {
+            button.classList.add(
+              ...hoverColorsMap[color]
+                .split(' ')
+                .map((c) => c.replace('hover:', ''))
+            )
+          }
+        }
+      })
+    }
+
+    function setActiveTab(index) {
+      if (
+        tabs[index] &&
+        (tabs[index].disabled ||
+          tabs[index].classList.contains('pointer-events-none'))
+      )
+        return
+      activeTabIndex = index
+      applyTabStyles()
+    }
+
+    function handleKeyDown(event, index) {
+      let nextIndex = -1
+      const numTabs = tabs.length
+
+      if (orientation === 'horizontal') {
+        if (event.key === 'ArrowRight') {
+          nextIndex = (index + 1) % numTabs
+        } else if (event.key === 'ArrowLeft') {
+          nextIndex = (index - 1 + numTabs) % numTabs
+        }
+      } else {
+        // vertical
+        if (event.key === 'ArrowDown') {
+          nextIndex = (index + 1) % numTabs
+        } else if (event.key === 'ArrowUp') {
+          nextIndex = (index - 1 + numTabs) % numTabs
+        }
+      }
+
+      if (nextIndex !== -1) {
+        event.preventDefault()
+        let attempts = 0
+        while (tabs[nextIndex].disabled && attempts < numTabs) {
+          if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+            nextIndex = (nextIndex + 1) % numTabs
+          } else {
+            nextIndex = (nextIndex - 1 + numTabs) % numTabs
+          }
+          attempts++
+        }
+        if (!tabs[nextIndex].disabled) {
+          setActiveTab(nextIndex)
+          tabs[nextIndex].focus()
+        }
+      }
+    }
+
+    if (tabs.length > 0) {
+      const firstEnabledTabIndex = tabs.findIndex((tab) => !tab.disabled)
+      if (firstEnabledTabIndex !== -1) {
+        activeTabIndex = firstEnabledTabIndex
+      } else {
+        activeTabIndex = 0
+      }
+      applyTabStyles()
+    }
+
+    return () => {
+      tabs.forEach((button) => {
+        const newButton = button.cloneNode(true)
+        button.parentNode.replaceChild(newButton, button)
+      })
+    }
+  })
+</script>
