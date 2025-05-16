@@ -9,6 +9,7 @@ import Preview from '@/components/landing/Preview.astro'
 import Accordion from '@/components/react/Accordion/Accordion.jsx'
 import { AccordionReact, AccordionItemReact } from '@/const/componentsReact'
 import { AccordionTs, AccordionItemTs } from '@/const/componentsTs'
+import { AccordionAstro } from '@/const/componentsAstro'
 
 ## Sobre el componente
 
@@ -85,7 +86,8 @@ Y el código para `Accordion` es el siguiente:
   client:load
   tabs={[
     { label: 'React', code: AccordionReact },
-    { label: 'TypeScript', code: AccordionTs }
+    { label: 'TypeScript', code: AccordionTs },
+    { label: 'Astro', code: AccordionAstro }
   ]}
 />
 

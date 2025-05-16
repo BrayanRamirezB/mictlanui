@@ -9,6 +9,7 @@ import CustomTab from '@/components/react/Tabs/CustomTab.jsx'
 import CodeTabs from '@/components/landing/CodeTabs.jsx'
 import { TabReact, TabsReact } from '@/const/componentsReact'
 import { TabTs, TabsTs } from '@/const/componentsTs'
+import { TabAstro, TabsAstro } from '@/const/componentsAstro'
 
 ## Sobre el componente
 
@@ -47,8 +48,9 @@ El código para el componente `Tab` es el siguiente:
 <CodeTabs
   client:load
   tabs={[
-    { label: 'React', code: TabsReact },
-    { label: 'TypeScript', code: TabsTs }
+    { label: 'React', code: TabReact },
+    { label: 'TypeScript', code: TabTs },
+    { label: 'Astro', code: TabAstro }
   ]}
 />
 
@@ -58,7 +60,8 @@ El código para el componente `Tabs` es el siguiente:
   client:load
   tabs={[
     { label: 'React', code: TabsReact },
-    { label: 'TypeScript', code: TabsTs }
+    { label: 'TypeScript', code: TabsTs },
+    { label: 'Astro', code: TabsAstro }
   ]}
 />
 
