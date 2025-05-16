@@ -164,7 +164,6 @@ const roundeds = {
             )
             closeListbox()
 
-            // Dispatch custom event
             const event = new CustomEvent('select-change', {
               detail: { value: item.getAttribute('data-value') }
             })
@@ -173,7 +172,6 @@ const roundeds = {
         })
       })
 
-      // Actualizar estado de validación
       const updateValidation = () => {
         const errorElement = select.querySelector('.error-message')
         if (errorElement) {
@@ -183,7 +181,6 @@ const roundeds = {
         }
       }
 
-      // Escuchar cambios en atributos
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.attributeName === 'data-invalid') {
@@ -196,7 +193,6 @@ const roundeds = {
         attributes: true
       })
 
-      // Actualización inicial
       updateValidation()
     })()
   </script>

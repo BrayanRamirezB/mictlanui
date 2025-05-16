@@ -1,6 +1,4 @@
 ---
-import type { AriaRole } from 'react'
-
 interface CardHeaderProps {
   textColor?:
     | 'default'
@@ -24,7 +22,7 @@ interface CardHeaderProps {
   href?: string
   className?: string
   ariaLabel?: string
-  role?: AriaRole | null | undefined
+  role?: string
 }
 const {
   textColor = 'default',
