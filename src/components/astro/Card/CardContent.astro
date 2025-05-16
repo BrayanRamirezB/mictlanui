@@ -1,6 +1,4 @@
 ---
-import type { AriaRole } from 'react'
-
 interface CardContentProps {
   textColor?:
     | 'default'
@@ -14,7 +12,7 @@ interface CardContentProps {
   textAlign?: 'left' | 'center' | 'right'
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   className?: string
-  role?: AriaRole | null | undefined
+  role?: string | null | undefined
   ariaLabel?: string
 }
 
