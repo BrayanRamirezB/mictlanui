@@ -86,9 +86,11 @@ const Slider: React.FC<SliderProps> = ({
       orientation === 'horizontal'
         ? e.clientX - trackRect.left
         : trackRect.bottom - e.clientY
-    const newValue =
-      Math.round(min + ((clickPos / trackLength) * (max - min)) / step) * step
-    handleValueChange(Math.max(min, Math.min(max, newValue)))
+    const percent = Math.max(0, Math.min(1, clickPos / trackLength))
+    let rawValue = min + percent * (max - min)
+    let newValue = Math.round((rawValue - min) / step) * step + min
+    newValue = Math.max(min, Math.min(max, parseFloat(newValue.toFixed(10))))
+    handleValueChange(newValue)
   }
 
   const handleThumbDrag = (e: Event) => {
@@ -114,9 +116,11 @@ const Slider: React.FC<SliderProps> = ({
       return
     }
 
-    const newValue =
-      Math.round(min + ((clientPos / trackLength) * (max - min)) / step) * step
-    handleValueChange(Math.max(min, Math.min(max, newValue)))
+    const percent = Math.max(0, Math.min(1, clientPos / trackLength))
+    let rawValue = min + percent * (max - min)
+    let newValue = Math.round((rawValue - min) / step) * step + min
+    newValue = Math.max(min, Math.min(max, parseFloat(newValue.toFixed(10))))
+    handleValueChange(newValue)
   }
 
   const handleThumbMouseDown = (e: MouseEvent<HTMLDivElement>) => {
