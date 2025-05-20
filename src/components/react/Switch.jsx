@@ -15,7 +15,6 @@ const Switch = ({
   id
 }) => {
   const [isSelected, setIsSelected] = useState(initialSelected)
-  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     setIsSelected(initialSelected)
@@ -25,16 +24,6 @@ const Switch = ({
     if (!isReadOnly && !isDisabled) {
       setIsSelected(!isSelected)
     }
-  }
-
-  const handleMouseEnter = () => {
-    if (!isReadOnly && !isDisabled) {
-      setIsHovered(true)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
   }
 
   const handleInputChange = (e) => {
@@ -51,7 +40,7 @@ const Switch = ({
   }
 
   const colors = {
-    default: 'bg-zinc-700/30 dark:bg-neutral-100/20 dark:shadow-zinc-700/20',
+    default: 'bg-zinc-700/30 dark:bg-neutral-100/30 dark:shadow-zinc-700/20',
     primary: 'bg-blue-500/50',
     secondary: 'bg-indigo-500/50 ',
     success: 'bg-green-500/50 ',
@@ -116,8 +105,6 @@ const Switch = ({
       className={`flex items-center space-x-2 ${
         isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onClick={handleToggle}
       onKeyDown={handleKeyDown}
       role='switch'
@@ -134,9 +121,9 @@ const Switch = ({
         </label>
       )}
       <div
-        className={`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors ${
+        className={`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors duration-500 ease-in-out ${
           isSelected ? colors[color] : 'bg-gray-300'
-        } ${isHovered ? colors[color] : ''}
+        }
         ${roundeds[rounded]} 
         ${sizes[size]} `}
       >
@@ -158,7 +145,7 @@ const Switch = ({
             </span>
           )}
           <div
-            className={`absolute bg-neutral-100 shadow-lg transform transition-transform ${
+            className={`absolute bg-neutral-100 shadow-lg transform duration-500 ease-in-out transition-transform ${
               isSelected ? circleTranslate[size] : 'translate-x-0'
             } ${circleSizes[size]} ${roundeds[rounded]}`}
           >

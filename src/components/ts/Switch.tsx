@@ -42,7 +42,6 @@ const Switch: FC<SwitchProps> = ({
   id = 'switch'
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(initialSelected)
-  const [isHovered, setIsHovered] = useState<boolean>(false)
 
   useEffect(() => {
     setIsSelected(initialSelected)
@@ -52,16 +51,6 @@ const Switch: FC<SwitchProps> = ({
     if (!isReadOnly && !isDisabled) {
       setIsSelected(!isSelected)
     }
-  }
-
-  const handleMouseEnter = () => {
-    if (!isReadOnly && !isDisabled) {
-      setIsHovered(true)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
   }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +67,7 @@ const Switch: FC<SwitchProps> = ({
   }
 
   const colors = {
-    default: 'bg-zinc-700/30 dark:bg-neutral-100/20 dark:shadow-zinc-700/20',
+    default: 'bg-zinc-700/30 dark:bg-neutral-100/30 dark:shadow-zinc-700/20',
     primary: 'bg-blue-500/50',
     secondary: 'bg-indigo-500/50 ',
     success: 'bg-green-500/50 ',
@@ -143,8 +132,6 @@ const Switch: FC<SwitchProps> = ({
       className={`flex items-center space-x-2 ${
         isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onClick={handleToggle}
       onKeyDown={handleKeyDown}
       role='switch'
@@ -161,9 +148,9 @@ const Switch: FC<SwitchProps> = ({
         </label>
       )}
       <div
-        className={`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors ${
+        className={`flex items-center border-0 shadow-xl backdrop-blur-md duration-500 ease-in-out transition-colors ${
           isSelected ? colors[color] : 'bg-gray-300'
-        } ${isHovered ? colors[color] : ''}
+        }
         ${roundeds[rounded]} 
         ${sizes[size]} `}
       >
@@ -185,7 +172,7 @@ const Switch: FC<SwitchProps> = ({
             </span>
           )}
           <div
-            className={`absolute bg-neutral-100 shadow-lg transform transition-transform ${
+            className={`absolute bg-neutral-100 shadow-lg transform duration-500 ease-in-out transition-transform ${
               isSelected ? circleTranslate[size] : 'translate-x-0'
             } ${circleSizes[size]} ${roundeds[rounded]}`}
           >
