@@ -843,7 +843,8 @@ export const ButtonReact = `const Button = ({
   color = 'default',
   isLoading = false,
   onClick,
-  children
+  children,
+  className
 }) => {
   const variants = {
     default: 'border-0 shadow-md backdrop-blur-sm',
@@ -931,6 +932,7 @@ export const ButtonReact = `const Button = ({
       }
       \${hoverColors[color]}
       \${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+      \${className}
     \`
 
   return (
@@ -1259,6 +1261,7 @@ const Checkbox = ({
             strokeLinecap='round'
             strokeLinejoin='round'
             aria-hidden='true'
+            className='animate-fade-in'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M5 12l5 5l10 -10' />
@@ -1483,7 +1486,7 @@ const Code = ({
 
       <button
         onClick={handleCopy}
-        className={\`flex text-white px-1.5 py-1 rounded-lg transition duration-300 ease-out \${hoverColors[color]}\`}
+        className={\`flex text-white px-1.5 py-1 rounded-lg transition hover:animate-squeeze duration-300 ease-out \${hoverColors[color]}\`}
         aria-label={
           copied ? 'Code copied to clipboard' : 'Copy code to clipboard'
         }
@@ -2266,7 +2269,6 @@ const Switch = ({
   id
 }) => {
   const [isSelected, setIsSelected] = useState(initialSelected)
-  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     setIsSelected(initialSelected)
@@ -2276,16 +2278,6 @@ const Switch = ({
     if (!isReadOnly && !isDisabled) {
       setIsSelected(!isSelected)
     }
-  }
-
-  const handleMouseEnter = () => {
-    if (!isReadOnly && !isDisabled) {
-      setIsHovered(true)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
   }
 
   const handleInputChange = (e) => {
@@ -2302,7 +2294,7 @@ const Switch = ({
   }
 
   const colors = {
-    default: 'bg-zinc-700/30 dark:bg-neutral-100/20 dark:shadow-zinc-700/20',
+    default: 'bg-zinc-700/30 dark:bg-neutral-100/30 dark:shadow-zinc-700/20',
     primary: 'bg-blue-500/50',
     secondary: 'bg-indigo-500/50 ',
     success: 'bg-green-500/50 ',
@@ -2367,8 +2359,6 @@ const Switch = ({
       className={\`flex items-center space-x-2 \${
         isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
       }\`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onClick={handleToggle}
       onKeyDown={handleKeyDown}
       role='switch'
@@ -2385,9 +2375,9 @@ const Switch = ({
         </label>
       )}
       <div
-        className={\`flex items-center border-0 shadow-xl backdrop-blur-md transition-colors \${
+        className={\`flex items-center border-0 shadow-xl backdrop-blur-md duration-500 ease-in-out transition-colors \${
           isSelected ? colors[color] : 'bg-gray-300'
-        } \${isHovered ? colors[color] : ''}
+        }
         \${roundeds[rounded]} 
         \${sizes[size]} \`}
       >
@@ -2409,7 +2399,7 @@ const Switch = ({
             </span>
           )}
           <div
-            className={\`absolute bg-neutral-100 shadow-lg transform transition-transform \${
+            className={\`absolute bg-neutral-100 shadow-lg transform duration-500 ease-in-out transition-transform \${
               isSelected ? circleTranslate[size] : 'translate-x-0'
             } \${circleSizes[size]} \${roundeds[rounded]}\`}
           >
@@ -2670,7 +2660,7 @@ const Tooltip = ({
           data-placement={placement}
           data-disabled={isDisabled}
           aria-hidden={!isOpen}
-          className={\`absolute z-50 border-0 shadow-md backdrop-blur-sm \${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
+          className={\`absolute z-50 border-0 shadow-md backdrop-blur-sm animate-fade-in \${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
           \${roundeds[rounded]}
           \${textColors[color]}
           \${colors[color]}
@@ -3189,10 +3179,10 @@ const Drawer = ({
   }
 
   const drawerPositions = {
-    top: 'top-0 left-0 right-0 w-full',
-    bottom: 'bottom-0 left-0 right-0 w-full',
-    left: 'left-0 top-0 bottom-0 h-full',
-    right: 'right-0 top-0 bottom-0 h-full'
+    top: 'top-0 left-0 right-0 w-full animate-fade-in-down',
+    bottom: 'bottom-0 left-0 right-0 w-full animate-fade-in-up',
+    left: 'left-0 top-0 bottom-0 h-full animate-fade-in-right',
+    right: 'right-0 top-0 bottom-0 h-full animate-fade-in-left'
   }
 
   const drawerStyle = \`\${drawerPositions[position]} \${
@@ -3588,7 +3578,7 @@ const DropdownMenu = ({
       id={id}
       role='menu'
       aria-hidden={!isOpen}
-      className={\`origin-top-right flex flex-col right-0 mt-2 w-full \${
+      className={\`origin-top-right animate-fade-in-down flex flex-col right-0 mt-2 w-full \${
         isOpen ? 'block' : 'hidden'
       }
         \${variants[variant]} 
@@ -4138,7 +4128,7 @@ const Modal = ({
       <div
         ref={modalRef}
         tabIndex='-1'
-        className={\`\${colors[color]} \${roundeds[rounded]} shadow-lg w-full \${
+        className={\`animate-zoom-in \${colors[color]} \${roundeds[rounded]} shadow-lg w-full \${
           sizes[size]
         } border-0 backdrop-blur-sm \${
           effect === 'opaque' ? 'text-gray-200' : 'text-gray-800 '
@@ -4350,7 +4340,7 @@ const PopoverContent = forwardRef(
           role='dialog'
         >
           <div
-            className={\`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 \${colors[color]} \${roundeds[rounded]}\`}
+            className={\`border-0 animate-fade-in backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 \${colors[color]} \${roundeds[rounded]}\`}
           >
             {children}
           </div>
@@ -4476,7 +4466,7 @@ const Radio = ({
       />
 
       <div
-        className={\`size-5 rounded-full flex items-center justify-center transition-colors \${
+        className={\`size-5 rounded-full flex items-center justify-center duration-500 ease-in-out transition-colors \${
           isSelected
             ? colors[color]
             : 'border-2 border-zinc-700/50 dark:border-neutral-100/50'
@@ -4742,7 +4732,7 @@ const Select = ({
 
       {isOpen && (
         <div
-          className={\`listbox-wrapper absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 \${colors[color]}\`}
+          className={\`listbox-wrapper animate-fade-in-down absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 \${colors[color]}\`}
         >
           <ul
             className='listbox'
@@ -5011,7 +5001,7 @@ const Tabs = ({
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={\`px-4 py-2 transition-colors duration-300 ease-in-out \${
                 activeTab === index
-                  ? \`\${activeVariants[variant]} \${borderColors[color]} \${
+                  ? \`animate-flip-in-x \${activeVariants[variant]} \${borderColors[color]} \${
                       textColors[color]
                     } \${variant !== 'light' && roundeds[radius]}\`
                   : noActiveTextColors[color]
