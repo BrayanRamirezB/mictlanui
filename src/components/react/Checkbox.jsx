@@ -122,6 +122,7 @@ const Checkbox = ({
             strokeLinecap='round'
             strokeLinejoin='round'
             aria-hidden='true'
+            className='animate-fade-in'
           >
             <path stroke='none' d='M0 0h24v24H0z' fill='none' />
             <path d='M5 12l5 5l10 -10' />
