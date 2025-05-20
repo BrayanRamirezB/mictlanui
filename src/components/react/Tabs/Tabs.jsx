@@ -130,11 +130,13 @@ const Tabs = ({
               ref={(el) => (tabsRef.current[index] = el)}
               onClick={() => !isDisabled && !disabled && setActiveTab(index)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className={`px-4 py-2 transition-colors duration-300 ease-in-out ${
+              className={`px-4 py-2 transition-transform duration-300 ease-in-out ${
                 activeTab === index
-                  ? `${activeVariants[variant]} ${borderColors[color]} ${
-                      textColors[color]
-                    } ${variant !== 'light' && roundeds[radius]}`
+                  ? `animate-flip-in-x ${activeVariants[variant]} ${
+                      borderColors[color]
+                    } ${textColors[color]} ${
+                      variant !== 'light' && roundeds[radius]
+                    }`
                   : noActiveTextColors[color]
               } ${
                 isDisabled || disabled

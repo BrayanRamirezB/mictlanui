@@ -65,6 +65,29 @@ El código para el componente `Tabs` es el siguiente:
   ]}
 />
 
+El código para la animación al cambiar de pestaña es el siguiente:
+
+<CodeBlock client:load>
+
+```css
+@theme {
+  --animate-flip-in-x: flip-in-x 0.6s ease-out;
+
+  @keyframes flip-in-x {
+    0% {
+      opacity: 0;
+      transform: rotateY(90deg);
+    }
+    100% {
+      opacity: 1;
+      transform: rotateY(0deg);
+    }
+  }
+}
+```
+
+</CodeBlock>
+
 ## Variantes
 
 Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `Tabs`. Este atributo tiene los siguientes valores: `default`, `bordered` y `light`.
