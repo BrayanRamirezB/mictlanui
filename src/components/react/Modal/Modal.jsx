@@ -116,9 +116,9 @@ const Modal = ({
       <div
         ref={modalRef}
         tabIndex='-1'
-        className={`${colors[color]} ${roundeds[rounded]} shadow-lg w-full ${
-          sizes[size]
-        } border-0 backdrop-blur-sm ${
+        className={`animate-zoom-in ${colors[color]} ${
+          roundeds[rounded]
+        } shadow-lg w-full ${sizes[size]} border-0 backdrop-blur-sm ${
           effect === 'opaque' ? 'text-gray-200' : 'text-gray-800 '
         } dark:text-gray-300`}
       >

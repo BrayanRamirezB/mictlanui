@@ -133,6 +133,29 @@ El código para el componente `Modal` es el siguiente:
   ]}
 />
 
+El código para la animación al mostrar el componente es el siguiente:
+
+<CodeBlock client:load>
+
+```css
+@theme {
+  --animate-zoom-in: zoom-in 0.3s ease-out;
+
+  @keyframes zoom-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+```
+
+</CodeBlock>
+
 ## Non-Dismissable
 
 Para deshabilitar el cierre del componente, se puede utilizar el atributo `isDismissable={false}`. Este atributo permite que el modal sea cerrado solo por el botón de cierre.
