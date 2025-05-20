@@ -58,17 +58,17 @@ const Drawer = ({
   }
 
   const drawerPositions = {
-    top: 'top-0 left-0 right-0 w-full',
-    bottom: 'bottom-0 left-0 right-0 w-full',
-    left: 'left-0 top-0 bottom-0 h-full',
-    right: 'right-0 top-0 bottom-0 h-full'
+    top: 'top-0 left-0 right-0 w-full animate-fade-in-down',
+    bottom: 'bottom-0 left-0 right-0 w-full animate-fade-in-up',
+    left: 'left-0 top-0 bottom-0 h-full animate-fade-in-right',
+    right: 'right-0 top-0 bottom-0 h-full animate-fade-in-left'
   }
 
   const drawerStyle = `${drawerPositions[position]} ${
     position === 'top' || position === 'bottom'
       ? drawerHSizes[size]
       : drawerWSizes[size]
-  } fixed `
+  } fixed`
 
   useEffect(() => {
     const handleEscape = (event) => {
