@@ -49,7 +49,7 @@ const PopoverContent = forwardRef(
           role='dialog'
         >
           <div
-            className={`border-0 backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 ${colors[color]} ${roundeds[rounded]}`}
+            className={`border-0 animate-fade-in backdrop-blur-md shadow-lg p-4 whitespace-nowrap text-gray-800 dark:text-gray-300 ${colors[color]} ${roundeds[rounded]}`}
           >
             {children}
           </div>
