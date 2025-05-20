@@ -87,7 +87,7 @@ const Radio = ({
       />
 
       <div
-        className={`size-5 rounded-full flex items-center justify-center transition-colors ${
+        className={`size-5 rounded-full flex items-center justify-center duration-500 ease-in-out transition-colors ${
           isSelected
             ? colors[color]
             : 'border-2 border-zinc-700/50 dark:border-neutral-100/50'
