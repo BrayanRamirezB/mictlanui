@@ -131,6 +131,29 @@ El código para el componente `DropdownItem` es el siguiente:
   ]}
 />
 
+El código para la animación al mostrar el componente es el siguiente:
+
+<CodeBlock client:load>
+
+```css
+@theme {
+  --animate-fade-in-down: fade-in-down 0.6s ease-in-out;
+
+  @keyframes fade-in-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+```
+
+</CodeBlock>
+
 ### DropdownTrigger
 
 ### Variantes

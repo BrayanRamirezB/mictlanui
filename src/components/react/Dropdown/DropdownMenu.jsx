@@ -46,7 +46,7 @@ const DropdownMenu = ({
       id={id}
       role='menu'
       aria-hidden={!isOpen}
-      className={`origin-top-right flex flex-col right-0 mt-2 w-full ${
+      className={`origin-top-right animate-fade-in-down flex flex-col right-0 mt-2 w-full ${
         isOpen ? 'block' : 'hidden'
       }
         ${variants[variant]} 
