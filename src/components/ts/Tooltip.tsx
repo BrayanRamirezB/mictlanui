@@ -82,7 +82,7 @@ const Tooltip: FC<TooltipProps> = ({
           data-placement={placement}
           data-disabled={isDisabled}
           aria-hidden={!isOpen}
-          className={`absolute z-50 border-0 shadow-md backdrop-blur-sm ${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
+          className={`absolute z-50 border-0 shadow-md backdrop-blur-sm animate-fade-in ${positions[placement]} whitespace-nowrap text-sm px-3 py-1 
           ${roundeds[rounded]}
           ${textColors[color]}
           ${colors[color]}

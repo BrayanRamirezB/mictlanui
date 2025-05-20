@@ -49,6 +49,27 @@ El código para el componente `Tooltip` es el siguiente:
   ]}
 />
 
+El código para la animación al mostrar el componente es el siguiente:
+
+<CodeBlock client:load>
+
+```css
+@theme {
+  --animate-fade-in: fade-in 0.3s ease-in-out;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+```
+
+</CodeBlock>
+
 ## Posicionamiento
 
 Para cambiar el posicionamiento del componente, se puede utilizar el atributo `placement` en el componente `Tooltip`. Este atributo los siguientes valores: `top`, `bottom`, `left` y `right`.
