@@ -44,6 +44,28 @@ El código para `Code` es el siguiente:
   ]}
 />
 
+El código para la animación al hacer hover es el siguiente:
+
+<CodeBlock client:load>
+
+```css
+@theme {
+  --animate-squeeze: squeeze 0.6s ease-in-out;
+
+  @keyframes squeeze {
+    0%,
+    100% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1.1, 0.9);
+    }
+  }
+}
+```
+
+</CodeBlock>
+
 ## Variantes
 
 Para cambiar el estilo del componente, se puede utilizar el atributo `variant` en el componente `Code`. Este atributo tiene los siguientes valores: `default`, `bordered` y `light`.

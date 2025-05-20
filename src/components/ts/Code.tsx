@@ -101,7 +101,7 @@ const Code: FC<CodeProps> = ({
 
       <button
         onClick={handleCopy}
-        className={`flex text-white px-1.5 py-1 rounded-lg transition duration-300 ease-out ${hoverColors[color]}`}
+        className={`flex text-white px-1.5 py-1 rounded-lg hover:animate-squeeze transition duration-300 ease-out ${hoverColors[color]}`}
         aria-label={
           copied ? 'Code copied to clipboard' : 'Copy code to clipboard'
         }
