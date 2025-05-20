@@ -127,7 +127,7 @@ const Select = ({
 
       {isOpen && (
         <div
-          className={`listbox-wrapper absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 ${colors[color]}`}
+          className={`listbox-wrapper animate-fade-in-down absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 ${colors[color]}`}
         >
           <ul
             className='listbox'
