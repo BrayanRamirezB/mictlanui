@@ -9,6 +9,7 @@ interface ButtonProps {
   isLoading?: boolean
   onClick?: () => void
   children?: React.ReactNode
+  className?: string
 }
 
 const Button: FC<ButtonProps> = ({
@@ -19,7 +20,8 @@ const Button: FC<ButtonProps> = ({
   color = 'default',
   isLoading = false,
   onClick,
-  children
+  children,
+  className
 }) => {
   const variants = {
     default: 'border-0 shadow-md backdrop-blur-sm',
@@ -107,6 +109,7 @@ const Button: FC<ButtonProps> = ({
       }
       ${hoverColors[color]}
       ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+      ${className}
     `
 
   return (
