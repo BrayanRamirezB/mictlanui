@@ -1,8 +1,10 @@
+import clsx from 'clsx'
+
 const Image = ({
   imageSrc,
-  alt = 'img preview',
-  zoomedWrapper,
-  filter,
+  alt = 'Image preview',
+  zoomedWrapper = false,
+  filter = 'none',
   rounded = 'md',
   shadow = 'md',
   className
@@ -16,47 +18,64 @@ const Image = ({
 
   const roundeds = {
     none: 'rounded-none',
-    sm: 'rounded-md',
-    md: 'rounded-lg',
-    lg: 'rounded-2xl',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    xl: 'rounded-xl',
     full: 'rounded-full'
   }
 
   const shadows = {
     none: 'shadow-none',
-    sm: 'shadow-xs',
+    sm: 'shadow-sm',
     md: 'shadow-md',
     lg: 'shadow-lg',
     xl: 'shadow-xl'
   }
 
-  const zoomed = zoomedWrapper
-    ? 'transition-transform duration-500 ease-in-out transform group-hover:scale-110'
-    : ''
+  const zoomEffect =
+    'transition-transform duration-500 ease-in-out transform group-hover:scale-110'
+
+  const imageClasses = clsx(
+    'object-cover',
+    filters[filter],
+    roundeds[rounded],
+    {
+      [zoomEffect]: zoomedWrapper && filter !== 'blur',
+      'w-full h-full': !className
+    },
+    className
+  )
 
   return (
-    <div className='relative' role='img' aria-label={alt}>
-      <div
-        className={`overflow-hidden group ${roundeds[rounded]} ${shadows[shadow]} dark:shadow-neutral-100/20`}
-      >
+    <div
+      className={clsx(
+        'relative',
+        shadows[shadow],
+        'dark:shadow-neutral-100/20'
+      )}
+    >
+      <div className={clsx('overflow-hidden group', roundeds[rounded])}>
         <img
           src={imageSrc}
           alt={alt}
-          className={`object-cover ${filters[filter]} ${
-            filter !== 'blur' && zoomed
-          } ${roundeds[rounded]} ${
-            className === '' && 'w-full h-full'
-          } ${className}`}
+          className={imageClasses}
+          loading='lazy'
+          decoding='async'
         />
 
         {filter === 'blur' && (
-          <div className={`absolute inset-0 flex items-center justify-center`}>
+          <div className='absolute inset-0 flex items-center justify-center'>
             <img
               src={imageSrc}
-              alt={alt}
-              className={`size-6/7 object-cover shadow-lg ${
-                roundeds[rounded]
-              } ${filter === 'blur' && zoomed}`}
+              alt=''
+              className={clsx(
+                'size-6/7 object-cover shadow-lg',
+                roundeds[rounded],
+                { [zoomEffect]: zoomedWrapper }
+              )}
+              aria-hidden='true'
+              loading='lazy'
             />
           </div>
         )}
