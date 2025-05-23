@@ -1,4 +1,13 @@
-import { useState } from 'react'
+import clsx from 'clsx'
+
+const COLOR_STYLES = {
+  default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
+  primary: 'bg-blue-500/50',
+  secondary: 'bg-indigo-500/50',
+  success: 'bg-green-500/60',
+  warning: 'bg-yellow-500/60',
+  danger: 'bg-red-500/50'
+}
 
 const Radio = ({
   value,
@@ -8,104 +17,76 @@ const Radio = ({
   children,
   description,
   onChange,
-  color
+  color = 'default',
+  className = '',
+  ...props
 }) => {
-  const [isPressed, setIsPressed] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
+  const isInteractive = !isDisabled && !isReadOnly
 
   const handleChange = () => {
-    if (!isDisabled && !isReadOnly && onChange) {
+    if (isInteractive && onChange) {
       onChange(value)
     }
   }
 
-  const handleMouseDown = () => {
-    if (!isDisabled && !isReadOnly) {
-      setIsPressed(true)
-    }
-  }
-
-  const handleMouseUp = () => {
-    setIsPressed(false)
-  }
-
-  const handleMouseEnter = () => {
-    if (!isDisabled && !isReadOnly) {
-      setIsHovered(true)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
+  const handleKeyUp = (e) => {
+    if (isInteractive && (e.key === 'Enter' || e.key === ' ')) {
       handleChange()
     }
   }
 
-  const colors = {
-    default: 'bg-zinc-700/30 dark:bg-neutral-100/50',
-    primary: 'bg-blue-500/50 ',
-    secondary: 'bg-indigo-500/50 ',
-    success: 'bg-green-500/60 ',
-    warning: 'bg-yellow-500/60 ',
-    danger: 'bg-red-500/50 '
-  }
+  const radioClasses = clsx(
+    'flex items-center gap-3 transition-opacity',
+    {
+      'opacity-50 cursor-not-allowed': isDisabled,
+      'cursor-pointer': isInteractive
+    },
+    className
+  )
+
+  const indicatorClasses = clsx(
+    'size-5 rounded-full flex items-center justify-center',
+    'transition-all duration-300 ease-in-out border-2',
+    isSelected
+      ? `${COLOR_STYLES[color]} border-transparent`
+      : 'border-zinc-700/50 dark:border-neutral-100/50',
+    {
+      'hover:bg-zinc-700/20 dark:hover:bg-neutral-100/20':
+        isInteractive && !isSelected
+    }
+  )
 
   return (
-    <div
+    <button
+      {...props}
       role='radio'
+      type='button'
       aria-checked={isSelected}
-      aria-disabled={isDisabled}
-      tabIndex={isDisabled ? -1 : 0}
-      data-selected={isSelected}
-      data-pressed={isPressed}
-      data-readonly={isReadOnly}
-      data-hover-unselected={isHovered && !isSelected}
-      data-hover={isHovered}
-      data-disabled={isDisabled}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      aria-disabled={isDisabled || isReadOnly}
+      tabIndex={isInteractive ? 0 : -1}
       onClick={handleChange}
-      onKeyDown={handleKeyDown}
-      className={`flex items-center gap-2 ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      }`}
+      onKeyUp={handleKeyUp}
+      className={radioClasses}
+      disabled={isDisabled || isReadOnly}
     >
-      <input
-        type='radio'
-        value={value}
-        checked={isSelected}
-        disabled={isDisabled || isReadOnly}
-        onChange={handleChange}
-        className='hidden'
-      />
-
-      <div
-        className={`size-5 rounded-full flex items-center justify-center duration-500 ease-in-out transition-colors ${
-          isSelected
-            ? colors[color]
-            : 'border-2 border-zinc-700/50 dark:border-neutral-100/50'
-        } ${isHovered ? 'bg-zinc-700/30 dark:bg-neutral-100/30' : ''}`}
-      >
+      <div className={indicatorClasses}>
         {isSelected && (
           <div
-            className={`size-3 border-2 rounded-full border-transparent ${colors[color]}`}
-          ></div>
+            className={clsx(
+              'size-3 border-2 rounded-full border-transparent',
+              COLOR_STYLES[color]
+            )}
+          />
         )}
       </div>
 
-      <div className='flex flex-col'>
-        <div className='text-sm font-medium'>{children}</div>
-
-        {description && <p className='text-sm font-light'>{description}</p>}
+      <div className='text-left'>
+        <span className='text-sm font-medium'>{children}</span>
+        {description && (
+          <p className='mt-1 text-sm font-light'>{description}</p>
+        )}
       </div>
-    </div>
+    </button>
   )
 }
 
