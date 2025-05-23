@@ -1,4 +1,72 @@
 import { useState, useRef, useEffect } from 'react'
+import clsx from 'clsx'
+
+const COLORS = {
+  default: 'bg-neutral-100/90 dark:bg-zinc-700/90',
+  primary: 'bg-blue-500/40',
+  secondary: 'bg-indigo-500/40',
+  success: 'bg-green-500/40',
+  warning: 'bg-yellow-500/40',
+  danger: 'bg-red-500/40'
+}
+
+const THUMB_COLORS = {
+  default: 'bg-neutral-100 dark:bg-zinc-700',
+  primary: 'bg-blue-500',
+  secondary: 'bg-indigo-500',
+  success: 'bg-green-500',
+  warning: 'bg-yellow-500',
+  danger: 'bg-red-500'
+}
+
+const TEXT_COLORS = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-600',
+  secondary: 'text-indigo-600',
+  success: 'text-green-600',
+  warning: 'text-yellow-600',
+  danger: 'text-red-600'
+}
+
+const THUMB_SIZES = {
+  sm: 'w-4 h-4',
+  md: 'w-5 h-5',
+  lg: 'w-7 h-7'
+}
+
+const VERTICAL_BAR_SIZES = {
+  sm: 'w-4',
+  md: 'w-5',
+  lg: 'w-7'
+}
+
+const HORIZONTAL_BAR_SIZES = {
+  sm: 'h-4',
+  md: 'h-5',
+  lg: 'h-7'
+}
+
+const THUMB_RADII = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const SLIDER_WIDTH = {
+  sm: 'w-40',
+  md: 'w-64',
+  lg: 'w-96',
+  full: 'w-full'
+}
+
+const SLIDER_HEIGHT = {
+  sm: 'h-40',
+  md: 'h-64',
+  lg: 'h-96',
+  full: 'h-full'
+}
 
 const Slider = ({
   min = 0,
@@ -132,89 +200,25 @@ const Slider = ({
     }%`
   }
 
-  const colors = {
-    default: 'bg-neutral-100/90 dark:bg-zinc-700/90',
-    primary: 'bg-blue-500/40 ',
-    secondary: 'bg-indigo-500/40 ',
-    success: 'bg-green-500/40 ',
-    warning: 'bg-yellow-500/40',
-    danger: 'bg-red-500/40 '
-  }
-
-  const thumbColors = {
-    default: 'bg-neutral-100 dark:bg-zinc-700',
-    primary: 'bg-blue-500',
-    secondary: 'bg-indigo-500',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    danger: 'bg-red-500'
-  }
-
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-600',
-    secondary: 'text-indigo-600',
-    success: 'text-green-600',
-    warning: 'text-yellow-600',
-    danger: 'text-red-600'
-  }
-
-  const thumbSizes = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-7 h-7'
-  }
-
-  const verticalBarSizes = {
-    sm: 'w-4',
-    md: 'w-5',
-    lg: 'w-7'
-  }
-
-  const horizontalBarSizes = {
-    sm: 'h-4',
-    md: 'h-5',
-    lg: 'h-7'
-  }
-
-  const thumbRadiuses = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    full: 'rounded-full'
-  }
-
-  const sliderWidth = {
-    sm: 'w-40',
-    md: 'w-64',
-    lg: 'w-96',
-    full: 'w-full'
-  }
-
-  const sliderHeight = {
-    sm: 'h-40',
-    md: 'h-64',
-    lg: 'h-96',
-    full: 'h-full'
-  }
-
   return (
     <div
-      className={`flex items-center justify-center ${
-        orientation === 'horizontal' ? 'flex-col' : 'flex-col-reverse gap-y-4'
-      } ${textColors[textColor]}`}
+      className={clsx(
+        'flex items-center justify-center',
+        orientation === 'horizontal' ? 'flex-col' : 'flex-col-reverse gap-y-4',
+        TEXT_COLORS[textColor]
+      )}
     >
       <div className='flex items-center'>
         {label && <span className='text-sm mr-2'>{label}</span>}
         {showValue && <span className='text-sm'>{value}</span>}
       </div>
       <div
-        className={`flex justify-between items-center  ${
+        className={clsx(
+          'flex justify-between items-center',
           orientation === 'horizontal'
             ? 'flex-row space-x-2'
             : 'flex-col space-y-2'
-        }`}
+        )}
       >
         {startContent && (
           <span className='flex items-center justify-center'>
@@ -222,32 +226,52 @@ const Slider = ({
           </span>
         )}
         <div
-          className={`relative ${
+          className={clsx(
+            'relative',
             orientation === 'horizontal'
-              ? `${sliderWidth[sliderLength]} h-10`
-              : `${sliderHeight[sliderLength]} w-10`
-          } ${hovering ? 'data-hover' : ''} ${disabled ? 'opacity-50' : ''}`}
+              ? [SLIDER_WIDTH[sliderLength], 'h-10']
+              : [SLIDER_HEIGHT[sliderLength], 'w-10'],
+            hovering && 'data-hover',
+            disabled && 'opacity-50'
+          )}
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
           data-orientation={orientation}
         >
           <div
-            className={`absolute ${
+            className={clsx(
+              'absolute',
+              'backdrop-blur-sm',
+              'shadow-md',
+              'bg-neutral-100/20',
+              'dark:bg-zinc-700/30',
+              'dark:shadow-neutral-100/10',
+              'rounded-md',
               orientation === 'horizontal'
-                ? `top-1/2 left-0 w-full ${horizontalBarSizes[size]} -translate-y-1/2`
-                : `left-1/2 top-0 h-full ${verticalBarSizes[size]} -translate-x-1/2`
-            } backdrop-blur-sm shadow-md bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10 rounded-md ${
+                ? [
+                    'top-1/2',
+                    'left-0',
+                    'w-full',
+                    HORIZONTAL_BAR_SIZES[size],
+                    '-translate-y-1/2'
+                  ]
+                : [
+                    'left-1/2',
+                    'top-0',
+                    'h-full',
+                    VERTICAL_BAR_SIZES[size],
+                    '-translate-x-1/2'
+                  ],
               disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-            }`}
+            )}
             ref={trackRef}
             onClick={handleTrackClick}
           >
             <div
-              className={`absolute ${
-                orientation === 'horizontal'
-                  ? 'left-0 top-0 h-full'
-                  : 'bottom-0 left-0 w-full'
-              } ${colors[color]} rounded-md`}
+              className={clsx('absolute', COLORS[color], 'rounded-md', {
+                'left-0 top-0 h-full': orientation === 'horizontal',
+                'bottom-0 left-0 w-full': orientation === 'vertical'
+              })}
               style={{
                 [orientation === 'horizontal'
                   ? 'width'
@@ -257,14 +281,22 @@ const Slider = ({
           </div>
 
           <div
-            className={`absolute ${
+            className={clsx(
+              'absolute',
+              'shadow-sm',
               orientation === 'horizontal'
-                ? 'top-1/2 -translate-y-1/2 -translate-x-1/2 left-0'
-                : 'left-1/2 -translate-x-1/2 -translate-y-1/2 top-0'
-            } ${thumbSizes[size]} ${thumbRadiuses[thumbRadius]} ${
-              showThumb &&
-              `${thumbColors[color]} border-2 border-zinc-700/30 dark:border-neutral-100/20`
-            } shadow-sm ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                ? ['top-1/2', '-translate-y-1/2', '-translate-x-1/2', 'left-0']
+                : ['left-1/2', '-translate-x-1/2', '-translate-y-1/2', 'top-0'],
+              THUMB_SIZES[size],
+              THUMB_RADII[thumbRadius],
+              showThumb && [
+                THUMB_COLORS[color],
+                'border-2',
+                'border-zinc-700/30',
+                'dark:border-neutral-100/20'
+              ],
+              disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+            )}
             style={thumbStyle}
             ref={thumbRef}
             onMouseDown={handleThumbMouseDown}
