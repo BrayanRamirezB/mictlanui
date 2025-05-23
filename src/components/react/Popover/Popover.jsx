@@ -1,4 +1,14 @@
-import { useState, useRef, useEffect, Children, cloneElement } from 'react'
+import {
+  useState,
+  useRef,
+  useEffect,
+  Children,
+  cloneElement,
+  useCallback,
+  memo,
+  useId
+} from 'react'
+import clsx from 'clsx'
 import PopoverContent from '@/components/react/Popover/PopoverContent'
 import PopoverTrigger from '@/components/react/Popover/PopoverTrigger'
 
@@ -12,20 +22,21 @@ const Popover = ({
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef(null)
   const contentRef = useRef(null)
+  const id = useId()
+
+  const handleToggle = useCallback(() => setIsOpen((prev) => !prev), [])
+
+  const handleClickOutside = useCallback((event) => {
+    if (contentRef.current && !contentRef.current.contains(event.target)) {
+      setIsOpen(false)
+    }
+  }, [])
+
+  const handleEscape = useCallback((event) => {
+    if (event.key === 'Escape') setIsOpen(false)
+  }, [])
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (contentRef.current && !contentRef.current.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false)
-      }
-    }
-
     document.addEventListener('mousedown', handleClickOutside)
     document.addEventListener('keydown', handleEscape)
 
@@ -33,18 +44,23 @@ const Popover = ({
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [])
+  }, [handleClickOutside, handleEscape])
 
   return (
     <div className='relative' ref={popoverRef} role='dialog'>
       {Children.map(children, (child) => {
         if (child.type === PopoverTrigger) {
           return cloneElement(child, {
-            onClick: () => setIsOpen(!isOpen)
+            onClick: handleToggle,
+            'aria-haspopup': 'dialog',
+            'aria-expanded': isOpen,
+            'aria-controls': id
           })
         }
+
         if (child.type === PopoverContent) {
           return cloneElement(child, {
+            id,
             isOpen,
             backdrop,
             placement,
@@ -53,10 +69,11 @@ const Popover = ({
             ref: contentRef
           })
         }
+
         return child
       })}
     </div>
   )
 }
 
-export default Popover
+export default memo(Popover)
