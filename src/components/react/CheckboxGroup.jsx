@@ -63,12 +63,10 @@ const CheckboxGroup = ({
   const groupId = useId()
   const titleId = `${groupId}-label`
 
-  // Sincronizar estado cuando cambia la prop checkboxes
   useEffect(() => {
     setCheckboxStates(checkboxes)
   }, [checkboxes])
 
-  // Manejo de cambios optimizado con useCallback
   const handleCheckboxChange = useCallback(
     (id) => {
       setCheckboxStates((prevStates) => {
@@ -84,7 +82,6 @@ const CheckboxGroup = ({
     [onChange]
   )
 
-  // Clases dinámicas con clsx
   const containerClasses = clsx(
     'flex flex-col gap-2',
     variants[variant],
