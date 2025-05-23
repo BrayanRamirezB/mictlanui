@@ -70,7 +70,8 @@ const Checkbox = ({
   size = 'md',
   rounded = 'lg',
   checked,
-  disabled = false
+  disabled = false,
+  onChange
 }) => {
   const [internalChecked, setInternalChecked] = useState(checked)
 
@@ -78,6 +79,7 @@ const Checkbox = ({
     if (disabled) return
     const newChecked = !internalChecked
     setInternalChecked(newChecked)
+    onChange?.()
   }
 
   const containerClasses = clsx(
