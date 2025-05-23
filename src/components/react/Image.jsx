@@ -56,13 +56,7 @@ const Image = ({
       )}
     >
       <div className={clsx('overflow-hidden group', roundeds[rounded])}>
-        <img
-          src={imageSrc}
-          alt={alt}
-          className={imageClasses}
-          loading='lazy'
-          decoding='async'
-        />
+        <img src={imageSrc} alt={alt} className={imageClasses} />
 
         {filter === 'blur' && (
           <div className='absolute inset-0 flex items-center justify-center'>
@@ -75,7 +69,6 @@ const Image = ({
                 { [zoomEffect]: zoomedWrapper }
               )}
               aria-hidden='true'
-              loading='lazy'
             />
           </div>
         )}
