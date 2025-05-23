@@ -48,14 +48,15 @@ const Image = ({
   )
 
   return (
-    <div
-      className={clsx(
-        'relative',
-        shadows[shadow],
-        'dark:shadow-neutral-100/20'
-      )}
-    >
-      <div className={clsx('overflow-hidden group', roundeds[rounded])}>
+    <div className={clsx('relative')}>
+      <div
+        className={clsx(
+          'overflow-hidden group',
+          roundeds[rounded],
+          shadows[shadow],
+          'dark:shadow-neutral-100/20'
+        )}
+      >
         <img src={imageSrc} alt={alt} className={imageClasses} />
 
         {filter === 'blur' && (
