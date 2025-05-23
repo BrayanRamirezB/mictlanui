@@ -1,52 +1,58 @@
-import { useState } from 'react'
+import { useState, useCallback, forwardRef } from 'react'
+import clsx from 'clsx'
 import AccordionItem from '@/components/react/Accordion/AccordionItem'
 
-const Accordion = ({
-  items,
-  multiple = false,
-  styleVariant = 'default',
-  color
-}) => {
-  const [activeIndexes, setActiveIndexes] = useState([])
+const Accordion = forwardRef(
+  (
+    {
+      items = [],
+      multiple = false,
+      styleVariant = 'default',
+      color = 'default',
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const [activeIndexes, setActiveIndexes] = useState([])
 
-  const toggleAccordion = (index) => {
-    if (multiple) {
-      setActiveIndexes((prevIndexes) =>
-        prevIndexes.includes(index)
-          ? prevIndexes.filter((i) => i !== index)
-          : [...prevIndexes, index]
-      )
-    } else {
-      setActiveIndexes((prevIndexes) =>
-        prevIndexes.includes(index) ? [] : [index]
-      )
-    }
+    const toggleAccordion = useCallback(
+      (index) => {
+        setActiveIndexes((prev) => {
+          const isActive = prev.includes(index)
+          if (multiple) {
+            return isActive ? prev.filter((i) => i !== index) : [...prev, index]
+          }
+          return isActive ? [] : [index]
+        })
+      },
+      [multiple]
+    )
+
+    return (
+      <div
+        ref={ref}
+        className={clsx('w-full', className)}
+        role='tablist'
+        aria-multiselectable={multiple}
+        {...props}
+      >
+        {items.map((item, idx) => (
+          <AccordionItem
+            key={item.id ?? idx}
+            index={idx}
+            title={item.title}
+            subtitle={item.subtitle}
+            content={item.content}
+            isActive={activeIndexes.includes(idx)}
+            toggle={toggleAccordion}
+            styleVariant={styleVariant}
+            color={color}
+          />
+        ))}
+      </div>
+    )
   }
-
-  return (
-    <div
-      id='accordion'
-      className='w-full'
-      role='tablist'
-      aria-multiselectable={multiple}
-    >
-      {items.map((item, index) => (
-        <AccordionItem
-          key={index}
-          index={index}
-          title={item.title}
-          subtitle={item.subtitle}
-          content={item.content}
-          isActive={activeIndexes.includes(index)}
-          toggle={toggleAccordion}
-          styleVariant={styleVariant}
-          color={color}
-          aria-expanded={activeIndexes.includes(index)}
-          aria-controls={`accordion-content-${index}`}
-        />
-      ))}
-    </div>
-  )
-}
+)
 
 export default Accordion
