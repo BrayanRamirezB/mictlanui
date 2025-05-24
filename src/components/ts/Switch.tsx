@@ -1,12 +1,20 @@
 import {
   useState,
-  useEffect,
-  type ChangeEvent,
+  useCallback,
+  useId,
+  useMemo,
+  type FC,
   type ReactNode,
-  type FC
+  type ChangeEvent,
+  type KeyboardEvent
 } from 'react'
 
-interface SwitchProps {
+export type Color = keyof typeof COLOR_STYLES
+export type TextColor = keyof typeof TEXT_COLORS
+export type Rounded = keyof typeof ROUNDED_STYLES
+export type Size = keyof typeof SIZE_STYLES
+
+export interface SwitchProps {
   label?: string
   startContent?: ReactNode
   endContent?: ReactNode
@@ -14,151 +22,171 @@ interface SwitchProps {
   isSelected?: boolean
   isReadOnly?: boolean
   isDisabled?: boolean
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-  textColor?:
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  color?: Color
+  textColor?: TextColor
+  rounded?: Rounded
+  size?: Size
+  className?: string
   id?: string
+  onChange?: (selected: boolean) => void
 }
+
+export const COLOR_STYLES = {
+  default: 'bg-zinc-700/30 dark:bg-neutral-100/30 dark:shadow-zinc-700/20',
+  primary: 'bg-blue-500/50',
+  secondary: 'bg-indigo-500/50',
+  success: 'bg-green-500/50',
+  warning: 'bg-yellow-500/50',
+  danger: 'bg-red-500/50'
+} as const
+
+export const TEXT_COLORS = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-800 dark:text-blue-600',
+  secondary: 'text-indigo-800 dark:text-indigo-600',
+  success: 'text-green-800 dark:text-green-600',
+  warning: 'text-yellow-800 dark:text-yellow-600',
+  danger: 'text-red-800 dark:text-red-500'
+} as const
+
+export const ROUNDED_STYLES = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+} as const
+
+export const SIZE_STYLES = {
+  sm: 'h-6 w-11',
+  md: 'h-8 w-16',
+  lg: 'h-9 w-16',
+  xl: 'h-10 w-20'
+} as const
+
+export const TEXT_SIZES = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl'
+} as const
+
+export const CIRCLE_SIZES = {
+  sm: 'size-5',
+  md: 'size-6',
+  lg: 'size-7',
+  xl: 'size-9'
+} as const
+
+export const CIRCLE_TRANSLATE = {
+  sm: 'translate-x-4',
+  md: 'translate-x-8',
+  lg: 'translate-x-7',
+  xl: 'translate-x-9'
+} as const
+
+export const CONTENT_SIZES = {
+  sm: 'text-sm size-5',
+  md: 'text-base size-6',
+  lg: 'text-lg size-7',
+  xl: 'text-xl size-9'
+} as const
 
 const Switch: FC<SwitchProps> = ({
   label,
   startContent,
   endContent,
   thumbIcon,
-  isSelected: initialSelected = false,
+  isSelected = false,
   isReadOnly = false,
   isDisabled = false,
   color = 'default',
   textColor = 'default',
   rounded = 'full',
   size = 'md',
-  id = 'switch'
+  className = '',
+  id = useId(),
+  onChange
 }) => {
-  const [isSelected, setIsSelected] = useState<boolean>(initialSelected)
+  const [internalSelected, setInternalSelected] = useState(isSelected)
 
-  useEffect(() => {
-    setIsSelected(initialSelected)
-  }, [initialSelected])
+  const handleToggle = useCallback(() => {
+    if (isReadOnly || isDisabled) return
+    const newValue = !internalSelected
+    setInternalSelected(newValue)
+    onChange?.(newValue)
+  }, [internalSelected, isDisabled, isReadOnly, onChange])
 
-  const handleToggle = () => {
-    if (!isReadOnly && !isDisabled) {
-      setIsSelected(!isSelected)
-    }
-  }
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (isReadOnly || isDisabled) return
+      const newValue = e.target.checked
+      setInternalSelected(newValue)
+      onChange?.(newValue)
+    },
+    [isDisabled, isReadOnly, onChange]
+  )
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!isReadOnly && !isDisabled) {
-      setIsSelected(e.target.checked)
-    }
-  }
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (!isReadOnly && !isDisabled && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault()
+        handleToggle()
+      }
+    },
+    [handleToggle, isDisabled, isReadOnly]
+  )
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!isReadOnly && !isDisabled && (e.key === 'Enter' || e.key === ' ')) {
-      e.preventDefault()
-      setIsSelected(!isSelected)
-    }
-  }
+  const containerClasses = useMemo(
+    () =>
+      `flex items-center space-x-2 ${
+        isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+      } ${className}`,
+    [className, isDisabled]
+  )
 
-  const colors = {
-    default: 'bg-zinc-700/30 dark:bg-neutral-100/30 dark:shadow-zinc-700/20',
-    primary: 'bg-blue-500/50',
-    secondary: 'bg-indigo-500/50 ',
-    success: 'bg-green-500/50 ',
-    warning: 'bg-yellow-500/50 ',
-    danger: 'bg-red-500/50 '
-  }
+  const trackClasses = useMemo(
+    () =>
+      `flex items-center border-0 shadow-xl backdrop-blur-md transition-colors duration-500 ease-in-out relative
+      ${internalSelected ? COLOR_STYLES[color] : 'bg-gray-300'}
+      ${ROUNDED_STYLES[rounded]}
+      ${SIZE_STYLES[size]}`,
+    [internalSelected, color, rounded, size]
+  )
 
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-800 dark:text-blue-600',
-    secondary: 'text-indigo-800 dark:text-indigo-600',
-    success: 'text-green-800 dark:text-green-600',
-    warning: 'text-yellow-800 dark:text-yellow-600',
-    danger: 'text-red-800 dark:text-red-500'
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    full: 'rounded-full'
-  }
-
-  const sizes = {
-    sm: 'h-6 w-11',
-    md: 'h-8 w-16',
-    lg: 'h-9 w-16',
-    xl: 'h-10 w-20'
-  }
-
-  const textSizes = {
-    sm: 'text-sm',
-    md: 'text-base',
-    lg: 'text-lg',
-    xl: 'text-xl'
-  }
-
-  const circleSizes = {
-    sm: 'size-5',
-    md: 'size-6',
-    lg: 'size-7',
-    xl: 'size-9'
-  }
-
-  const circleTranslate = {
-    sm: 'translate-x-4',
-    md: 'translate-x-8',
-    lg: 'translate-x-7',
-    xl: 'translate-x-9'
-  }
-
-  const contentSizes = {
-    sm: 'text-sm size-5',
-    md: 'text-base size-6',
-    lg: 'text-lg size-7',
-    xl: 'text-xl size-9'
-  }
+  const thumbClasses = useMemo(
+    () =>
+      `absolute bg-neutral-100 shadow-lg duration-500 ease-in-out transition-transform
+      ${internalSelected ? CIRCLE_TRANSLATE[size] : 'translate-x-0'}
+      ${CIRCLE_SIZES[size]}
+      ${ROUNDED_STYLES[rounded]}`,
+    [internalSelected, size, rounded]
+  )
 
   return (
     <div
-      className={`flex items-center space-x-2 ${
-        isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      }`}
+      className={containerClasses}
       onClick={handleToggle}
       onKeyDown={handleKeyDown}
       role='switch'
-      aria-checked={isSelected}
+      aria-checked={internalSelected}
       aria-disabled={isDisabled}
       tabIndex={isDisabled ? -1 : 0}
     >
       {label && (
         <label
           htmlFor={id}
-          className={`${textSizes[size]} ${textColors[textColor]}`}
+          className={`${TEXT_SIZES[size]} ${TEXT_COLORS[textColor]}`}
         >
           {label}
         </label>
       )}
-      <div
-        className={`flex items-center border-0 shadow-xl backdrop-blur-md duration-500 ease-in-out transition-colors ${
-          isSelected ? colors[color] : 'bg-gray-300'
-        }
-        ${roundeds[rounded]} 
-        ${sizes[size]} `}
-      >
+      <div className={trackClasses}>
         <input
           type='checkbox'
           id={id}
           className='hidden'
-          checked={isSelected}
+          checked={internalSelected}
           onChange={handleInputChange}
           readOnly={isReadOnly}
           disabled={isDisabled}
@@ -166,19 +194,15 @@ const Switch: FC<SwitchProps> = ({
         <div className='flex items-center justify-between w-full px-1'>
           {startContent && (
             <span
-              className={`flex items-center justify-center ${contentSizes[size]}`}
+              className={`flex items-center justify-center ${CONTENT_SIZES[size]}`}
             >
               {startContent}
             </span>
           )}
-          <div
-            className={`absolute bg-neutral-100 shadow-lg transform duration-500 ease-in-out transition-transform ${
-              isSelected ? circleTranslate[size] : 'translate-x-0'
-            } ${circleSizes[size]} ${roundeds[rounded]}`}
-          >
+          <div className={thumbClasses}>
             {thumbIcon && (
               <span
-                className={`flex items-center justify-center ${contentSizes[size]}`}
+                className={`flex items-center justify-center ${CONTENT_SIZES[size]}`}
               >
                 {thumbIcon}
               </span>
@@ -186,7 +210,7 @@ const Switch: FC<SwitchProps> = ({
           </div>
           {endContent && (
             <span
-              className={`flex items-center justify-center ${contentSizes[size]}`}
+              className={`flex items-center justify-center ${CONTENT_SIZES[size]}`}
             >
               {endContent}
             </span>
