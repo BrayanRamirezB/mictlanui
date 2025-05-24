@@ -18,21 +18,19 @@ const Accordion: FC<AccordionProps> = ({
   items,
   multiple = false,
   styleVariant = 'default',
-  color
+  color = 'default'
 }) => {
   const [activeIndexes, setActiveIndexes] = useState<number[]>([])
 
   const toggleAccordion = (index: number) => {
     if (multiple) {
-      setActiveIndexes((prevIndexes) =>
-        prevIndexes.includes(index)
-          ? prevIndexes.filter((i) => i !== index)
-          : [...prevIndexes, index]
+      setActiveIndexes((prev) =>
+        prev.includes(index)
+          ? prev.filter((i) => i !== index)
+          : [...prev, index]
       )
     } else {
-      setActiveIndexes((prevIndexes) =>
-        prevIndexes.includes(index) ? [] : [index]
-      )
+      setActiveIndexes((prev) => (prev.includes(index) ? [] : [index]))
     }
   }
 
