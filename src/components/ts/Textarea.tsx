@@ -1,6 +1,18 @@
-import { useState, type ChangeEvent, type FocusEvent, type FC } from 'react'
+import {
+  useState,
+  useId,
+  useCallback,
+  forwardRef,
+  type ChangeEvent,
+  type TextareaHTMLAttributes
+} from 'react'
+import clsx from 'clsx'
 
-interface TextareaProps {
+export type Variant = keyof typeof VARIANT_STYLES
+export type Color = keyof typeof COLOR_STYLES
+
+export interface TextareaProps
+  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
   placeholder?: string
   description?: string
@@ -9,155 +21,141 @@ interface TextareaProps {
   isReadOnly?: boolean
   isDisabled?: boolean
   defaultValue?: string
-  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
-  variant?: 'default' | 'bordered' | 'light'
-  [key: string]: any
+  variant?: Variant
+  className?: string
 }
 
-const Textarea: FC<TextareaProps> = ({
-  label,
-  placeholder = '',
-  description,
-  errorMessage,
-  isRequired = false,
-  isReadOnly = false,
-  isDisabled = false,
-  defaultValue = '',
-  onChange: externalOnChange,
-  variant = 'default',
-  ...props
-}) => {
-  const [value, setValue] = useState<string>(defaultValue)
-  const [isInvalid, setIsInvalid] = useState<boolean>(false)
-  const [isFocused, setFocused] = useState<boolean>(false)
-  const [isFocusVisible, setFocusVisible] = useState<boolean>(false)
+export const VARIANT_STYLES = {
+  default:
+    'border-0 shadow-md backdrop-blur-sm bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+  bordered: 'border border-gray-800 dark:border-gray-300 bg-transparent',
+  light: 'bg-transparent'
+} as const
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value
-    setValue(newValue)
+export const COLOR_STYLES = {
+  default:
+    'text-zinc-800 dark:text-neutral-100 placeholder-zinc-800/30 dark:placeholder-neutral-100/30',
+  danger: 'bg-red-500/20 text-red-800 dark:text-red-500'
+} as const
 
-    if (newValue === '' && isRequired) {
-      setIsInvalid(true)
-    } else {
-      setIsInvalid(false)
-    }
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (
+    {
+      label,
+      placeholder = '',
+      description,
+      errorMessage,
+      isRequired = false,
+      isReadOnly = false,
+      isDisabled = false,
+      defaultValue = '',
+      onChange: externalOnChange,
+      variant = 'default',
+      className = '',
+      id,
+      ...props
+    },
+    ref
+  ) => {
+    const autoId = useId()
+    const textareaId = id || autoId
 
-    if (externalOnChange) {
-      externalOnChange(e)
-    }
-  }
+    const [value, setValue] = useState(defaultValue)
+    const [isInvalid, setIsInvalid] = useState(false)
+    const [isFocused, setIsFocused] = useState(false)
 
-  const handleFocus = (e: FocusEvent<HTMLTextAreaElement>) => {
-    setFocused(true)
-    setFocusVisible(e.type === 'focus')
-  }
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const newValue = e.target.value
+        setValue(newValue)
+        setIsInvalid(isRequired && newValue.trim() === '')
+        externalOnChange?.(e)
+      },
+      [externalOnChange, isRequired]
+    )
 
-  const handleBlur = () => {
-    setFocused(false)
-    setFocusVisible(false)
-  }
+    const handleFocus = useCallback(() => setIsFocused(true), [])
+    const handleBlur = useCallback(() => {
+      setIsFocused(false)
+      setIsInvalid(isRequired && value.trim() === '')
+    }, [isRequired, value])
 
-  const variants = {
-    default: 'border-0 shadow-md backdrop-blur-sm',
-    bordered: 'border bg-transparent',
-    light: 'bg-transparent'
-  }
+    const containerClasses = clsx(
+      'flex flex-col space-y-2',
+      isDisabled && 'opacity-50 cursor-not-allowed',
+      className
+    )
 
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
-    danger: 'bg-red-500/20'
-  }
+    const textareaClasses = clsx(
+      'w-full p-2 rounded-lg transition focus:outline-none',
+      VARIANT_STYLES[variant],
+      COLOR_STYLES.default,
+      isInvalid && COLOR_STYLES.danger,
+      isFocused && 'ring-2 ring-blue-500',
+      isDisabled && 'bg-gray-100'
+    )
 
-  const borderColors = {
-    default: 'border-gray-800 dark:border-gray-300'
-  }
-
-  const textColors = {
-    default:
-      'text-zinc-800 dark:text-neutral-100 placeholder-zinc-800/30 dark:placeholder-neutral-100/30',
-    danger: 'text-red-800 dark:text-red-500'
-  }
-
-  const baseClasses = `
-    flex flex-col space-y-2
-    ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}
-  `
-
-  const inputClasses = `
-    w-full p-2 rounded-lg transition focus:outline-none
-    ${variants[variant]}
-    ${variant === 'default' && colors['default']}
-    ${textColors['default']}
-    ${variant === 'bordered' && borderColors['default']}
-    ${isInvalid ? colors['danger'] : ''}
-    ${isFocused && isFocusVisible ? 'ring-2 ring-blue-500' : ''}
-    ${isDisabled ? 'bg-gray-100' : ''}
-  `
-
-  return (
-    <div
-      className={baseClasses}
-      data-invalid={isInvalid}
-      data-required={isRequired}
-      data-readonly={isReadOnly}
-      data-focus={isFocused}
-      data-focus-visible={isFocusVisible}
-      data-disabled={isDisabled}
-    >
-      <div className='headerWrapper'>
+    return (
+      <div
+        className={containerClasses}
+        data-invalid={isInvalid}
+        data-required={isRequired}
+        data-readonly={isReadOnly}
+        data-focus={isFocused}
+        data-disabled={isDisabled}
+      >
         {label && (
           <label
-            htmlFor={props.id || 'textarea'}
-            className={`label text-sm font-medium ${textColors['default']}`}
+            htmlFor={textareaId}
+            className={clsx('text-sm font-medium', COLOR_STYLES.default)}
           >
             {label}
-            {isRequired && <span className={`${textColors['danger']}`}>*</span>}
+            {isRequired && <span className='text-red-500'> *</span>}
           </label>
         )}
-      </div>
 
-      <div className='inputWrapper'>
         <textarea
-          id={props.id || 'textarea'}
-          role='textbox'
-          className={inputClasses}
+          id={textareaId}
+          ref={ref}
+          className={textareaClasses}
+          placeholder={placeholder}
+          value={value}
+          disabled={isDisabled}
+          readOnly={isReadOnly}
           aria-invalid={isInvalid}
           aria-required={isRequired}
           aria-readonly={isReadOnly}
           aria-disabled={isDisabled}
-          aria-describedby={description ? 'description' : undefined}
-          aria-errormessage={errorMessage ? 'errorMessage' : undefined}
-          disabled={isDisabled}
-          readOnly={isReadOnly}
-          value={value}
+          aria-describedby={description ? `${textareaId}-desc` : undefined}
+          aria-errormessage={
+            isInvalid && errorMessage ? `${textareaId}-error` : undefined
+          }
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder={placeholder}
           {...props}
         />
+
+        {description && (
+          <p id={`${textareaId}-desc`} className='text-sm'>
+            {description}
+          </p>
+        )}
+
+        {isInvalid && errorMessage && (
+          <p
+            id={`${textareaId}-error`}
+            className='text-sm text-red-800 dark:text-red-500'
+            aria-live='assertive'
+          >
+            {errorMessage}
+          </p>
+        )}
       </div>
+    )
+  }
+)
 
-      {description && (
-        <div
-          id={`${props.id || 'textarea'}-description`}
-          className={`description text-sm ${textColors['default']}`}
-        >
-          {description}
-        </div>
-      )}
-
-      {isInvalid && errorMessage && (
-        <div
-          id={`${props.id || 'textarea'}-errorMessage`}
-          className={`errorMessage text-sm ${textColors['danger']}`}
-          aria-live='assertive'
-        >
-          {errorMessage}
-        </div>
-      )}
-    </div>
-  )
-}
+Textarea.displayName = 'Textarea'
 
 export default Textarea
