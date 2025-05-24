@@ -1,4 +1,4 @@
-import { forwardRef, memo, useId } from 'react'
+import { forwardRef, memo } from 'react'
 import clsx from 'clsx'
 
 const BG_COLORS = {
@@ -103,7 +103,6 @@ const Card = forwardRef(
     },
     ref
   ) => {
-    const autoId = useId()
     const role = isLink ? 'link' : 'region'
     const Tag = isLink ? 'a' : 'div'
 

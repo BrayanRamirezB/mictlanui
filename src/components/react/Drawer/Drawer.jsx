@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useEffect, useId, useCallback, memo } from 'react'
+import { forwardRef, useRef, useEffect, useCallback, memo } from 'react'
 import clsx from 'clsx'
 
 const BG_COLORS = {
@@ -58,7 +58,6 @@ const Drawer = forwardRef(
     },
     ref
   ) => {
-    const autoId = useId()
     const drawerRef = ref || useRef(null)
     const lastFocused = useRef(null)
 

@@ -114,6 +114,4 @@ const User = forwardRef(
   }
 )
 
-User.displayName = 'User'
-
 export default User
