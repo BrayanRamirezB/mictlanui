@@ -1,67 +1,76 @@
-import { type FC, type MouseEvent } from 'react'
+import { forwardRef, memo, type ReactNode } from 'react'
+import clsx from 'clsx'
 
-interface BreadcrumbItemProps {
+export type BreadcrumbItemProps = {
   label: string
   href?: string
-  icon?: React.ReactNode
+  icon?: ReactNode
   selected?: boolean
   sizeClass?: string
   roundedClass?: string
   colorClass?: string
-  onClick?: (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void
+  onClick?: () => void
+  className?: string
 }
 
-const BreadcrumbItem: FC<BreadcrumbItemProps> = ({
-  label,
-  href,
-  icon,
-  selected = false,
-  sizeClass = '',
-  roundedClass = '',
-  colorClass = '',
-  onClick
-}) => {
-  if (href) {
-    return (
-      <a
-        href={href}
-        onClick={(e) => onClick?.(e)}
-        className={`inline-flex items-center gap-1 cursor-pointer ${sizeClass} ${roundedClass} ${colorClass}
-        ${
-          selected ? 'font-bold' : 'font-normal'
-        } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50`}
-        aria-current={selected ? 'page' : undefined}
-        aria-label={label}
-      >
+const BreadcrumbItem = forwardRef<
+  HTMLAnchorElement & HTMLButtonElement,
+  BreadcrumbItemProps
+>(
+  (
+    {
+      label,
+      href,
+      icon,
+      selected = false,
+      sizeClass = '',
+      roundedClass = '',
+      colorClass = '',
+      onClick,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const baseClasses = clsx(
+      'inline-flex items-center gap-1 cursor-pointer transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50',
+      sizeClass,
+      roundedClass,
+      colorClass,
+      selected ? 'font-bold' : 'font-normal',
+      className
+    )
+
+    const commonProps = {
+      className: baseClasses,
+      'aria-label': label,
+      ...(selected ? { 'aria-current': 'page' as 'page' } : {}),
+      onClick,
+      ref,
+      ...props
+    }
+
+    const content = (
+      <>
         {icon && (
           <span className='inline-block' aria-hidden='true'>
             {icon}
           </span>
         )}
         {label}
+      </>
+    )
+
+    return href ? (
+      <a href={href} {...commonProps}>
+        {content}
       </a>
+    ) : (
+      <button type='button' {...commonProps}>
+        {content}
+      </button>
     )
   }
+)
 
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className={`inline-flex items-center gap-1 cursor-pointer ${sizeClass} ${roundedClass} ${colorClass}
-        ${
-          selected ? 'font-bold' : 'font-normal'
-        } transition duration-300 hover:text-opacity-50 dark:hover:text-opacity-50`}
-      aria-current={selected ? 'page' : undefined}
-      aria-label={label}
-    >
-      {icon && (
-        <span className='inline-block' aria-hidden='true'>
-          {icon}
-        </span>
-      )}
-      {label}
-    </button>
-  )
-}
-
-export default BreadcrumbItem
+export default memo(BreadcrumbItem)

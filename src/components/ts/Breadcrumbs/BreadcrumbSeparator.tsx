@@ -1,23 +1,37 @@
-import { type FC } from 'react'
+import { forwardRef, memo, type ReactNode } from 'react'
+import clsx from 'clsx'
 
-interface BreadcrumbSeparatorProps {
-  separator: React.ReactNode
+type BreadcrumbSeparatorProps = {
+  separator?: ReactNode
   colorClass?: string
   ariaLabel?: string
+  className?: string
 }
 
-const BreadcrumbSeparator: FC<BreadcrumbSeparatorProps> = ({
-  separator,
-  colorClass,
-  ariaLabel
-}) => (
-  <span
-    className={`mx-1 ${colorClass}`}
-    role='separator'
-    aria-label={ariaLabel || 'breadcrumb separator'}
-  >
-    {separator}
-  </span>
+const BreadcrumbSeparator = forwardRef<
+  HTMLSpanElement,
+  BreadcrumbSeparatorProps
+>(
+  (
+    {
+      separator = '/',
+      colorClass = 'text-gray-500',
+      ariaLabel = 'breadcrumb separator',
+      className,
+      ...props
+    },
+    ref
+  ) => (
+    <span
+      ref={ref}
+      role='separator'
+      aria-label={ariaLabel}
+      className={clsx('mx-1', colorClass, className)}
+      {...props}
+    >
+      {separator}
+    </span>
+  )
 )
 
-export default BreadcrumbSeparator
+export default memo(BreadcrumbSeparator)
