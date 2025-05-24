@@ -1,12 +1,27 @@
-import React, {
+import {
   useState,
   useRef,
   useEffect,
-  type MouseEvent,
-  type TouchEvent,
-  type ReactNode,
-  type CSSProperties
+  type FC,
+  type MouseEvent as ReactMouseEvent,
+  type TouchEvent as ReactTouchEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type CSSProperties,
+  type ReactNode
 } from 'react'
+import clsx from 'clsx'
+
+export type Color =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+export type Size = 'sm' | 'md' | 'lg'
+export type Orientation = 'horizontal' | 'vertical'
+export type Radius = 'none' | 'sm' | 'md' | 'lg' | 'full'
+export type LengthKey = Size | 'full'
 
 interface SliderProps {
   min?: number
@@ -19,22 +34,83 @@ interface SliderProps {
   startContent?: ReactNode
   endContent?: ReactNode
   disabled?: boolean
-  orientation?: 'horizontal' | 'vertical'
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-  textColor?:
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  sliderLength?: 'sm' | 'md' | 'lg' | 'full'
-  thumbRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+  orientation?: Orientation
+  color?: Color
+  textColor?: Color
+  size?: Size
+  sliderLength?: LengthKey
+  thumbRadius?: Radius
   showThumb?: boolean
 }
 
-const Slider: React.FC<SliderProps> = ({
+const COLORS: Record<Color, string> = {
+  default: 'bg-neutral-100/90 dark:bg-zinc-700/90',
+  primary: 'bg-blue-500/40',
+  secondary: 'bg-indigo-500/40',
+  success: 'bg-green-500/40',
+  warning: 'bg-yellow-500/40',
+  danger: 'bg-red-500/40'
+}
+
+const THUMB_COLORS: Record<Color, string> = {
+  default: 'bg-neutral-100 dark:bg-zinc-700',
+  primary: 'bg-blue-500',
+  secondary: 'bg-indigo-500',
+  success: 'bg-green-500',
+  warning: 'bg-yellow-500',
+  danger: 'bg-red-500'
+}
+
+const TEXT_COLORS: Record<Color, string> = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-600',
+  secondary: 'text-indigo-600',
+  success: 'text-green-600',
+  warning: 'text-yellow-600',
+  danger: 'text-red-600'
+}
+
+const THUMB_SIZES: Record<Size, string> = {
+  sm: 'w-4 h-4',
+  md: 'w-5 h-5',
+  lg: 'w-7 h-7'
+}
+
+const VERTICAL_BAR_SIZES: Record<Size, string> = {
+  sm: 'w-4',
+  md: 'w-5',
+  lg: 'w-7'
+}
+
+const HORIZONTAL_BAR_SIZES: Record<Size, string> = {
+  sm: 'h-4',
+  md: 'h-5',
+  lg: 'h-7'
+}
+
+const THUMB_RADII: Record<Radius, string> = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  full: 'rounded-full'
+}
+
+const SLIDER_WIDTH: Record<LengthKey, string> = {
+  sm: 'w-40',
+  md: 'w-64',
+  lg: 'w-96',
+  full: 'w-full'
+}
+
+const SLIDER_HEIGHT: Record<LengthKey, string> = {
+  sm: 'h-40',
+  md: 'h-64',
+  lg: 'h-96',
+  full: 'h-full'
+}
+
+const Slider: FC<SliderProps> = ({
   min = 0,
   max = 100,
   step = 1,
@@ -54,13 +130,13 @@ const Slider: React.FC<SliderProps> = ({
   showThumb = true
 }) => {
   const [value, setValue] = useState<number>(initialValue ?? min)
-  const [isDragging, setIsDragging] = useState<boolean>(false)
-  const [hovering, setHovering] = useState<boolean>(false)
-  const [thumbHovering, setThumbHovering] = useState<boolean>(false)
-  const [thumbPressed, setThumbPressed] = useState<boolean>(false)
-  const [thumbFocused, setThumbFocused] = useState<boolean>(false)
-  const trackRef = useRef<HTMLDivElement>(null)
-  const thumbRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [hovering, setHovering] = useState(false)
+  const [thumbHovering, setThumbHovering] = useState(false)
+  const [thumbPressed, setThumbPressed] = useState(false)
+  const [thumbFocused, setThumbFocused] = useState(false)
+  const trackRef = useRef<HTMLDivElement | null>(null)
+  const thumbRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (initialValue !== undefined) {
@@ -71,85 +147,68 @@ const Slider: React.FC<SliderProps> = ({
   const handleValueChange = (newValue: number) => {
     if (disabled) return
     setValue(newValue)
-    if (onChange) {
-      onChange(newValue)
-    }
+    onChange?.(newValue)
   }
 
-  const handleTrackClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (disabled) return
-    if (!trackRef.current) return
-    const trackRect = trackRef.current.getBoundingClientRect()
-    const trackLength =
-      orientation === 'horizontal' ? trackRect.width : trackRect.height
+  const calculatePercentage = () => ((value - min) / (max - min)) * 100
+
+  const handleTrackClick = (e: ReactMouseEvent<HTMLDivElement>) => {
+    if (disabled || !trackRef.current) return
+    const rect = trackRef.current.getBoundingClientRect()
+    const length = orientation === 'horizontal' ? rect.width : rect.height
     const clickPos =
       orientation === 'horizontal'
-        ? e.clientX - trackRect.left
-        : trackRect.bottom - e.clientY
-    const percent = Math.max(0, Math.min(1, clickPos / trackLength))
-    let rawValue = min + percent * (max - min)
-    let newValue = Math.round((rawValue - min) / step) * step + min
+        ? e.clientX - rect.left
+        : rect.bottom - e.clientY
+    const percent = Math.max(0, Math.min(1, clickPos / length))
+    let raw = min + percent * (max - min)
+    let newValue = Math.round((raw - min) / step) * step + min
     newValue = Math.max(min, Math.min(max, parseFloat(newValue.toFixed(10))))
     handleValueChange(newValue)
   }
 
-  const handleThumbDrag = (e: Event) => {
-    if (disabled) return
-    if (!trackRef.current) return
-
-    const trackRect = trackRef.current.getBoundingClientRect()
-    const trackLength =
-      orientation === 'horizontal' ? trackRect.width : trackRect.height
-
-    let clientPos: number
-    if (e instanceof MouseEvent) {
-      clientPos =
-        orientation === 'horizontal'
-          ? e.clientX - trackRect.left
-          : trackRect.bottom - e.clientY
-    } else if (e instanceof TouchEvent && e.touches.length > 0) {
-      clientPos =
-        orientation === 'horizontal'
-          ? e.touches[0].clientX - trackRect.left
-          : trackRect.bottom - e.touches[0].clientY
-    } else {
-      return
-    }
-
-    const percent = Math.max(0, Math.min(1, clientPos / trackLength))
-    let rawValue = min + percent * (max - min)
-    let newValue = Math.round((rawValue - min) / step) * step + min
+  const handleThumbDrag = (e: MouseEvent | TouchEvent) => {
+    if (disabled || !trackRef.current) return
+    const rect = trackRef.current.getBoundingClientRect()
+    const length = orientation === 'horizontal' ? rect.width : rect.height
+    const clientPos =
+      orientation === 'horizontal'
+        ? ('clientX' in e ? e.clientX : e.touches[0].clientX) - rect.left
+        : rect.bottom - ('clientY' in e ? e.clientY : e.touches[0].clientY)
+    const percent = Math.max(0, Math.min(1, clientPos / length))
+    let raw = min + percent * (max - min)
+    let newValue = Math.round((raw - min) / step) * step + min
     newValue = Math.max(min, Math.min(max, parseFloat(newValue.toFixed(10))))
     handleValueChange(newValue)
-  }
-
-  const handleThumbMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    if (disabled) return
-    setIsDragging(true)
-    setThumbPressed(true)
-    document.addEventListener('mousemove', handleThumbDrag as EventListener)
-    document.addEventListener('mouseup', handleThumbMouseUp)
-  }
-
-  const handleThumbTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    if (disabled) return
-    setIsDragging(true)
-    setThumbPressed(true)
-    document.addEventListener('touchmove', handleThumbDrag as EventListener)
-    document.addEventListener('touchend', handleThumbMouseUp)
   }
 
   const handleThumbMouseUp = () => {
     if (disabled) return
     setIsDragging(false)
     setThumbPressed(false)
-    document.removeEventListener('mousemove', handleThumbDrag as EventListener)
+    document.removeEventListener('mousemove', handleThumbDrag)
     document.removeEventListener('mouseup', handleThumbMouseUp)
-    document.removeEventListener('touchmove', handleThumbDrag as EventListener)
+    document.removeEventListener('touchmove', handleThumbDrag)
     document.removeEventListener('touchend', handleThumbMouseUp)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleThumbMouseDown = (e: ReactMouseEvent) => {
+    if (disabled) return
+    setIsDragging(true)
+    setThumbPressed(true)
+    document.addEventListener('mousemove', handleThumbDrag)
+    document.addEventListener('mouseup', handleThumbMouseUp)
+  }
+
+  const handleThumbTouchStart = (e: ReactTouchEvent) => {
+    if (disabled) return
+    setIsDragging(true)
+    setThumbPressed(true)
+    document.addEventListener('touchmove', handleThumbDrag)
+    document.addEventListener('touchend', handleThumbMouseUp)
+  }
+
+  const handleKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (disabled) return
     let newValue = value
     switch (e.key) {
@@ -167,10 +226,6 @@ const Slider: React.FC<SliderProps> = ({
     handleValueChange(newValue)
   }
 
-  const calculatePercentage = () => {
-    return ((value - min) / (max - min)) * 100
-  }
-
   const thumbStyle: CSSProperties = {
     [orientation === 'horizontal' ? 'left' : 'top']: `${
       orientation === 'vertical'
@@ -179,100 +234,25 @@ const Slider: React.FC<SliderProps> = ({
     }%`
   }
 
-  const colors: { [key in NonNullable<SliderProps['color']>]: string } = {
-    default: 'bg-neutral-100/90 dark:bg-zinc-700/90',
-    primary: 'bg-blue-500/40',
-    secondary: 'bg-indigo-500/40',
-    success: 'bg-green-500/40',
-    warning: 'bg-yellow-500/40',
-    danger: 'bg-red-500/40'
-  }
-
-  const thumbColors: { [key in NonNullable<SliderProps['color']>]: string } = {
-    default: 'bg-neutral-100 dark:bg-zinc-700',
-    primary: 'bg-blue-500',
-    secondary: 'bg-indigo-500',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    danger: 'bg-red-500'
-  }
-
-  const textColors: { [key in NonNullable<SliderProps['textColor']>]: string } =
-    {
-      default: 'text-gray-800 dark:text-gray-300',
-      primary: 'text-blue-600',
-      secondary: 'text-indigo-600',
-      success: 'text-green-600',
-      warning: 'text-yellow-600',
-      danger: 'text-red-600'
-    }
-
-  const thumbSizes: { [key in NonNullable<SliderProps['size']>]: string } = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-7 h-7'
-  }
-
-  const verticalBarSizes: {
-    [key in NonNullable<SliderProps['size']>]: string
-  } = {
-    sm: 'w-4',
-    md: 'w-5',
-    lg: 'w-7'
-  }
-
-  const horizontalBarSizes: {
-    [key in NonNullable<SliderProps['size']>]: string
-  } = {
-    sm: 'h-4',
-    md: 'h-5',
-    lg: 'h-7'
-  }
-
-  const thumbRadiuses: {
-    [key in NonNullable<SliderProps['thumbRadius']>]: string
-  } = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    full: 'rounded-full'
-  }
-
-  const sliderWidth: {
-    [key in Exclude<SliderProps['sliderLength'], undefined>]: string
-  } = {
-    sm: 'w-40',
-    md: 'w-64',
-    lg: 'w-96',
-    full: 'w-full'
-  }
-
-  const sliderHeight: {
-    [key in Exclude<SliderProps['sliderLength'], undefined>]: string
-  } = {
-    sm: 'h-40',
-    md: 'h-64',
-    lg: 'h-96',
-    full: 'h-full'
-  }
-
   return (
     <div
-      className={`flex items-center justify-center ${
-        orientation === 'horizontal' ? 'flex-col' : 'flex-col-reverse gap-y-4'
-      } ${textColors[textColor]}`}
+      className={clsx(
+        'flex items-center justify-center',
+        orientation === 'horizontal' ? 'flex-col' : 'flex-col-reverse gap-y-4',
+        TEXT_COLORS[textColor]
+      )}
     >
       <div className='flex items-center'>
         {label && <span className='text-sm mr-2'>{label}</span>}
         {showValue && <span className='text-sm'>{value}</span>}
       </div>
       <div
-        className={`flex justify-between items-center ${
+        className={clsx(
+          'flex justify-between items-center',
           orientation === 'horizontal'
             ? 'flex-row space-x-2'
             : 'flex-col space-y-2'
-        }`}
+        )}
       >
         {startContent && (
           <span className='flex items-center justify-center'>
@@ -280,49 +260,77 @@ const Slider: React.FC<SliderProps> = ({
           </span>
         )}
         <div
-          className={`relative ${
+          className={clsx(
+            'relative',
             orientation === 'horizontal'
-              ? `${sliderWidth[sliderLength]} h-10`
-              : `${sliderHeight[sliderLength]} w-10`
-          } ${hovering ? 'data-hover' : ''} ${disabled ? 'opacity-50' : ''}`}
+              ? [SLIDER_WIDTH[sliderLength], 'h-10']
+              : [SLIDER_HEIGHT[sliderLength], 'w-10'],
+            hovering && 'data-hover',
+            disabled && 'opacity-50'
+          )}
+          ref={trackRef}
+          onClick={handleTrackClick}
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
           data-orientation={orientation}
         >
           <div
-            className={`absolute ${
+            className={clsx(
+              'absolute',
+              'backdrop-blur-sm',
+              'shadow-md',
+              'bg-neutral-100/20',
+              'dark:bg-zinc-700/30',
+              'dark:shadow-neutral-100/10',
+              'rounded-md',
               orientation === 'horizontal'
-                ? `top-1/2 left-0 w-full ${horizontalBarSizes[size]} -translate-y-1/2`
-                : `left-1/2 top-0 h-full ${verticalBarSizes[size]} -translate-x-1/2`
-            } backdrop-blur-sm shadow-md bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10 rounded-md ${
+                ? [
+                    'top-1/2',
+                    'left-0',
+                    'w-full',
+                    HORIZONTAL_BAR_SIZES[size],
+                    '-translate-y-1/2'
+                  ]
+                : [
+                    'left-1/2',
+                    'top-0',
+                    'h-full',
+                    VERTICAL_BAR_SIZES[size],
+                    '-translate-x-1/2'
+                  ],
               disabled ? 'cursor-not-allowed' : 'cursor-pointer'
-            }`}
-            ref={trackRef}
-            onClick={handleTrackClick}
+            )}
           >
             <div
-              className={`absolute ${
-                orientation === 'horizontal'
-                  ? 'left-0 top-0 h-full'
-                  : 'bottom-0 left-0 w-full'
-              } ${colors[color]} rounded-md`}
+              className={clsx('absolute', COLORS[color], 'rounded-md', {
+                'left-0 top-0 h-full': orientation === 'horizontal',
+                'bottom-0 left-0 w-full': orientation === 'vertical'
+              })}
               style={{
                 [orientation === 'horizontal'
                   ? 'width'
                   : 'height']: `${calculatePercentage()}%`
               }}
-            ></div>
+            />
           </div>
 
           <div
-            className={`absolute ${
+            className={clsx(
+              'absolute',
+              'shadow-sm',
               orientation === 'horizontal'
-                ? 'top-1/2 -translate-y-1/2 -translate-x-1/2 left-0'
-                : 'left-1/2 -translate-x-1/2 -translate-y-1/2 top-0'
-            } ${thumbSizes[size]} ${thumbRadiuses[thumbRadius]} ${
-              showThumb &&
-              `${thumbColors[color]} border-2 border-zinc-700/30 dark:border-neutral-100/20`
-            } shadow-sm ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                ? ['top-1/2', '-translate-y-1/2', '-translate-x-1/2', 'left-0']
+                : ['left-1/2', '-translate-x-1/2', '-translate-y-1/2', 'top-0'],
+              THUMB_SIZES[size],
+              THUMB_RADII[thumbRadius],
+              showThumb && [
+                THUMB_COLORS[color],
+                'border-2',
+                'border-zinc-700/30',
+                'dark:border-neutral-100/20'
+              ],
+              disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+            )}
             style={thumbStyle}
             ref={thumbRef}
             onMouseDown={handleThumbMouseDown}
@@ -343,7 +351,7 @@ const Slider: React.FC<SliderProps> = ({
             data-hover={thumbHovering}
             data-pressed={thumbPressed}
             data-focus-visible={thumbFocused}
-          ></div>
+          />
         </div>
         {endContent && (
           <span className='flex items-center justify-center'>{endContent}</span>
