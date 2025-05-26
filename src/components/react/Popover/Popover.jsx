@@ -8,7 +8,6 @@ import {
   memo,
   useId
 } from 'react'
-import clsx from 'clsx'
 import PopoverContent from '@/components/react/Popover/PopoverContent'
 import PopoverTrigger from '@/components/react/Popover/PopoverTrigger'
 
