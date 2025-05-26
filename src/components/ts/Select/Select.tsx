@@ -1,140 +1,177 @@
 import {
+  isValidElement,
   useState,
   useRef,
+  useEffect,
+  useCallback,
   Children,
   cloneElement,
+  forwardRef,
+  memo,
   type ReactNode,
-  type ReactElement
+  type RefObject
 } from 'react'
-import { type SelectItemProps } from '@/components/ts/Select/SelectItem'
+import clsx from 'clsx'
 
-interface SelectProps {
+export type Variant = 'default' | 'bordered' | 'light'
+export type Color =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+export type Rounded = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+
+export interface SelectProps {
   label?: string
   description?: string
   errorMessage?: string
   isInvalid?: boolean
-  children: ReactNode
-  onChange: (value: string | number | null) => void
   isDisabled?: boolean
+  onChange?: (value: string) => void
   placeholder?: string
-  variant?: 'default' | 'bordered' | 'light'
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  variant?: Variant
+  color?: Color
+  rounded?: Rounded
+  children: ReactNode
 }
 
-const Select = ({
-  label,
-  description,
-  errorMessage,
-  isInvalid = false,
-  children,
-  onChange,
-  isDisabled = false,
-  placeholder = 'Selecciona una opción',
-  variant = 'default',
-  color = 'default',
-  rounded = 'md'
-}: SelectProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState<string | number | null>(
-    null
-  )
-  const [selectedLabel, setSelectedLabel] = useState<ReactNode | null>(null)
-  const selectRef = useRef<HTMLDivElement>(null)
+const VARIANTS: Record<Variant, string> = {
+  default: 'border-0 backdrop-blur-sm shadow-md',
+  bordered: 'border border-current shadow-md',
+  light: 'border-b border-current'
+}
 
-  const handleSelect = (value: string | number, children: ReactNode) => {
-    if (isDisabled) return
+const COLORS: Record<Color, string> = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30',
+  primary: 'bg-blue-500/20',
+  secondary: 'bg-indigo-500/20',
+  success: 'bg-green-500/30',
+  warning: 'bg-yellow-500/20',
+  danger: 'bg-red-500/20'
+}
 
-    setSelectedValue(value)
-    setSelectedLabel(children)
-    setIsOpen(false)
-    onChange(value)
-  }
+const TEXT_COLORS: Record<Color, string> = {
+  default: 'text-gray-800 dark:text-gray-300',
+  primary: 'text-blue-600',
+  secondary: 'text-indigo-600',
+  success: 'text-green-600',
+  warning: 'text-yellow-600',
+  danger: 'text-red-600'
+}
 
-  const handleTriggerClick = () => {
-    if (isDisabled) return
+const ROUNDEDS: Record<Rounded, string> = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  full: 'rounded-full'
+}
 
-    setIsOpen(!isOpen)
-  }
+const Select = forwardRef<HTMLDivElement, SelectProps>(
+  (
+    {
+      label,
+      description,
+      errorMessage,
+      isInvalid = false,
+      isDisabled = false,
+      onChange,
+      placeholder = 'Selecciona una opción',
+      variant = 'default',
+      color = 'default',
+      rounded = 'md',
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [selected, setSelected] = useState<{
+      value: string | null
+      label: string | null
+    }>({ value: null, label: null })
+    const containerRef =
+      (ref as RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null)
 
-  const hasValue = selectedValue !== null
-  const hasLabel = !!label
-  const isFilled = hasValue || isOpen
+    const handleOutsideClick = useCallback(
+      (e: MouseEvent) => {
+        if (
+          containerRef.current &&
+          !containerRef.current.contains(e.target as Node)
+        ) {
+          setIsOpen(false)
+        }
+      },
+      [containerRef]
+    )
 
-  const variants = {
-    default: 'border-0 backdrop-blur-sm shadow-md',
-    bordered: 'border border-current shadow-md',
-    light: 'border-b border-current'
-  }
+    useEffect(() => {
+      document.addEventListener('mousedown', handleOutsideClick)
+      return () => document.removeEventListener('mousedown', handleOutsideClick)
+    }, [handleOutsideClick])
 
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-neutral-100/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/30 ',
-    warning: 'bg-yellow-500/20 ',
-    danger: 'bg-red-500/20 '
-  }
+    const handleKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setIsOpen(false)
+        if (e.key === 'Enter' && !isOpen) setIsOpen(true)
+      },
+      [isOpen]
+    )
 
-  const textColors = {
-    default: 'text-gray-800 dark:text-gray-300',
-    primary: 'text-blue-600',
-    secondary: 'text-indigo-600',
-    success: 'text-green-600',
-    warning: 'text-yellow-600',
-    danger: 'text-red-600'
-  }
+    useEffect(() => {
+      if (!isOpen) return
+      document.addEventListener('keydown', handleKeyDown)
+      return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [isOpen, handleKeyDown])
 
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-lg',
-    xl: 'rounded-xl',
-    full: 'rounded-full'
-  }
+    const handleSelect = useCallback(
+      (value: string, label: string) => {
+        if (isDisabled) return
+        setSelected({ value, label })
+        setIsOpen(false)
+        onChange?.(value)
+      },
+      [isDisabled, onChange]
+    )
 
-  return (
-    <div
-      className={`relative w-full space-y-2 text-gray-600 dark:text-gray-500`}
-      ref={selectRef}
-      data-filled={isFilled}
-      data-has-value={hasValue}
-      data-has-label={hasLabel}
-      data-invalid={isInvalid}
-    >
-      {label && (
-        <label
-          htmlFor='select-trigger'
-          className='block text-sm font-medium mb-1'
-        >
-          {label}
-        </label>
-      )}
-
+    return (
       <div
-        id='select-trigger'
-        role='button'
-        aria-haspopup='listbox'
-        aria-expanded={isOpen}
-        aria-disabled={isDisabled}
-        className={`trigger flex items-center justify-between p-2 ${
-          variants[variant]
-        } ${variant === 'default' && colors[color]} ${textColors[color]} ${
-          variant !== 'light' && roundeds[rounded]
-        } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-        onClick={handleTriggerClick}
-        data-open={isOpen}
+        ref={containerRef}
+        className='relative w-full space-y-1 text-gray-600 dark:text-gray-400'
+        data-invalid={isInvalid}
+        {...props}
       >
-        <div className='value'>
-          {selectedValue ? selectedLabel : placeholder}
-        </div>
+        {label && (
+          <label className='block text-sm font-medium mb-1'>{label}</label>
+        )}
 
-        <div className='selector-icon' data-open={isOpen} aria-hidden='true'>
+        <button
+          type='button'
+          role='combobox'
+          aria-expanded={isOpen}
+          aria-disabled={isDisabled}
+          className={clsx(
+            'flex items-center justify-between p-2 w-full',
+            VARIANTS[variant],
+            variant === 'default' && COLORS[color],
+            TEXT_COLORS[color],
+            variant !== 'light' && ROUNDEDS[rounded],
+            {
+              'opacity-50 cursor-not-allowed': isDisabled,
+              'cursor-pointer': !isDisabled
+            }
+          )}
+          onClick={() => !isDisabled && setIsOpen((o) => !o)}
+        >
+          <span>{selected.value ? selected.label : placeholder}</span>
           <svg
-            className={`w-4 h-4 transition-transform ${
-              isOpen ? 'rotate-180' : ''
-            }`}
+            className={clsx(
+              'w-4 h-4 transition-transform',
+              isOpen && 'rotate-180'
+            )}
             fill='none'
             stroke='currentColor'
             viewBox='0 0 24 24'
@@ -142,42 +179,41 @@ const Select = ({
             <path
               strokeLinecap='round'
               strokeLinejoin='round'
-              strokeWidth='2'
+              strokeWidth={2}
               d='M19 9l-7 7-7-7'
             />
           </svg>
-        </div>
-      </div>
+        </button>
 
-      {isOpen && (
-        <div
-          className={`listbox-wrapper animate-fade-in-down absolute mt-1 w-full border-0 backdrop-blur-xl rounded-md shadow-lg z-10 ${colors[color]}`}
-        >
+        {isOpen && (
           <ul
-            className='listbox'
             role='listbox'
             aria-labelledby='select-trigger'
+            className={clsx(
+              'absolute mt-1 animate-fade-in-down w-full rounded-md shadow-lg z-10 max-h-60 overflow-auto',
+              COLORS[color]
+            )}
           >
-            {Children.map(children, (child) =>
-              cloneElement(child as ReactElement<SelectItemProps>, {
+            {Children.map(children, (child) => {
+              if (!isValidElement(child)) return child
+              return cloneElement(child, {
                 onSelect: handleSelect,
-                selectedValue,
+                selectedValue: selected.value,
                 color
               })
-            )}
+            })}
           </ul>
-        </div>
-      )}
+        )}
 
-      {description && <p className='text-sm mt-1'>{description}</p>}
+        {description && <p className='text-sm mt-1'>{description}</p>}
+        {isInvalid && errorMessage && (
+          <p className='text-sm text-red-500 mt-1' role='alert'>
+            {errorMessage}
+          </p>
+        )}
+      </div>
+    )
+  }
+)
 
-      {isInvalid && errorMessage && (
-        <p className='text-sm text-red-500 mt-1' role='alert'>
-          {errorMessage}
-        </p>
-      )}
-    </div>
-  )
-}
-
-export default Select
+export default memo(Select)
