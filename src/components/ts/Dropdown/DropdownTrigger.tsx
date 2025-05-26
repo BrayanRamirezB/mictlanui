@@ -1,6 +1,6 @@
 import { forwardRef, memo, type ReactNode } from 'react'
 import clsx from 'clsx'
-import { useDropdown } from '@/components/react/Dropdown/Dropdown'
+import { useDropdown } from '@/components/ts/Dropdown/Dropdown'
 
 const VARIANT_STYLES = {
   default: 'border-0 shadow-lg backdrop-blur-sm',
