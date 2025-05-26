@@ -1,14 +1,58 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useCallback, memo } from 'react'
+import clsx from 'clsx'
 
-interface ModalProps {
+export type Effect = 'opaque' | 'blur' | 'transparent'
+export type Color =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+export type Rounded = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+export type Size = 'sm' | 'md' | 'lg' | 'xl' | 'full'
+
+export interface ModalProps {
   isOpen: boolean
   isDismissable?: boolean
-  effect?: 'opaque' | 'blur' | 'transparent'
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl'
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  effect?: Effect
+  color?: Color
+  rounded?: Rounded
+  size?: Size
   onClose: () => void
-  children: ReactNode
+  children: React.ReactNode
+  className?: string
+}
+
+const BACKDROP_EFFECTS: Record<Effect, string> = {
+  opaque: 'bg-black/50',
+  blur: 'backdrop-blur-sm',
+  transparent: 'bg-transparent'
+}
+
+const COLORS: Record<Color, string> = {
+  default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
+  primary: 'bg-blue-500/20',
+  secondary: 'bg-indigo-500/20',
+  success: 'bg-green-500/20',
+  warning: 'bg-yellow-500/30',
+  danger: 'bg-red-500/20'
+}
+
+const ROUNDED: Record<Rounded, string> = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-xl',
+  xl: 'rounded-2xl'
+}
+
+const SIZES: Record<Size, string> = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  full: 'max-w-full min-h-full'
 }
 
 const Modal = ({
@@ -19,18 +63,22 @@ const Modal = ({
   rounded = 'md',
   size = 'md',
   onClose,
-  children
+  children,
+  className
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isDismissable) {
         onClose()
       }
-    }
+    },
+    [isDismissable, onClose]
+  )
 
-    const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
       if (
         modalRef.current &&
         !modalRef.current.contains(event.target as Node) &&
@@ -38,42 +86,47 @@ const Modal = ({
       ) {
         onClose()
       }
-    }
+    },
+    [isDismissable, onClose]
+  )
 
-    const trapFocus = (event: KeyboardEvent) => {
-      if (isOpen && modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll(
-          'a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-        )
-        const firstElement = focusableElements[0] as HTMLElement
-        const lastElement = focusableElements[
-          focusableElements.length - 1
-        ] as HTMLElement
+  const trapFocus = useCallback((event: KeyboardEvent) => {
+    if (!modalRef.current) return
 
-        if (event.key === 'Tab') {
-          if (event.shiftKey) {
-            if (document.activeElement === firstElement) {
-              event.preventDefault()
-              lastElement.focus()
-            }
-          } else {
-            if (document.activeElement === lastElement) {
-              event.preventDefault()
-              firstElement.focus()
-            }
-          }
-        }
+    const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+      'a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    )
+
+    if (focusableElements.length === 0) return
+
+    const firstElement = focusableElements[0]
+    const lastElement = focusableElements[focusableElements.length - 1]
+
+    if (event.key === 'Tab') {
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
       }
     }
+  }, [])
 
+  useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('mousedown', handleClickOutside)
       document.addEventListener('keydown', trapFocus)
       document.body.style.overflow = 'hidden'
 
-      if (modalRef.current) {
-        modalRef.current.focus()
+      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        'a, button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusableElements && focusableElements.length > 0) {
+        focusableElements[0].focus()
+      } else {
+        modalRef.current?.focus()
       }
     }
 
@@ -83,44 +136,16 @@ const Modal = ({
       document.removeEventListener('keydown', trapFocus)
       document.body.style.overflow = 'auto'
     }
-  }, [isOpen, isDismissable, onClose])
+  }, [isOpen, handleKeyDown, handleClickOutside, trapFocus])
 
   if (!isOpen) return null
 
-  const backdropEffects = {
-    opaque: 'bg-black/50',
-    blur: 'backdrop-blur-sm',
-    transparent: 'bg-transparent'
-  }
-
-  const colors = {
-    default: 'bg-neutral-100/20 dark:bg-zinc-700/30 dark:shadow-zinc-700/10',
-    primary: 'bg-blue-500/20 ',
-    secondary: 'bg-indigo-500/20 ',
-    success: 'bg-green-500/20 ',
-    warning: 'bg-yellow-500/30 ',
-    danger: 'bg-red-500/20 '
-  }
-
-  const roundeds = {
-    none: 'rounded-none',
-    sm: 'rounded-sm',
-    md: 'rounded-md',
-    lg: 'rounded-xl',
-    xl: 'rounded-2xl'
-  }
-
-  const sizes = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl',
-    full: 'max-w-full min-h-full'
-  }
-
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center ${backdropEffects[effect]}`}
+      className={clsx(
+        'fixed inset-0 z-50 flex items-center justify-center',
+        BACKDROP_EFFECTS[effect]
+      )}
       role='dialog'
       aria-modal='true'
       aria-labelledby='modal-title'
@@ -129,11 +154,18 @@ const Modal = ({
       <div
         ref={modalRef}
         tabIndex={-1}
-        className={`animate-zoom-in ${colors[color]} ${
-          roundeds[rounded]
-        } shadow-lg w-full ${sizes[size]} border-0 backdrop-blur-sm ${
-          effect === 'opaque' ? 'text-gray-200' : 'text-gray-800 '
-        } dark:text-gray-300`}
+        className={clsx(
+          'animate-zoom-in shadow-lg w-full border-0 backdrop-blur-sm',
+          COLORS[color],
+          ROUNDED[rounded],
+          SIZES[size],
+          {
+            'text-gray-200': effect === 'opaque',
+            'text-gray-800 dark:text-gray-300': effect !== 'opaque'
+          },
+          className
+        )}
+        role='document'
       >
         {children}
       </div>
@@ -141,4 +173,4 @@ const Modal = ({
   )
 }
 
-export default Modal
+export default memo(Modal)
