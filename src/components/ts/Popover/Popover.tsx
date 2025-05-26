@@ -4,17 +4,30 @@ import {
   useEffect,
   Children,
   cloneElement,
-  type ReactElement
+  useCallback,
+  memo,
+  useId
 } from 'react'
 import PopoverContent from '@/components/ts/Popover/PopoverContent'
 import PopoverTrigger from '@/components/ts/Popover/PopoverTrigger'
 
-interface PopoverProps {
-  children: ReactElement<any>[]
-  backdrop?: 'transparent' | 'opaque' | 'blur'
-  placement?: 'top' | 'bottom' | 'left' | 'right'
-  color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
-  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
+export type Backdrop = 'opaque' | 'blur' | 'transparent'
+export type Placement = 'top' | 'right' | 'bottom' | 'left'
+export type Color =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+export type Rounded = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+
+export interface PopoverProps {
+  children: React.ReactNode
+  backdrop?: Backdrop
+  placement?: Placement
+  color?: Color
+  rounded?: Rounded
 }
 
 const Popover = ({
@@ -27,23 +40,26 @@ const Popover = ({
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  const id = useId()
+
+  const handleToggle = useCallback(() => {
+    setIsOpen((prev) => !prev)
+  }, [])
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (
+      contentRef.current &&
+      !contentRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false)
+    }
+  }, [])
+
+  const handleEscape = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') setIsOpen(false)
+  }, [])
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        contentRef.current &&
-        !contentRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false)
-      }
-    }
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false)
-      }
-    }
-
     document.addEventListener('mousedown', handleClickOutside)
     document.addEventListener('keydown', handleEscape)
 
@@ -51,30 +67,40 @@ const Popover = ({
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [])
+  }, [handleClickOutside, handleEscape])
 
   return (
-    <div className='relative' role='dialog' ref={popoverRef}>
+    <div className='relative' ref={popoverRef} role='dialog'>
       {Children.map(children, (child) => {
-        if (child.type === PopoverTrigger) {
-          return cloneElement(child, {
-            onClick: () => setIsOpen(!isOpen)
-          }) as ReactElement
+        if (!child || typeof child !== 'object' || !('type' in child)) {
+          return child
         }
-        if (child.type === PopoverContent) {
-          return cloneElement(child, {
+
+        if ((child as any).type === PopoverTrigger) {
+          return cloneElement(child as React.ReactElement<any>, {
+            onClick: handleToggle,
+            'aria-haspopup': 'dialog',
+            'aria-expanded': isOpen,
+            'aria-controls': id
+          })
+        }
+
+        if ((child as any).type === PopoverContent) {
+          return cloneElement(child as React.ReactElement<any>, {
+            id,
             isOpen,
             backdrop,
             placement,
             color,
             rounded,
             ref: contentRef
-          }) as ReactElement
+          })
         }
+
         return child
       })}
     </div>
   )
 }
 
-export default Popover
+export default memo(Popover)
