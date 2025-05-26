@@ -1,6 +1,7 @@
-import { type ReactNode, type FC } from 'react'
+import { memo, type FC, type ReactNode } from 'react'
+import clsx from 'clsx'
 
-type Color =
+export type Color =
   | 'default'
   | 'primary'
   | 'secondary'
@@ -8,37 +9,38 @@ type Color =
   | 'warning'
   | 'danger'
 
-interface TableBodyProps {
+export interface TableBodyProps {
   isLoading?: boolean
   loadingContent?: ReactNode
   isEmpty?: boolean
   emptyMessage?: string
   divide?: boolean
   color?: Color
-  children: ReactNode
+  children?: ReactNode
+}
+
+const DIVIDE_COLORS: Record<Color, string> = {
+  default: 'divide-gray-800 dark:divide-gray-300',
+  primary: 'divide-blue-800 dark:divide-blue-500',
+  secondary: 'divide-indigo-800 dark:divide-indigo-500',
+  success: 'divide-green-800 dark:divide-green-500',
+  warning: 'divide-yellow-800 dark:divide-yellow-500',
+  danger: 'divide-red-800 dark:divide-red-500'
 }
 
 const TableBody: FC<TableBodyProps> = ({
   isLoading = false,
-  loadingContent,
+  loadingContent = null,
   isEmpty = false,
   emptyMessage = 'No data available.',
   divide = false,
   color = 'default',
-  children
+  children,
+  ...props
 }) => {
-  const divideColors: Record<Color, string> = {
-    default: 'divide-gray-800 dark:divide-gray-300',
-    primary: 'divide-blue-800 dark:divide-blue-500',
-    secondary: 'divide-indigo-800 dark:divide-indigo-500',
-    success: 'divide-green-800 dark:divide-green-500',
-    warning: 'divide-yellow-800 dark:divide-yellow-500',
-    danger: 'divide-red-800 dark:divide-red-500'
-  }
-
   if (isLoading) {
     return (
-      <tbody aria-busy='true'>
+      <tbody aria-busy='true' {...props}>
         <tr>
           <td colSpan={100} className='py-6 text-center'>
             {loadingContent}
@@ -50,7 +52,7 @@ const TableBody: FC<TableBodyProps> = ({
 
   if (isEmpty) {
     return (
-      <tbody>
+      <tbody {...props}>
         <tr>
           <td
             colSpan={100}
@@ -67,12 +69,13 @@ const TableBody: FC<TableBodyProps> = ({
 
   return (
     <tbody
-      className={`${divide && `divide-y ${divideColors[color]}`}`}
       role='rowgroup'
+      className={clsx(divide && `divide-y ${DIVIDE_COLORS[color]}`)}
+      {...props}
     >
       {children}
     </tbody>
   )
 }
 
-export default TableBody
+export default memo(TableBody)
